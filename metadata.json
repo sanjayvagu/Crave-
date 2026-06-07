@@ -1,0 +1,6 @@
+{
+  "name": "Food Delivery App Model",
+  "description": "Premium React-based mobile-first UI inspired by Swiggy, featuring glassmorphism and motion graphics.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
