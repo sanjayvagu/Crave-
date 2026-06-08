@@ -336,14 +336,7 @@ export const Menu: React.FC<MenuProps> = ({
                                           className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
                                         >
                                           <motion.button
-                                            whileTap={{
-                                              scale: 0.8,
-                                              transition: {
-                                                type: "spring",
-                                                stiffness: 400,
-                                                damping: 10,
-                                              },
-                                            }}
+                                            whileTap={{ scale: 0.8 }}
                                             onClick={() =>
                                               onUpdateCart(item, -1)
                                             }
@@ -355,19 +348,12 @@ export const Menu: React.FC<MenuProps> = ({
                                             key={qty}
                                             initial={{ scale: 1.5, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
-                                            className="text-slate-800 dark:text-slate-100 font-bold"
+                                            className="text-slate-800 dark:text-slate-100"
                                           >
                                             {qty}
                                           </motion.span>
                                           <motion.button
-                                            whileTap={{
-                                              scale: 0.8,
-                                              transition: {
-                                                type: "spring",
-                                                stiffness: 400,
-                                                damping: 10,
-                                              },
-                                            }}
+                                            whileTap={{ scale: 0.8 }}
                                             onClick={() =>
                                               onUpdateCart(item, 1)
                                             }

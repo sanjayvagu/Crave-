@@ -91,7 +91,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
       const timer = setTimeout(() => {
         setCurrentStep(index);
         setToast({
-          message: status.label,
+          message: status.text,
           subtext: status.subtext,
           id: Date.now(),
         });
