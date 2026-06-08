@@ -10,7 +10,7 @@ import { Tracking } from "./components/Tracking";
 import { Profile } from "./components/Profile";
 import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
-import { Restaurant, CartItem, MenuItem, Order } from "./types";
+import { Restaurant, CartItem, MenuItem, Order, Address } from "./types";
 import { RESTAURANTS, MENU_ITEMS } from "./data";
 
 export type Screen =
@@ -30,6 +30,12 @@ export default function App() {
     useState<Restaurant | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+
+  const [addresses, setAddresses] = useState<Address[]>([
+    { id: "1", label: "Home", value: "123 Design Avenue" },
+    { id: "2", label: "Work", value: "456 Creative Boulevard" },
+  ]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("1");
 
   const handleToggleFavorite = (restaurantId: string) => {
     setFavorites((prev) =>
@@ -153,6 +159,9 @@ export default function App() {
               <Home
                 key="home"
                 favorites={favorites}
+                activeAddress={addresses.find(
+                  (a) => a.id === selectedAddressId,
+                )}
                 onToggleFavorite={handleToggleFavorite}
                 onSelectRestaurant={handleSelectRestaurant}
                 onViewHistory={() => setCurrentScreen("history")}
@@ -203,6 +212,10 @@ export default function App() {
               <Profile
                 key="profile"
                 favorites={favorites}
+                addresses={addresses}
+                selectedAddressId={selectedAddressId}
+                onSetAddresses={setAddresses}
+                onSelectAddressId={setSelectedAddressId}
                 onToggleFavorite={handleToggleFavorite}
                 onBack={() => setCurrentScreen("home")}
                 onViewOrders={() => setCurrentScreen("history")}

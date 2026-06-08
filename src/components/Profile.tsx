@@ -23,10 +23,14 @@ import {
 } from "lucide-react";
 import { useTheme } from "../ThemeContext";
 import { RESTAURANTS } from "../data";
-import { Restaurant } from "../types";
+import { Restaurant, Address } from "../types";
 
 interface ProfileProps {
   favorites: string[];
+  addresses: Address[];
+  selectedAddressId: string;
+  onSetAddresses: (addresses: Address[]) => void;
+  onSelectAddressId: (id: string) => void;
   onToggleFavorite: (id: string) => void;
   onBack: () => void;
   onViewOrders?: () => void;
@@ -35,6 +39,10 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({
   favorites,
+  addresses,
+  selectedAddressId,
+  onSetAddresses,
+  onSelectAddressId,
   onToggleFavorite,
   onBack,
   onViewOrders,
@@ -74,7 +82,7 @@ export const Profile: React.FC<ProfileProps> = ({
       id: "address",
       icon: MapPin,
       label: "Saved Addresses",
-      value: "Home, Work",
+      value: `${addresses.length} Saved`,
     },
     {
       id: "theme",
@@ -324,58 +332,80 @@ export const Profile: React.FC<ProfileProps> = ({
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-5 pb-32 space-y-4">
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                  <Check className="w-3.5 h-3.5" />
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-orange-50 dark:bg-orange-500/10 rounded-xl flex items-center justify-center shrink-0">
-                    <MapPinIcon className="w-6 h-6 text-[#fc8019]" />
+              {addresses.map((addr) => {
+                const isSelected = selectedAddressId === addr.id;
+                return (
+                  <div
+                    key={addr.id}
+                    onClick={() => onSelectAddressId(addr.id)}
+                    className={`bg-white dark:bg-slate-900 rounded-2xl p-4 border shadow-sm relative overflow-hidden cursor-pointer transition-all ${
+                      isSelected
+                        ? "border-[#fc8019] ring-1 ring-[#fc8019]"
+                        : "border-slate-200 dark:border-slate-700 hover:border-[#fc8019]/50"
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <Check className="w-3.5 h-3.5" />
+                      </div>
+                    )}
+                    <div className="flex gap-4">
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? "bg-orange-50 dark:bg-orange-500/10 text-[#fc8019]"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                        }`}
+                      >
+                        <MapPinIcon className="w-6 h-6" />
+                      </div>
+                      <div className="pr-10">
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-1">
+                          {addr.label}
+                        </h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                          {addr.value}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-4">
+                      <button className="text-sm font-bold text-[#fc8019]">
+                        Edit
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSetAddresses(
+                            addresses.filter((a) => a.id !== addr.id),
+                          );
+                          if (isSelected) {
+                            onSelectAddressId(
+                              addresses.find((a) => a.id !== addr.id)?.id || "",
+                            );
+                          }
+                        }}
+                        className="text-sm font-bold text-slate-400 dark:text-slate-500 hover:text-red-500"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-1">
-                      Home
-                    </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
-                      123 Design Avenue, Tech Park Building A, Floor 5, NY 10001
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-4">
-                  <button className="text-sm font-bold text-[#fc8019]">
-                    Edit
-                  </button>
-                  <button className="text-sm font-bold text-slate-400 dark:text-slate-500">
-                    Delete
-                  </button>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden group">
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0">
-                    <MapPinIcon className="w-6 h-6 text-slate-500 dark:text-slate-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base mb-1">
-                      Office
-                    </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
-                      456 Corporate Towers, Block C, NY 10002
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-4">
-                  <button className="text-sm font-bold text-[#fc8019]">
-                    Edit
-                  </button>
-                  <button className="text-sm font-bold text-slate-400 dark:text-slate-500">
-                    Delete
-                  </button>
-                </div>
-              </div>
+                );
+              })}
 
               <motion.button
+                onClick={() => {
+                  const newId = Date.now().toString();
+                  onSetAddresses([
+                    ...addresses,
+                    {
+                      id: newId,
+                      label: "New Address",
+                      value: "789 New Location St, City",
+                    },
+                  ]);
+                  onSelectAddressId(newId);
+                }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full bg-orange-50 dark:bg-[#fc8019]/10 border border-orange-200 dark:border-[#fc8019]/30 text-[#fc8019] border-dashed font-bold py-4 rounded-2xl flex items-center justify-center gap-2 mt-4"
               >

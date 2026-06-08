@@ -25,6 +25,12 @@ export interface CartItem extends MenuItem {
   instructions?: string;
 }
 
+export interface Address {
+  id: string;
+  label: string;
+  value: string;
+}
+
 export interface Order {
   id: string;
   restaurantName: string;

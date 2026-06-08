@@ -11,11 +11,12 @@ import {
   Heart,
 } from "lucide-react";
 import { RESTAURANTS } from "../data";
-import { Restaurant } from "../types";
+import { Restaurant, Address } from "../types";
 import { PullToRefresh } from "./PullToRefresh";
 
 interface HomeProps {
   favorites: string[];
+  activeAddress?: Address;
   onToggleFavorite: (id: string) => void;
   onSelectRestaurant: (restaurant: Restaurant) => void;
   onViewHistory: () => void;
@@ -25,13 +26,13 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({
   favorites,
+  activeAddress,
   onToggleFavorite,
   onSelectRestaurant,
   onViewHistory,
   onViewProfile,
   onOpenSearch,
 }) => {
-  const [address, setAddress] = useState("123 Design Avenue");
   const [isLocating, setIsLocating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,20 +46,16 @@ export const Home: React.FC<HomeProps> = ({
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Mocking reverse geocoding for UI display
           setTimeout(() => {
-            setAddress("Current Location Available");
             setIsLocating(false);
           }, 800);
         },
         (error) => {
           console.error("Error obtaining location", error);
-          setAddress("Unable to get location");
           setIsLocating(false);
         },
       );
     } else {
-      setAddress("Geolocation not supported");
       setIsLocating(false);
     }
   };
@@ -172,12 +169,14 @@ export const Home: React.FC<HomeProps> = ({
                     <MapPin className="text-[#fc8019] w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
                   )}
                   <div className="flex items-center font-bold text-xs text-slate-800 dark:text-slate-100">
-                    Home{" "}
+                    {activeAddress?.label || "Location"}{" "}
                     <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-[#fc8019] transition-colors" />
                   </div>
                 </div>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-32 text-center pl-2 group-hover:text-slate-800 dark:text-slate-100 transition-colors">
-                  {isLocating ? "Locating..." : address}
+                  {isLocating
+                    ? "Locating..."
+                    : activeAddress?.value || "Select Location"}
                 </p>
               </div>
 
