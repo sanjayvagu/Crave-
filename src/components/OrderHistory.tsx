@@ -26,6 +26,12 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
   onReorder,
 }) => {
   const [selectedReceipt, setSelectedReceipt] = useState<Order | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const calculateBreakdown = (total: number) => {
     const deliveryFee = 3.99;
@@ -71,108 +77,134 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-4">
-        {MOCK_ORDERS.map((order, index) => (
-          <motion.div
-            key={order.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.4,
-              delay: index * 0.1,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
-          >
-            <div className="flex justify-between items-start mb-3">
-              <div>
-                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
-                  {order.restaurantName}
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                  {order.date}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold text-slate-800 dark:text-slate-100">
-                  ${order.total.toFixed(2)}
-                </p>
-                <div
-                  className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
-                    order.status === "Delivered"
-                      ? "bg-green-100 text-green-700"
-                      : order.status === "Cancelled"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-orange-100 text-orange-700"
-                  }`}
-                >
-                  {order.status === "Delivered" && (
-                    <CheckCircle2 className="w-[10px] h-[10px]" />
-                  )}
-                  {order.status === "Cancelled" && (
-                    <XCircle className="w-[10px] h-[10px]" />
-                  )}
-                  {(order.status === "Processing" ||
-                    (order.status !== "Delivered" &&
-                      order.status !== "Cancelled")) && (
-                    <Clock className="w-[10px] h-[10px]" />
-                  )}
-                  {order.status}
-                </div>
-              </div>
-            </div>
-
-            <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
-              {order.items.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2 mb-1 last:mb-0"
-                >
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
-                    {item.quantity}
-                  </span>
-                  <span className="text-sm text-slate-700 dark:text-slate-200">
-                    {item.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-3">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSelectedReceipt(order)}
-                className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:bg-slate-950 transition-colors"
+        {isLoading
+          ? [1, 2, 3].map((key) => (
+              <div
+                key={key}
+                className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
               >
-                <Receipt className="w-4 h-4" />
-                View Receipt
-              </motion.button>
-              {["Preparing", "Out for Delivery", "Processing"].includes(
-                order.status,
-              ) ? (
-                <motion.button
-                  onClick={() => onTrackOrder && onTrackOrder()}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
-                >
-                  <Navigation className="w-4 h-4" />
-                  Track Order
-                </motion.button>
-              ) : (
-                <motion.button
-                  onClick={() => onReorder && onReorder(order)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  Reorder
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
-        ))}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex flex-col gap-2 w-1/2">
+                    <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-3/4"></div>
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-1/2"></div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-16"></div>
+                    <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-20"></div>
+                  </div>
+                </div>
+                <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
+                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-full mb-2"></div>
+                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-2/3"></div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
+                  <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
+                </div>
+              </div>
+            ))
+          : MOCK_ORDERS.map((order, index) => (
+              <motion.div
+                key={order.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.4,
+                  delay: index * 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
+                      {order.restaurantName}
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                      {order.date}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-slate-800 dark:text-slate-100">
+                      ${order.total.toFixed(2)}
+                    </p>
+                    <div
+                      className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
+                        order.status === "Delivered"
+                          ? "bg-green-100 text-green-700"
+                          : order.status === "Cancelled"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-orange-100 text-orange-700"
+                      }`}
+                    >
+                      {order.status === "Delivered" && (
+                        <CheckCircle2 className="w-[10px] h-[10px]" />
+                      )}
+                      {order.status === "Cancelled" && (
+                        <XCircle className="w-[10px] h-[10px]" />
+                      )}
+                      {(order.status === "Processing" ||
+                        (order.status !== "Delivered" &&
+                          order.status !== "Cancelled")) && (
+                        <Clock className="w-[10px] h-[10px]" />
+                      )}
+                      {order.status}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
+                  {order.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-2 mb-1 last:mb-0"
+                    >
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
+                        {item.quantity}
+                      </span>
+                      <span className="text-sm text-slate-700 dark:text-slate-200">
+                        {item.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedReceipt(order)}
+                    className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:bg-slate-950 transition-colors"
+                  >
+                    <Receipt className="w-4 h-4" />
+                    View Receipt
+                  </motion.button>
+                  {["Preparing", "Out for Delivery", "Processing"].includes(
+                    order.status,
+                  ) ? (
+                    <motion.button
+                      onClick={() => onTrackOrder && onTrackOrder()}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                    >
+                      <Navigation className="w-4 h-4" />
+                      Track Order
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      onClick={() => onReorder && onReorder(order)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Reorder
+                    </motion.button>
+                  )}
+                </div>
+              </motion.div>
+            ))}
       </div>
 
       {/* Receipt Modal */}
@@ -266,7 +298,9 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   <span>${selectedReceipt.total.toFixed(2)}</span>
                 </div>
 
-                {['Preparing', 'Out for Delivery', 'Processing'].includes(selectedReceipt.status) ? (
+                {["Preparing", "Out for Delivery", "Processing"].includes(
+                  selectedReceipt.status,
+                ) ? (
                   <motion.button
                     onClick={() => onTrackOrder && onTrackOrder()}
                     whileHover={{ scale: 1.02 }}

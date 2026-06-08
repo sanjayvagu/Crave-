@@ -33,6 +33,12 @@ export const Home: React.FC<HomeProps> = ({
 }) => {
   const [address, setAddress] = useState("123 Design Avenue");
   const [isLocating, setIsLocating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleEnableLocation = () => {
     setIsLocating(true);
@@ -215,42 +221,51 @@ export const Home: React.FC<HomeProps> = ({
           <div className="px-5 pb-8 pt-4">
             {/* Promotional Offers */}
             <div className="flex overflow-x-auto no-scrollbar gap-4 pb-6 -mx-5 px-5">
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: -1 }}
-                className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#fc8019] to-[#e86600] p-4 text-white shadow-lg overflow-hidden relative"
-              >
-                <div className="relative z-10">
-                  <span className="font-bold text-2xl drop-shadow-md">
-                    50% OFF
-                  </span>
-                  <p className="text-white/90 text-sm mt-1">
-                    on your first 3 orders
-                  </p>
-                  <button className="mt-3 bg-white dark:bg-slate-900 text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
-                    Claim Now
-                  </button>
-                </div>
-                {/* Abstract decorative circles */}
-                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
-                <div className="absolute right-10 -top-10 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
-              </motion.div>
+              {isLoading ? (
+                <>
+                  <div className="min-w-[280px] h-36 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                  <div className="min-w-[280px] h-36 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                </>
+              ) : (
+                <>
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: -1 }}
+                    className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#fc8019] to-[#e86600] p-4 text-white shadow-lg overflow-hidden relative"
+                  >
+                    <div className="relative z-10">
+                      <span className="font-bold text-2xl drop-shadow-md">
+                        50% OFF
+                      </span>
+                      <p className="text-white/90 text-sm mt-1">
+                        on your first 3 orders
+                      </p>
+                      <button className="mt-3 bg-white dark:bg-slate-900 text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                        Claim Now
+                      </button>
+                    </div>
+                    {/* Abstract decorative circles */}
+                    <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/20 rounded-full blur-xl"></div>
+                    <div className="absolute right-10 -top-10 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
+                  </motion.div>
 
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: 1 }}
-                className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#1b1c20] to-[#2d2e32] p-4 text-white shadow-lg overflow-hidden relative"
-              >
-                <div className="relative z-10">
-                  <span className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">
-                    PRO
-                  </span>
-                  <p className="text-white/90 text-sm mt-1 mb-3">
-                    Free delivery + 20% extra off
-                  </p>
-                  <span className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold">
-                    Join Now
-                  </span>
-                </div>
-              </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: 1 }}
+                    className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#1b1c20] to-[#2d2e32] p-4 text-white shadow-lg overflow-hidden relative"
+                  >
+                    <div className="relative z-10">
+                      <span className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">
+                        PRO
+                      </span>
+                      <p className="text-white/90 text-sm mt-1 mb-3">
+                        Free delivery + 20% extra off
+                      </p>
+                      <span className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-semibold">
+                        Join Now
+                      </span>
+                    </div>
+                  </motion.div>
+                </>
+              )}
             </div>
 
             {/* Top Restaurants */}
@@ -259,76 +274,96 @@ export const Home: React.FC<HomeProps> = ({
                 Top Restaurants to explore
               </h2>
               <div className="flex flex-col gap-6">
-                {RESTAURANTS.map((restaurant) => (
-                  <motion.div
-                    key={restaurant.id}
-                    layoutId={`restaurant-${restaurant.id}`}
-                    whileHover={{ y: -4 }}
-                    whileTap={{ scale: 0.96 }}
-                    onClick={() => onSelectRestaurant(restaurant)}
-                    className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800 cursor-pointer"
-                  >
-                    <div className="relative h-44">
-                      <motion.img
-                        layoutId={`restaurant-img-${restaurant.id}`}
-                        src={restaurant.image}
-                        alt={restaurant.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <motion.button
-                        whileTap={{ scale: 0.8 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onToggleFavorite(restaurant.id);
-                        }}
-                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center p-0 border border-white/30"
+                {isLoading ? (
+                  <>
+                    {[1, 2, 3].map((key) => (
+                      <div
+                        key={key}
+                        className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800"
                       >
-                        <Heart
-                          className={`w-5 h-5 ${favorites.includes(restaurant.id) ? "fill-red-500 text-red-500" : "text-white"}`}
-                        />
-                      </motion.button>
-                      <div className="absolute top-1/2 bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
-                        {restaurant.offers && (
-                          <div className="flex items-center gap-1 text-white font-bold text-lg">
-                            <Percent className="w-5 h-5 text-blue-400" />
-                            {restaurant.offers}
+                        <div className="h-44 bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                        <div className="p-4 bg-white dark:bg-slate-900">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="h-6 w-1/2 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
+                            <div className="h-6 w-12 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
                           </div>
-                        )}
+                          <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mt-3"></div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="p-4 bg-white dark:bg-slate-900">
-                      <div className="flex justify-between items-start">
-                        <motion.h3
-                          layoutId={`restaurant-title-${restaurant.id}`}
-                          className="font-bold text-xl text-slate-800 dark:text-slate-100 tracking-tight"
+                    ))}
+                  </>
+                ) : (
+                  RESTAURANTS.map((restaurant) => (
+                    <motion.div
+                      key={restaurant.id}
+                      layoutId={`restaurant-${restaurant.id}`}
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => onSelectRestaurant(restaurant)}
+                      className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800 cursor-pointer"
+                    >
+                      <div className="relative h-44">
+                        <motion.img
+                          layoutId={`restaurant-img-${restaurant.id}`}
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <motion.button
+                          whileTap={{ scale: 0.8 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleFavorite(restaurant.id);
+                          }}
+                          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center p-0 border border-white/30"
                         >
-                          {restaurant.name}
-                        </motion.h3>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-lg">
-                            <Star className="w-3 h-3 fill-current" />
-                            <span className="text-xs font-bold">
-                              {restaurant.rating}
+                          <Heart
+                            className={`w-5 h-5 ${favorites.includes(restaurant.id) ? "fill-red-500 text-red-500" : "text-white"}`}
+                          />
+                        </motion.button>
+                        <div className="absolute top-1/2 bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
+                          {restaurant.offers && (
+                            <div className="flex items-center gap-1 text-white font-bold text-lg">
+                              <Percent className="w-5 h-5 text-blue-400" />
+                              {restaurant.offers}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-4 bg-white dark:bg-slate-900">
+                        <div className="flex justify-between items-start">
+                          <motion.h3
+                            layoutId={`restaurant-title-${restaurant.id}`}
+                            className="font-bold text-xl text-slate-800 dark:text-slate-100 tracking-tight"
+                          >
+                            {restaurant.name}
+                          </motion.h3>
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-lg">
+                              <Star className="w-3 h-3 fill-current" />
+                              <span className="text-xs font-bold">
+                                {restaurant.rating}
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-slate-400 mt-1">
+                              {restaurant.reviewCount}+ reviews
                             </span>
                           </div>
-                          <span className="text-[10px] text-slate-400 mt-1">
-                            {restaurant.reviewCount}+ reviews
-                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            {restaurant.deliveryTime}
+                          </div>
+                          <div className="w-1 h-1 bg-slate-300 rounded-full"></div>
+                          <div>
+                            {restaurant.tags[0]}, {restaurant.tags[1]}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4 mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {restaurant.deliveryTime}
-                        </div>
-                        <div className="w-1 h-1 bg-slate-300 rounded-full"></div>
-                        <div>
-                          {restaurant.tags[0]}, {restaurant.tags[1]}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  ))
+                )}
               </div>
             </div>
 

@@ -22,6 +22,7 @@ export interface MenuItem {
 
 export interface CartItem extends MenuItem {
   quantity: number;
+  instructions?: string;
 }
 
 export interface Order {
@@ -30,5 +31,10 @@ export interface Order {
   date: string;
   total: number;
   items: { name: string; quantity: number }[];
-  status: 'Delivered' | 'Cancelled' | 'Processing' | 'Preparing' | 'Out for Delivery';
+  status:
+    | "Delivered"
+    | "Cancelled"
+    | "Processing"
+    | "Preparing"
+    | "Out for Delivery";
 }

@@ -53,6 +53,20 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
     Math.floor(Math.random() * (30 * 60 - 20 * 60 + 1) + 20 * 60),
   );
   const [showDialer, setShowDialer] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    subtext: string;
+    id: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   const handleCallDriver = () => {
     if (
@@ -76,6 +90,11 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
       if (index === 0) return;
       const timer = setTimeout(() => {
         setCurrentStep(index);
+        setToast({
+          message: status.text,
+          subtext: status.subtext,
+          id: Date.now(),
+        });
       }, status.delay);
       timers.push(timer);
     });
@@ -112,6 +131,25 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            key={toast.id}
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="absolute top-0 left-0 right-0 z-[60] p-4 pt-[max(1.5rem,env(safe-area-inset-top))] flex justify-center pointer-events-none"
+          >
+            <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-sm w-full mx-8">
+              <span className="font-bold text-lg">{toast.message}</span>
+              {toast.subtext && (
+                <span className="text-sm opacity-80 mt-1">{toast.subtext}</span>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="absolute top-0 right-0 p-4 z-50 pt-[max(1.5rem,env(safe-area-inset-top))]">
         <motion.button
           whileTap={{ scale: 0.9 }}

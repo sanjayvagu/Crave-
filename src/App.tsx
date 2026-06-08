@@ -67,6 +67,12 @@ export default function App() {
     });
   };
 
+  const handleUpdateInstructions = (itemId: string, instructions: string) => {
+    setCart((prev) =>
+      prev.map((c) => (c.id === itemId ? { ...c, instructions } : c)),
+    );
+  };
+
   const handleCheckoutComplete = () => {
     if (typeof window !== "undefined" && navigator.vibrate) {
       navigator.vibrate([100, 50, 100]);
@@ -171,6 +177,7 @@ export default function App() {
                 key="cart"
                 cart={cart}
                 onUpdateCart={handleUpdateCart}
+                onUpdateInstructions={handleUpdateInstructions}
                 onBack={() => setCurrentScreen("home")}
                 onCheckoutComplete={handleCheckoutComplete}
               />

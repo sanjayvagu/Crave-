@@ -39,6 +39,13 @@ export const Menu: React.FC<MenuProps> = ({
     [menuItems],
   );
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const filteredItems = useMemo(
     () =>
       activeCategory === "All"
@@ -110,7 +117,10 @@ export const Menu: React.FC<MenuProps> = ({
               <div className="flex items-center gap-4 mt-2 text-white/90 text-sm font-medium drop-shadow-md">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-white text-white" />
-                  {restaurant.rating} <span className="opacity-75 text-xs ml-1">({restaurant.reviewCount}+)</span>
+                  {restaurant.rating}{" "}
+                  <span className="opacity-75 text-xs ml-1">
+                    ({restaurant.reviewCount}+)
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
@@ -140,7 +150,20 @@ export const Menu: React.FC<MenuProps> = ({
             ))}
           </div>
 
-          <div className="flex flex-col gap-8 pb-12">
+          <motion.div
+            className="flex flex-col gap-8 pb-12"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            initial="hidden"
+            animate="visible"
+          >
             <AnimatePresence mode="popLayout">
               {(activeCategory === "All"
                 ? categories.filter((c) => c !== "All")
@@ -152,107 +175,160 @@ export const Menu: React.FC<MenuProps> = ({
                 if (categoryItems.length === 0) return null;
 
                 return (
-                  <motion.div layout key={category} className="mb-4">
+                  <motion.div
+                    layout
+                    key={category}
+                    className="mb-4"
+                    variants={{
+                      hidden: { opacity: 0 },
+                      visible: { opacity: 1 },
+                    }}
+                  >
                     <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
                       {category}
                     </h2>
-                    <div className="flex flex-col gap-8">
-                      {categoryItems.map((item) => {
-                        const qty = getItemQuantity(item.id);
-                        return (
-                          <motion.div
-                            layout
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.2 }}
-                            key={item.id}
-                            className="flex justify-between group"
-                          >
-                            <div className="flex-1 pr-4">
-                              <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center mb-1">
-                                <div
-                                  className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
-                                ></div>
+                    <motion.div
+                      className="flex flex-col gap-8"
+                      variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                          opacity: 1,
+                          transition: {
+                            staggerChildren: 0.08,
+                          },
+                        },
+                      }}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      {isLoading
+                        ? [1, 2, 3].map((key) => (
+                            <div key={key} className="flex justify-between">
+                              <div className="flex-1 pr-4">
+                                <div className="w-4 h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-2"></div>
+                                <div className="h-6 w-3/4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-2"></div>
+                                <div className="h-5 w-1/4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-3"></div>
+                                <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-1"></div>
+                                <div className="h-4 w-5/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
                               </div>
-                              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">
-                                {item.name}
-                              </h3>
-                              <p className="font-bold text-slate-700 dark:text-slate-200 mt-1">
-                                ${item.price.toFixed(2)}
-                              </p>
-                              <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2 leading-relaxed">
-                                {item.description}
-                              </p>
-                            </div>
-
-                            <div className="relative">
-                              <div className="w-32 h-32 rounded-2xl overflow-hidden shadow-sm">
-                                <img
-                                  src={item.image}
-                                  alt={item.name}
-                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                              </div>
-
-                              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-                                <AnimatePresence mode="popLayout">
-                                  {qty === 0 ? (
-                                    <motion.button
-                                      key="add"
-                                      initial={{ scale: 0.8, opacity: 0 }}
-                                      animate={{ scale: 1, opacity: 1 }}
-                                      exit={{ scale: 0.8, opacity: 0 }}
-                                      whileTap={{ scale: 0.9 }}
-                                      onClick={() => onUpdateCart(item, 1)}
-                                      className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-24 relative z-20"
-                                    >
-                                      ADD
-                                    </motion.button>
-                                  ) : (
-                                    <motion.div
-                                      key="qty"
-                                      initial={{ scale: 0.8, opacity: 0 }}
-                                      animate={{ scale: 1, opacity: 1 }}
-                                      exit={{ scale: 0.8, opacity: 0 }}
-                                      className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
-                                    >
-                                      <motion.button
-                                        whileTap={{ scale: 0.8 }}
-                                        onClick={() => onUpdateCart(item, -1)}
-                                        className="p-1"
-                                      >
-                                        <Minus className="w-4 h-4" />
-                                      </motion.button>
-                                      <motion.span
-                                        key={qty}
-                                        initial={{ scale: 1.5, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        className="text-slate-800 dark:text-slate-100"
-                                      >
-                                        {qty}
-                                      </motion.span>
-                                      <motion.button
-                                        whileTap={{ scale: 0.8 }}
-                                        onClick={() => onUpdateCart(item, 1)}
-                                        className="p-1"
-                                      >
-                                        <Plus className="w-4 h-4" />
-                                      </motion.button>
-                                    </motion.div>
-                                  )}
-                                </AnimatePresence>
+                              <div className="relative">
+                                <div className="w-32 h-32 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
+                                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-200 dark:bg-slate-800 w-24 h-10 rounded-xl animate-pulse"></div>
                               </div>
                             </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
+                          ))
+                        : categoryItems.map((item) => {
+                            const qty = getItemQuantity(item.id);
+                            return (
+                              <motion.div
+                                layout
+                                variants={{
+                                  hidden: { opacity: 0, x: -25 },
+                                  visible: {
+                                    opacity: 1,
+                                    x: 0,
+                                    transition: {
+                                      type: "spring",
+                                      stiffness: 260,
+                                      damping: 20,
+                                    },
+                                  },
+                                  exit: { opacity: 0, scale: 0.95 },
+                                }}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                key={item.id}
+                                className="flex justify-between group"
+                              >
+                                <div className="flex-1 pr-4">
+                                  <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center mb-1">
+                                    <div
+                                      className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
+                                    ></div>
+                                  </div>
+                                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">
+                                    {item.name}
+                                  </h3>
+                                  <p className="font-bold text-slate-700 dark:text-slate-200 mt-1">
+                                    ${item.price.toFixed(2)}
+                                  </p>
+                                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2 leading-relaxed">
+                                    {item.description}
+                                  </p>
+                                </div>
+
+                                <div className="relative">
+                                  <div className="w-32 h-32 rounded-2xl overflow-hidden shadow-sm">
+                                    <img
+                                      src={item.image}
+                                      alt={item.name}
+                                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                  </div>
+
+                                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+                                    <AnimatePresence mode="popLayout">
+                                      {qty === 0 ? (
+                                        <motion.button
+                                          key="add"
+                                          initial={{ scale: 0.8, opacity: 0 }}
+                                          animate={{ scale: 1, opacity: 1 }}
+                                          exit={{ scale: 0.8, opacity: 0 }}
+                                          whileTap={{ scale: 0.9 }}
+                                          onClick={() => onUpdateCart(item, 1)}
+                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-24 relative z-20"
+                                        >
+                                          ADD
+                                        </motion.button>
+                                      ) : (
+                                        <motion.div
+                                          key="qty"
+                                          initial={{ scale: 0.8, opacity: 0 }}
+                                          animate={{ scale: 1, opacity: 1 }}
+                                          exit={{ scale: 0.8, opacity: 0 }}
+                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
+                                        >
+                                          <motion.button
+                                            whileTap={{ scale: 0.8 }}
+                                            onClick={() =>
+                                              onUpdateCart(item, -1)
+                                            }
+                                            className="p-1"
+                                          >
+                                            <Minus className="w-4 h-4" />
+                                          </motion.button>
+                                          <motion.span
+                                            key={qty}
+                                            initial={{ scale: 1.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="text-slate-800 dark:text-slate-100"
+                                          >
+                                            {qty}
+                                          </motion.span>
+                                          <motion.button
+                                            whileTap={{ scale: 0.8 }}
+                                            onClick={() =>
+                                              onUpdateCart(item, 1)
+                                            }
+                                            className="p-1"
+                                          >
+                                            <Plus className="w-4 h-4" />
+                                          </motion.button>
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
+                    </motion.div>
                   </motion.div>
                 );
               })}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
       </div>
 

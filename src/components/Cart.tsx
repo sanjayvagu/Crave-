@@ -22,6 +22,7 @@ interface CartProps {
   onBack: () => void;
   onCheckoutComplete: () => void;
   onUpdateCart: (item: MenuItem, delta: number) => void;
+  onUpdateInstructions: (itemId: string, instructions: string) => void;
 }
 
 const NumberTicker = ({ value }: { value: number }) => {
@@ -51,11 +52,14 @@ export const Cart: React.FC<CartProps> = ({
   onBack,
   onCheckoutComplete,
   onUpdateCart,
+  onUpdateInstructions,
 }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  const [deliveryAddress, setDeliveryAddress] = useState("123 Design Avenue, Tech Park Building A");
+  const [deliveryAddress, setDeliveryAddress] = useState(
+    "123 Design Avenue, Tech Park Building A",
+  );
   const [tipPercentage, setTipPercentage] = useState<number>(0);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -201,7 +205,10 @@ export const Cart: React.FC<CartProps> = ({
                 35-40 mins delivery time
               </p>
             </div>
-            <button onClick={() => setShowMap(true)} className="text-[#fc8019] text-sm font-bold uppercase tracking-wider">
+            <button
+              onClick={() => setShowMap(true)}
+              className="text-[#fc8019] text-sm font-bold uppercase tracking-wider"
+            >
               Change
             </button>
           </div>
@@ -327,39 +334,52 @@ export const Cart: React.FC<CartProps> = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="flex justify-between items-center"
+                  className="flex flex-col gap-2"
                 >
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center shrink-0 mt-1">
-                      <div
-                        className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
-                      ></div>
-                    </div>
-                    <div>
-                      <h4 className="text-slate-800 dark:text-slate-100 text-sm font-medium">
-                        {item.name}
-                      </h4>
-                      <div className="flex items-center gap-2 mt-1">
-                        <button
-                          onClick={() => onUpdateCart(item, -1)}
-                          className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
-                        >
-                          <Minus className="w-3 h-3" />
-                        </button>
-                        <span className="text-sm font-medium w-4 text-center">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => onUpdateCart(item, 1)}
-                          className="w-6 h-6 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
-                        >
-                          <Plus className="w-3 h-3" />
-                        </button>
+                  <div className="flex justify-between items-start">
+                    <div className="flex items-start gap-2">
+                      <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center shrink-0 mt-1">
+                        <div
+                          className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
+                        ></div>
+                      </div>
+                      <div>
+                        <h4 className="text-slate-800 dark:text-slate-100 text-sm font-medium">
+                          {item.name}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <button
+                            onClick={() => onUpdateCart(item, -1)}
+                            className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="text-sm font-medium w-4 text-center">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => onUpdateCart(item, 1)}
+                            className="w-6 h-6 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
                       </div>
                     </div>
+                    <div className="font-medium text-slate-800 dark:text-slate-100 text-sm">
+                      $<NumberTicker value={item.price * item.quantity} />
+                    </div>
                   </div>
-                  <div className="font-medium text-slate-800 dark:text-slate-100 text-sm">
-                    $<NumberTicker value={item.price * item.quantity} />
+                  <div className="ml-6 mr-10 relative">
+                    <input
+                      type="text"
+                      placeholder="Add special instructions (e.g. extra cheese)"
+                      value={item.instructions || ""}
+                      onChange={(e) =>
+                        onUpdateInstructions?.(item.id, e.target.value)
+                      }
+                      className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 focus:border-[#fc8019] outline-none transition-colors"
+                    />
                   </div>
                 </motion.div>
               ))}
@@ -496,15 +516,19 @@ export const Cart: React.FC<CartProps> = ({
               <div
                 className="flex-1 w-full opacity-40 mix-blend-multiply dark:mix-blend-screen"
                 style={{
-                  backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)",
+                  backgroundImage:
+                    "radial-gradient(#cbd5e1 1px, transparent 1px)",
                   backgroundSize: "20px 20px",
                 }}
               ></div>
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <MapPin className="w-12 h-12 text-[#fc8019] -mt-12 drop-shadow-xl" strokeWidth={2.5}/>
+                <MapPin
+                  className="w-12 h-12 text-[#fc8019] -mt-12 drop-shadow-xl"
+                  strokeWidth={2.5}
+                />
               </div>
             </div>
-            
+
             <div className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.1)] relative z-20 pb-10">
               <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 mb-2">
                 Confirm Delivery Address
