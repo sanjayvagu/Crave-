@@ -116,7 +116,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
         <motion.button 
           whileTap={{ scale: 0.9 }} 
           onClick={onGoHome}
-          className="absolute top-5 left-5 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm"
+          className="absolute left-5 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm" style={{ top: 'max(1.25rem, env(safe-area-inset-top))' }}
         >
           <Home className="w-5 h-5" />
         </motion.button>
@@ -240,7 +240,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
             exit={{ opacity: 0, scale: 0.8 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleCallDriver}
-            className="absolute bottom-8 right-6 bg-[#fc8019] text-white p-4 rounded-full shadow-[0_8px_30px_rgb(252,128,25,0.4)] z-30 flex items-center gap-2"
+            className="absolute right-6 bg-[#fc8019] text-white p-4 rounded-full shadow-[0_8px_30px_rgb(252,128,25,0.4)] z-30 flex items-center gap-2" style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' }}
           >
             <Phone className="w-5 h-5 fill-current" />
             <span className="font-bold text-sm pr-1">Call Driver</span>

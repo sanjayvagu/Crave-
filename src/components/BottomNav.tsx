@@ -59,7 +59,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate,
   };
 
   return (
-    <div className="absolute bottom-6 left-0 right-0 flex items-center justify-center gap-3 px-5 z-[90]">
+    <div className="absolute left-0 right-0 flex items-center justify-center gap-3 px-5 z-[90]" style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
       <motion.div 
         ref={containerRef}
         onTouchMove={handleTouchMove}

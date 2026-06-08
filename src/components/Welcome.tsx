@@ -99,7 +99,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent" />
       </div>
 
-      <div className="px-8 pb-12 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end">
+      <div className="px-8 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end" style={{ paddingBottom: 'max(3rem, env(safe-area-inset-bottom))' }}>
         <AnimatePresence mode="wait">
           {loginState === 'onboarding' && (
             <motion.div

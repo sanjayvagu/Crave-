@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, User, CreditCard, MapPin, Bell, LogOut, ChevronRight, Plus, MapPin as MapPinIcon, Check, Wallet, Smartphone, Landmark, Moon, Sun } from 'lucide-react';
+import { ArrowLeft, User, CreditCard, MapPin, Bell, LogOut, ChevronRight, Plus, MapPin as MapPinIcon, Check, Wallet, Smartphone, Landmark, Moon, Sun, ShoppingBag, Heart } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
 
 interface ProfileProps {
   onBack: () => void;
+  onViewOrders?: () => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ onBack }) => {
-  const [activeView, setActiveView] = useState<'main' | 'edit' | 'payment' | 'address'>('main');
+export const Profile: React.FC<ProfileProps> = ({ onBack, onViewOrders }) => {
+  const [activeView, setActiveView] = useState<'main' | 'edit' | 'payment' | 'address' | 'wishlist'>('main');
   const { theme, toggleTheme } = useTheme();
 
   const menuItems = [
+    { id: 'orders', icon: ShoppingBag, label: 'My Orders', value: '3 Active, 12 Past', onClick: onViewOrders },
+    { id: 'wishlist', icon: Heart, label: 'Wishlist', value: '4 Restaurants, 12 Items' },
     { id: 'edit', icon: User, label: 'Edit Profile', value: 'Jane Doe' },
     { id: 'payment', icon: CreditCard, label: 'Payment Methods', value: '2 Cards' },
     { id: 'address', icon: MapPin, label: 'Saved Addresses', value: 'Home, Work' },
@@ -36,7 +39,7 @@ export const Profile: React.FC<ProfileProps> = ({ onBack }) => {
             exit={{ opacity: 0, x: -20 }}
             className="flex flex-col h-full w-full absolute inset-0"
           >
-            <div className="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
               <motion.button 
                 whileTap={{ scale: 0.9 }} 
                 onClick={onBack}
@@ -327,6 +330,33 @@ export const Profile: React.FC<ProfileProps> = ({ onBack }) => {
                    </div>
                  </div>
               </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeView === 'wishlist' && (
+          <motion.div 
+            key="wishlist"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="flex flex-col h-full w-full absolute inset-0 bg-slate-50 dark:bg-slate-950"
+          >
+            <div className="flex items-center justify-between p-5 bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-4">
+                <motion.button 
+                  whileTap={{ scale: 0.9 }} 
+                  onClick={() => setActiveView('main')}
+                  className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </motion.button>
+                <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">Wishlist</h1>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-5 pb-32 flex flex-col items-center justify-center">
+               <Heart className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />
+               <p className="text-slate-500 dark:text-slate-400 font-medium">Your wishlist is currently empty.</p>
             </div>
           </motion.div>
         )}

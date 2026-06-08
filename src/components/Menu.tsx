@@ -44,7 +44,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-5 flex flex-col justify-between">
             {/* Top Bar inside image */}
-            <div className="flex justify-between items-center z-10 pt-2">
+            <div className="flex justify-between items-center z-10 pt-[max(0.5rem,env(safe-area-inset-top))]">
               <motion.button 
                 whileTap={{ scale: 0.9 }} 
                 onClick={onBack}

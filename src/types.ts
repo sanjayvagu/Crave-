@@ -29,5 +29,5 @@ export interface Order {
   date: string;
   total: number;
   items: { name: string; quantity: number }[];
-  status: 'Delivered' | 'Cancelled' | 'Processing';
+  status: 'Delivered' | 'Cancelled' | 'Processing' | 'Preparing' | 'Out for Delivery';
 }

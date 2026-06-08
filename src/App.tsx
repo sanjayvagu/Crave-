@@ -134,6 +134,7 @@ export default function App() {
               <OrderHistory 
                 key="history"
                 onBack={() => setCurrentScreen('home')}
+                onTrackOrder={() => setCurrentScreen('tracking')}
               />
             )}
 
@@ -148,6 +149,7 @@ export default function App() {
               <Profile 
                 key="profile"
                 onBack={() => setCurrentScreen('home')}
+                onViewOrders={() => setCurrentScreen('history')}
               />
             )}
 

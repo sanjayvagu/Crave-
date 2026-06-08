@@ -119,6 +119,17 @@ import { Order } from "./types";
 
 export const MOCK_ORDERS: Order[] = [
   {
+    id: "ORD-ACTIVE1",
+    restaurantName: "Truffles & Co.",
+    date: "Today, 01:00 PM",
+    total: 25.50,
+    items: [
+      { name: "Classic Smash Burger", quantity: 1 },
+      { name: "Oreo Shake", quantity: 1 }
+    ],
+    status: "Preparing"
+  },
+  {
     id: "ORD-1A2B3C",
     restaurantName: "Truffles & Co.",
     date: "12 Oct 2026, 08:30 PM",

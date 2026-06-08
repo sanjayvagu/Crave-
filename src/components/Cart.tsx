@@ -117,7 +117,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
         <motion.button 
           whileTap={{ scale: 0.9 }} 
           onClick={onBack}
@@ -388,7 +388,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-12"
+              className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-32"
             >
               <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-8 h-8" />

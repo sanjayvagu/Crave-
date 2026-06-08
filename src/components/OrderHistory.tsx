@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Clock, History, RotateCcw, CheckCircle2, XCircle, Receipt, X } from 'lucide-react';
+import { ArrowLeft, Clock, History, RotateCcw, CheckCircle2, XCircle, Receipt, X, Navigation } from 'lucide-react';
 import { MOCK_ORDERS } from '../data';
 import { Order } from '../types';
 
 interface OrderHistoryProps {
   onBack: () => void;
+  onTrackOrder?: () => void;
 }
 
-export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack }) => {
+export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder }) => {
   const [selectedReceipt, setSelectedReceipt] = useState<Order | null>(null);
 
   const calculateBreakdown = (total: number) => {
@@ -35,7 +36,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack }) => {
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
         <motion.button 
           whileTap={{ scale: 0.9 }} 
           onClick={onBack}
@@ -100,14 +101,26 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack }) => {
                 <Receipt className="w-4 h-4" />
                 View Receipt
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reorder
-              </motion.button>
+              {['Preparing', 'Out for Delivery', 'Processing'].includes(order.status) ? (
+                <motion.button
+                  onClick={() => onTrackOrder && onTrackOrder()}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                >
+                  <Navigation className="w-4 h-4" />
+                  Track Order
+                </motion.button>
+              ) : (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Reorder
+                </motion.button>
+              )}
             </div>
           </motion.div>
         ))}
