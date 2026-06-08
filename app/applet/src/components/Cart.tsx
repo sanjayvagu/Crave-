@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
   ArrowLeft,
   MapPin,
   Receipt,
   TicketPercent,
   ChevronRight,
-  CreditCard,
   Wallet,
-  Smartphone,
   CheckCircle2,
-  Plus,
-  Minus
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { CartItem, MenuItem, Address } from "../types";
@@ -34,22 +30,14 @@ export const Cart: React.FC<CartProps> = ({
   onSelectAddressId,
   onBack,
   onCheckoutComplete,
-  onUpdateCart,
 }) => {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isChoosingAddress, setIsChoosingAddress] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"upi" | "cash">("upi");
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [selectedTip, setSelectedTip] = useState<string>("No Tip");
 
-  const handleProceed = () => {
-    setShowConfirmModal(true);
-  };
-
   const handleConfirmOrder = () => {
-    setShowConfirmModal(false);
     setIsProcessing(true);
 
     // Simulate order processing time
@@ -132,8 +120,6 @@ export const Cart: React.FC<CartProps> = ({
     );
   }
 
-  const activeAddress = addresses.find(a => a.id === selectedAddressId) || addresses[0];
-
   return (
     <motion.div
       initial={{ opacity: 0, x: "100%", zIndex: 20 }}
@@ -153,40 +139,25 @@ export const Cart: React.FC<CartProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 pb-40">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-5 pb-40">
         
         {/* Deliver To */}
         <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgb(0,0,0,0.04)]">
-          {!isChoosingAddress ? (
-            <div className="flex justify-between items-start">
-              <div className="flex gap-4">
-                <div className="bg-orange-50 w-12 h-12 rounded-2xl flex items-center justify-center text-[#fc8019] shrink-0">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-[17px] text-[#1a2333]">{activeAddress?.label || "Deliver to Home"}</h3>
-                  <p className="text-slate-500 text-[14px] mt-1">{activeAddress?.value || "123 Design Avenue"}</p>
-                  <p className="text-[#1a2333] font-bold text-[14px] mt-2">35-40 mins delivery time</p>
-                </div>
-              </div>
-              <button onClick={() => setIsChoosingAddress(true)} className="text-[#fc8019] text-[13px] font-bold uppercase tracking-wider mt-1 hover:underline">Change</button>
-            </div>
-          ) : (
-            <div>
-              <h3 className="font-bold text-[17px] text-[#1a2333] mb-4">Choose Address</h3>
-              <div className="space-y-3">
-                {addresses.map(a => (
-                   <div key={a.id} onClick={() => { onSelectAddressId(a.id); setIsChoosingAddress(false); }} className={`p-4 border rounded-2xl cursor-pointer transition-colors ${selectedAddressId === a.id ? 'border-[#fc8019] bg-orange-50/30' : 'border-slate-100 hover:border-slate-300'}`}>
-                     <div className="flex justify-between">
-                       <h4 className="font-bold text-[#1a2333]">{a.label}</h4>
-                       {selectedAddressId === a.id && <CheckCircle2 className="w-5 h-5 text-[#fc8019]" />}
-                     </div>
-                     <p className="text-sm text-slate-500 mt-1">{a.value}</p>
-                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="flex items-center gap-3 mb-4">
+            <MapPin className="w-6 h-6 text-[#fc8019]" />
+            <h3 className="font-bold text-[17px] text-[#1a2333]">Choose Delivery Address</h3>
+          </div>
+          <div className="space-y-3">
+            {addresses.map(a => (
+               <div key={a.id} onClick={() => onSelectAddressId(a.id)} className={`p-4 border rounded-2xl cursor-pointer transition-colors ${selectedAddressId === a.id ? 'border-[#fc8019] bg-orange-50/30' : 'border-slate-100 hover:border-slate-300'}`}>
+                 <div className="flex justify-between">
+                   <h4 className="font-bold text-[#1a2333]">{a.label}</h4>
+                   {selectedAddressId === a.id && <CheckCircle2 className="w-5 h-5 text-[#fc8019]" />}
+                 </div>
+                 <p className="text-sm text-slate-500 mt-1">{a.value}</p>
+               </div>
+            ))}
+          </div>
         </div>
 
         {/* Offers & Benefits */}
@@ -207,7 +178,7 @@ export const Cart: React.FC<CartProps> = ({
             <div className="flex gap-3">
               <input 
                 type="text" 
-                placeholder="ENTER COUPON CODE (E.G." 
+                placeholder="ENTER COUPON CODE" 
                 value={couponInput}
                 onChange={(e) => setCouponInput(e.target.value)}
                 className="flex-1 min-w-0 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm font-bold text-[#1a2333] placeholder:text-slate-400 placeholder:font-medium outline-none uppercase focus:border-slate-400 transition-colors" 
@@ -306,10 +277,10 @@ export const Cart: React.FC<CartProps> = ({
         </div>
       </div>
 
-      {/* Floating Action Button area */}
-      <div className="fixed bottom-0 w-full left-0 bg-gradient-to-t from-[#f8f9fc] via-[#f8f9fc] to-transparent pt-12 pb-[max(1rem,env(safe-area-inset-bottom))] px-5 z-40 pointer-events-none">
+      {/* Floating Action Button */}
+      <div className="fixed bottom-0 w-full left-0 bg-gradient-to-t from-[#f8f9fc] via-[#f8f9fc] to-transparent pt-12 pb-[max(1.5rem,env(safe-area-inset-bottom))] px-5 z-40 pointer-events-none">
         <motion.button
-          onClick={handleProceed}
+          onClick={handleConfirmOrder}
           whileTap={{ scale: 0.98 }}
           className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-[1.25rem] font-bold text-[17px] flex items-center justify-between px-5 shadow-[0_8px_30px_rgb(96,178,70,0.3)] pointer-events-auto transition-colors"
         >
@@ -324,30 +295,6 @@ export const Cart: React.FC<CartProps> = ({
           </div>
         </motion.button>
       </div>
-
-      {/* Confirmation Modal */}
-      <AnimatePresence>
-        {showConfirmModal && (
-          <div className="fixed inset-0 bg-slate-900/40 z-[100] flex items-center justify-center p-5 backdrop-blur-sm">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 10 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.9, y: 10 }}
-              className="bg-white rounded-[2rem] p-6 w-full max-w-sm shadow-2xl"
-            >
-               <div className="w-14 h-14 bg-green-50 text-[#60b246] rounded-2xl flex items-center justify-center mb-4">
-                 <CheckCircle2 className="w-7 h-7" />
-               </div>
-               <h3 className="text-[22px] font-extrabold text-[#1a2333] leading-tight mb-2 tracking-tight">Confirm Order</h3>
-               <p className="text-slate-500 font-medium mb-8 leading-relaxed text-[15px]">Are you sure you want to place the order for <strong className="text-slate-800">₹{total.toFixed(2)}</strong>?</p>
-               <div className="flex gap-3">
-                 <button onClick={() => setShowConfirmModal(false)} className="flex-1 py-4 rounded-2xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">Cancel</button>
-                 <button onClick={handleConfirmOrder} className="flex-1 py-4 rounded-2xl font-bold bg-[#60b246] hover:bg-[#529d3a] text-white shadow-lg shadow-green-500/20 transition-colors">Confirm</button>
-               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
-};
+};;
