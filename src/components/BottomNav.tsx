@@ -88,7 +88,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate,
                   initial={tab.id === 'cart' && cartItemCount > 0 ? { scale: 1.2 } : { scale: 1 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 0.3, type: 'spring', stiffness: 300, damping: 15 }}
-                  className={`mb-0.5 transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-slate-800'}`}
+                  className={`mb-0.5 transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-slate-800 dark:text-slate-100'}`}
                 >
                   <Icon className="w-5 h-5" style={{ fill: isActive ? 'currentColor' : 'none', strokeWidth: isActive ? 2 : 2.5 }} />
                   {tab.id === 'cart' && cartItemCount > 0 && (
@@ -97,7 +97,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate,
                     </span>
                   )}
                 </motion.div>
-                <span className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-slate-800'}`}>
+                <span className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? 'text-blue-600' : 'text-slate-800 dark:text-slate-100'}`}>
                   {tab.label}
                 </span>
               </div>
@@ -108,7 +108,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentScreen, onNavigate,
       
       <button
         onClick={() => onNavigate('search')}
-        className={`w-[64px] h-[64px] shrink-0 rounded-full flex flex-col items-center justify-center shadow-[0_8px_32px_rgb(0,0,0,0.08)] border border-white/60 backdrop-blur-2xl transition-colors duration-300 ${currentScreen === 'search' ? 'bg-slate-200/80 text-blue-600' : 'bg-[#f8f9fa]/80 text-slate-800'}`}
+        className={`w-[64px] h-[64px] shrink-0 rounded-full flex flex-col items-center justify-center shadow-[0_8px_32px_rgb(0,0,0,0.08)] border border-white/60 backdrop-blur-2xl transition-colors duration-300 ${currentScreen === 'search' ? 'bg-slate-200/80 text-blue-600' : 'bg-[#f8f9fa]/80 text-slate-800 dark:text-slate-100'}`}
       >
         <Search className="w-6 h-6" style={{ fill: currentScreen === 'search' ? 'currentColor' : 'none', strokeWidth: currentScreen === 'search' ? 3 : 2.5 }} />
       </button>

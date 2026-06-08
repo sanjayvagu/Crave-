@@ -44,10 +44,10 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
       animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 overflow-y-auto no-scrollbar pb-32"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-y-auto no-scrollbar pb-32"
     >
       {/* Header - Glassmorphic */}
-      <div className="sticky top-0 z-50 pt-6 pb-4 bg-white/70 backdrop-blur-xl border-b border-white/20 px-4">
+      <div className="sticky top-0 z-50 pt-6 pb-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-white/20 dark:border-slate-700/50 px-4">
         <div className="flex items-center justify-between gap-2">
           {/* Logo */}
           <motion.div
@@ -60,7 +60,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
             }}
             className="flex items-center shrink-0 cursor-pointer group"
           >
-            <h1 className="text-2xl font-black tracking-tight lowercase text-slate-800 flex items-baseline" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            <h1 className="text-2xl font-black tracking-tight lowercase text-slate-800 dark:text-slate-100 flex items-baseline" style={{ fontFamily: 'Outfit, sans-serif' }}>
               {"cra".split("").map((char, index) => (
                  <motion.span
                    key={index}
@@ -117,11 +117,11 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
               ) : (
                 <MapPin className="text-[#fc8019] w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
               )}
-              <div className="flex items-center font-bold text-xs text-slate-800">
-                Home <ChevronDown className="w-3 h-3 text-slate-500 group-hover:text-[#fc8019] transition-colors" />
+              <div className="flex items-center font-bold text-xs text-slate-800 dark:text-slate-100">
+                Home <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-[#fc8019] transition-colors" />
               </div>
             </div>
-            <p className="text-[10px] text-slate-500 truncate w-32 text-center pl-2 group-hover:text-slate-800 transition-colors">
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-32 text-center pl-2 group-hover:text-slate-800 dark:text-slate-100 transition-colors">
               {isLocating ? 'Locating...' : address}
             </p>
           </div>
@@ -131,11 +131,11 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
             <motion.button 
               whileTap={{ scale: 0.9 }} 
               onClick={onViewHistory}
-              className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 shadow-sm border border-slate-200"
+              className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700"
             >
               <History className="w-4 h-4" />
             </motion.button>
-            <motion.div onClick={onViewProfile} whileTap={{ scale: 0.9 }} className="cursor-pointer w-9 h-9 rounded-full overflow-hidden shadow-sm border border-slate-200">
+            <motion.div onClick={onViewProfile} whileTap={{ scale: 0.9 }} className="cursor-pointer w-9 h-9 rounded-full overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700">
               <img src="https://i.pravatar.cc/100?img=11" alt="Profile" className="w-full h-full object-cover" />
             </motion.div>
           </div>
@@ -146,10 +146,10 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
           onClick={onOpenSearch}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="mt-4 flex items-center bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-3 border border-slate-100 cursor-pointer"
+          className="mt-4 flex items-center bg-white dark:bg-slate-900 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-3 border border-slate-100 dark:border-slate-800 cursor-pointer"
         >
-          <Search className="w-5 h-5 text-slate-400 ml-1" />
-          <p className="flex-1 ml-3 text-slate-400">Search for restaurants, cuisines...</p>
+          <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 ml-1" />
+          <p className="flex-1 ml-3 text-slate-400 dark:text-slate-500">Search for restaurants, cuisines...</p>
         </motion.div>
       </div>
 
@@ -163,7 +163,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
             <div className="relative z-10">
               <span className="font-bold text-2xl drop-shadow-md">50% OFF</span>
               <p className="text-white/90 text-sm mt-1">on your first 3 orders</p>
-              <button className="mt-3 bg-white text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+              <button className="mt-3 bg-white dark:bg-slate-900 text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
                 Claim Now
               </button>
             </div>
@@ -186,7 +186,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
 
         {/* Top Restaurants */}
         <div className="mt-2">
-          <h2 className="text-lg font-bold text-slate-800 mb-4 tracking-tight">Top Restaurants to explore</h2>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 tracking-tight">Top Restaurants to explore</h2>
           <div className="flex flex-col gap-6">
             {RESTAURANTS.map((restaurant) => (
               <motion.div
@@ -195,7 +195,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => onSelectRestaurant(restaurant)}
-                className="bg-white rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 cursor-pointer"
+                className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800 cursor-pointer"
               >
                 <div className="relative h-44">
                   <motion.img 
@@ -213,9 +213,9 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
                     )}
                   </div>
                 </div>
-                <div className="p-4 bg-white">
+                <div className="p-4 bg-white dark:bg-slate-900">
                   <div className="flex justify-between items-start">
-                    <motion.h3 layoutId={`restaurant-title-${restaurant.id}`} className="font-bold text-xl text-slate-800 tracking-tight">
+                    <motion.h3 layoutId={`restaurant-title-${restaurant.id}`} className="font-bold text-xl text-slate-800 dark:text-slate-100 tracking-tight">
                       {restaurant.name}
                     </motion.h3>
                     <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-lg">
@@ -223,7 +223,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
                       <span className="text-xs font-bold">{restaurant.rating}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 mt-2 text-slate-500 text-sm font-medium">
+                  <div className="flex items-center gap-4 mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       {restaurant.deliveryTime}
@@ -238,20 +238,20 @@ export const Home: React.FC<HomeProps> = ({ onSelectRestaurant, onViewHistory, o
         </div>
 
         {/* Footer */}
-        <div className="mt-12 py-10 border-t border-slate-200 flex flex-col items-center justify-center">
+        <div className="mt-12 py-10 border-t border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center">
           <div className="flex flex-col items-center shrink-0 mb-4 cursor-pointer group">
             <div className="flex items-center">
-              <h1 className="text-4xl font-black tracking-tight lowercase text-slate-300 flex items-baseline group-hover:text-slate-800 transition-colors duration-500" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              <h1 className="text-4xl font-black tracking-tight lowercase text-slate-300 dark:text-slate-600 flex items-baseline group-hover:text-slate-800 dark:text-slate-100 transition-colors duration-500" style={{ fontFamily: 'Outfit, sans-serif' }}>
                 {"cra".split("").map((char, index) => (
                   <span key={index} className="inline-block">{char}</span>
                 ))}
-                <span className="text-slate-300 group-hover:text-[#fc8019] transition-colors duration-500">v</span>
+                <span className="text-slate-300 dark:text-slate-600 group-hover:text-[#fc8019] transition-colors duration-500">v</span>
                 <span className="inline-block">e</span>
               </h1>
               <div className="w-1.5 h-1.5 rounded-full bg-slate-300 self-end mb-2 ml-0.5 group-hover:bg-[#fc8019] transition-colors duration-500" />
             </div>
           </div>
-          <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Developed by Sanjay vagu</p>
+          <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase">Developed by Sanjay vagu</p>
         </div>
       </div>
     </motion.div>

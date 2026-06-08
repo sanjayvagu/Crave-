@@ -38,7 +38,7 @@ export const Splash: React.FC<SplashProps> = ({ onComplete }) => {
           initial={{ width: 0 }}
           animate={{ width: 40 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="h-1 bg-white mt-4 rounded-full"
+          className="h-1 bg-white dark:bg-slate-900 mt-4 rounded-full"
         />
       </motion.div>
     </motion.div>

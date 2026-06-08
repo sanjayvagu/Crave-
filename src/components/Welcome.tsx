@@ -59,7 +59,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: "-100%" }}
       transition={{ duration: 0.5 }}
-      className="absolute inset-0 bg-white flex flex-col z-40 overflow-hidden"
+      className="absolute inset-0 bg-white dark:bg-slate-900 flex flex-col z-40 overflow-hidden"
     >
       <div className="flex-1 relative bg-orange-50/50 overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -99,7 +99,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent" />
       </div>
 
-      <div className="px-8 pb-12 pt-6 shrink-0 z-10 bg-white min-h-[300px] flex flex-col justify-end">
+      <div className="px-8 pb-12 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end">
         <AnimatePresence mode="wait">
           {loginState === 'onboarding' && (
             <motion.div
@@ -112,7 +112,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
                 {ONBOARDING_STEPS.map((s, idx) => (
                   <div 
                     key={s.id} 
-                    className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? 'w-8 bg-[#fc8019]' : 'w-2 bg-slate-200'}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? 'w-8 bg-[#fc8019]' : 'w-2 bg-slate-200 dark:bg-slate-700'}`}
                   />
                 ))}
               </div>
@@ -124,10 +124,10 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h1 className="text-3xl font-black text-slate-800 mb-4 tracking-tight leading-tight">
+                  <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-4 tracking-tight leading-tight">
                     {step.title}
                   </h1>
-                  <p className="text-slate-500 text-base mb-8 leading-relaxed">
+                  <p className="text-slate-500 dark:text-slate-400 text-base mb-8 leading-relaxed">
                     {step.description}
                   </p>
                 </motion.div>
@@ -143,10 +143,10 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col gap-4"
             >
-              <h1 className="text-2xl font-black text-slate-800 mb-2">Let's get started</h1>
-              <p className="text-slate-500 mb-4">Enter your mobile number to continue</p>
+              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Let's get started</h1>
+              <p className="text-slate-500 dark:text-slate-400 mb-4">Enter your mobile number to continue</p>
               <div className="flex gap-2 mb-6">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 flex items-center justify-center font-bold text-slate-600">
+                <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300">
                   +91
                 </div>
                 <input 
@@ -154,7 +154,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
                   placeholder="Phone Number"
                   value={phone}
                   onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-4 font-bold text-slate-800 outline-none focus:border-[#fc8019]"
+                  className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-[#fc8019]"
                 />
               </div>
             </motion.div>
@@ -168,8 +168,8 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col gap-4"
             >
-              <h1 className="text-2xl font-black text-slate-800 mb-2">Verify details</h1>
-              <p className="text-slate-500 mb-4">OTP sent to +91 {phone} <br/><span className="text-xs text-[#fc8019] mt-1.5 font-medium inline-block bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">Sample OTP: 1234</span></p>
+              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Verify details</h1>
+              <p className="text-slate-500 dark:text-slate-400 mb-4">OTP sent to +91 {phone} <br/><span className="text-xs text-[#fc8019] mt-1.5 font-medium inline-block bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">Sample OTP: 1234</span></p>
               <div className="flex justify-between mb-6">
                 {[...Array(4)].map((_, i) => (
                   <input 
@@ -185,7 +185,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
                         (e.target.nextSibling as HTMLInputElement).focus();
                       }
                     }}
-                    className="w-16 h-16 text-center text-2xl font-black bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-[#fc8019]"
+                    className="w-16 h-16 text-center text-2xl font-black bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:border-[#fc8019]"
                   />
                 ))}
               </div>
@@ -221,7 +221,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
         {loginState === 'onboarding' && (
           <button 
             onClick={onStart} 
-            className="mt-6 text-center text-slate-500 font-bold text-sm hover:text-slate-800 transition-colors"
+            className="mt-6 text-center text-slate-500 dark:text-slate-400 font-bold text-sm hover:text-slate-800 dark:text-slate-100 transition-colors"
           >
             Continue as Guest
           </button>

@@ -31,7 +31,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
       animate={{ opacity: 1, x: 0, zIndex: 10 }}
       exit={{ opacity: 0, x: "100%", zIndex: 10 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 overflow-hidden"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
       <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
         {/* Parallax Header */}
@@ -82,7 +82,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
         </div>
 
         {/* Menu Section */}
-        <div className="bg-white rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
+        <div className="bg-white dark:bg-slate-900 rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
           <div className="flex overflow-x-auto no-scrollbar gap-3 mb-6 pb-2">
             {categories.map(category => (
               <button
@@ -91,7 +91,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
                 className={`flex-shrink-0 whitespace-nowrap px-5 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${
                   activeCategory === category
                     ? 'bg-slate-800 text-white shadow-slate-800/20'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-slate-950'
                 }`}
               >
                 {category}
@@ -107,7 +107,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
                 
                 return (
                   <motion.div layout key={category} className="mb-4">
-                    <h2 className="text-xl font-bold text-slate-800 mb-6">{category}</h2>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">{category}</h2>
                     <div className="flex flex-col gap-8">
                       {categoryItems.map((item) => {
                         const qty = getItemQuantity(item.id);
@@ -125,9 +125,9 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
                             <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center mb-1">
                               <div className={`w-2 h-2 rounded-full ${item.isVeg ? 'bg-green-500' : 'bg-red-500'}`}></div>
                             </div>
-                            <h3 className="font-bold text-slate-800 text-lg leading-tight">{item.name}</h3>
-                            <p className="font-bold text-slate-700 mt-1">${item.price.toFixed(2)}</p>
-                            <p className="text-slate-500 text-sm mt-2 line-clamp-2 leading-relaxed">{item.description}</p>
+                            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">{item.name}</h3>
+                            <p className="font-bold text-slate-700 dark:text-slate-200 mt-1">${item.price.toFixed(2)}</p>
+                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2 leading-relaxed">{item.description}</p>
                           </div>
                           
                           <div className="relative">
@@ -145,7 +145,7 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
                                     exit={{ scale: 0.8, opacity: 0 }}
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => onUpdateCart(item, 1)}
-                                    className="bg-white text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-24 relative z-20"
+                                    className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-24 relative z-20"
                                   >
                                     ADD
                                   </motion.button>
@@ -155,14 +155,14 @@ export const Menu: React.FC<MenuProps> = ({ restaurant, cart, onUpdateCart, onBa
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0.8, opacity: 0 }}
-                                    className="bg-white text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
+                                    className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
                                   >
                                     <motion.button whileTap={{ scale: 0.8 }} onClick={() => onUpdateCart(item, -1)} className="p-1"><Minus className="w-4 h-4" /></motion.button>
                                     <motion.span 
                                       key={qty}
                                       initial={{ scale: 1.5, opacity: 0 }}
                                       animate={{ scale: 1, opacity: 1 }}
-                                      className="text-slate-800"
+                                      className="text-slate-800 dark:text-slate-100"
                                     >
                                       {qty}
                                     </motion.span>

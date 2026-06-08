@@ -114,43 +114,43 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
       animate={{ opacity: 1, y: 0, zIndex: 20 }}
       exit={{ opacity: 0, y: "100%", zIndex: 20 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 p-5 bg-white shadow-sm z-10 shrink-0">
+      <div className="flex items-center gap-4 p-5 bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
         <motion.button 
           whileTap={{ scale: 0.9 }} 
           onClick={onBack}
-          className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-700"
+          className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
         >
           <ArrowLeft className="w-5 h-5" />
         </motion.button>
         <div>
-          <h1 className="font-bold text-lg text-slate-800 tracking-tight">Checkout</h1>
-          <p className="text-xs text-slate-500 font-medium">Truffles & Co. &bull; {cart.length} items</p>
+          <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">Checkout</h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Truffles & Co. &bull; {cart.length} items</p>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6">
         
         {/* Deliver To Card (Glassmorphic) */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800">
           <div className="flex items-start gap-3">
             <div className="bg-orange-100 p-2 rounded-lg text-[#fc8019]">
               <MapPin className="w-5 h-5" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-slate-800">Deliver to Home</h3>
-              <p className="text-sm text-slate-500 mt-1 line-clamp-1">123 Design Avenue, Tech Park Building A</p>
-              <p className="text-sm font-medium mt-1 text-slate-700">35-40 mins delivery time</p>
+              <h3 className="font-bold text-slate-800 dark:text-slate-100">Deliver to Home</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">123 Design Avenue, Tech Park Building A</p>
+              <p className="text-sm font-medium mt-1 text-slate-700 dark:text-slate-200">35-40 mins delivery time</p>
             </div>
             <button className="text-[#fc8019] text-sm font-bold uppercase tracking-wider">Change</button>
           </div>
         </div>
 
         {/* Apply Coupon */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
-          <h3 className="font-bold text-slate-800 mb-3 text-sm flex items-center gap-2">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800 relative overflow-hidden">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-3 text-sm flex items-center gap-2">
             <TicketPercent className="w-5 h-5 text-[#fc8019]" />
             Offers & Benefits
           </h3>
@@ -170,8 +170,8 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                       placeholder="Enter coupon code (e.g. CRAVE20)"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      className={`w-full bg-slate-50 border rounded-xl px-4 py-3 text-sm font-medium uppercase outline-none transition-colors ${
-                        couponError ? 'border-red-300 text-red-600 focus:border-red-500' : 'border-slate-200 text-slate-800 focus:border-[#fc8019]'
+                      className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-xl px-4 py-3 text-sm font-medium uppercase outline-none transition-colors ${
+                        couponError ? 'border-red-300 text-red-600 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:border-[#fc8019]'
                       }`}
                     />
                     {couponError && (
@@ -211,7 +211,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                 </div>
                 <button 
                   onClick={() => { setAppliedCoupon(null); setCouponInput(''); }}
-                  className="text-slate-400 hover:text-slate-600 p-2"
+                  className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 p-2"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -221,8 +221,8 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
         </div>
 
         {/* Add Tip */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-          <h3 className="font-bold text-slate-800 mb-3 text-sm">Add a tip for the delivery partner</h3>
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-3 text-sm">Add a tip for the delivery partner</h3>
           <div className="flex gap-3">
             {[0, 10, 15, 20].map((percentage) => (
               <button
@@ -231,7 +231,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                 className={`flex-1 py-2 rounded-xl border text-sm font-bold transition-all ${
                   tipPercentage === percentage
                     ? 'border-[#fc8019] bg-orange-50 text-[#fc8019]'
-                    : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                    : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300'
                 }`}
               >
                 {percentage === 0 ? 'No Tip' : `${percentage}%`}
@@ -241,9 +241,9 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
         </div>
 
         {/* Order Summary */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
-          <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-slate-400" />
+        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-slate-400 dark:text-slate-500" />
             Order Summary
           </h3>
           
@@ -263,11 +263,11 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                       <div className={`w-2 h-2 rounded-full ${item.isVeg ? 'bg-green-500' : 'bg-red-500'}`}></div>
                     </div>
                     <div>
-                      <h4 className="text-slate-800 text-sm font-medium">{item.name}</h4>
+                      <h4 className="text-slate-800 dark:text-slate-100 text-sm font-medium">{item.name}</h4>
                       <div className="flex items-center gap-2 mt-1">
                         <button 
                           onClick={() => onUpdateCart(item, -1)}
-                          className="w-6 h-6 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50"
+                          className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -281,7 +281,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                       </div>
                     </div>
                   </div>
-                  <div className="font-medium text-slate-800 text-sm">
+                  <div className="font-medium text-slate-800 dark:text-slate-100 text-sm">
                     $<NumberTicker value={item.price * item.quantity} />
                   </div>
                 </motion.div>
@@ -289,11 +289,11 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
             </AnimatePresence>
           </div>
 
-          <div className="w-full h-px bg-slate-100 my-4 border-dashed border-t-2 border-slate-200"></div>
+          <div className="w-full h-px bg-slate-100 dark:bg-slate-800 my-4 border-dashed border-t-2 border-slate-200 dark:border-slate-700"></div>
 
           {/* Bill Details */}
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
               <span>Item Total</span>
               <span className="flex items-center">$<NumberTicker value={itemTotal} /></span>
             </div>
@@ -310,11 +310,11 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
               <span className="flex items-center gap-1">Delivery fee <Clock className="w-3 h-3"/></span>
               <span className="flex items-center">$<NumberTicker value={deliveryFee} /></span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex justify-between text-slate-600 dark:text-slate-300">
               <span>Taxes & charges</span>
               <span className="flex items-center">$<NumberTicker value={taxes} /></span>
             </div>
@@ -333,9 +333,9 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
             </AnimatePresence>
           </div>
           
-          <div className="w-full h-px bg-slate-200 my-4"></div>
+          <div className="w-full h-px bg-slate-200 dark:bg-slate-700 my-4"></div>
           
-          <div className="flex justify-between font-bold text-slate-800 text-lg">
+          <div className="flex justify-between font-bold text-slate-800 dark:text-slate-100 text-lg">
             <span>To Pay</span>
             <span className="flex items-center">$<NumberTicker value={total} /></span>
           </div>
@@ -344,7 +344,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
       </div>
 
       {/* Slide to Pay Area */}
-      <div className="bg-white border-t border-slate-100 px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
+      <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
         <motion.button
           onClick={() => setIsConfirming(true)}
           whileHover={{ scale: 1.02 }}
@@ -388,13 +388,13 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-white p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-12"
+              className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-12"
             >
               <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-bold text-slate-800 mb-2">Confirm Your Order</h2>
-              <p className="text-slate-500 text-center mb-6">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Confirm Your Order</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-center mb-6">
                 Are you ready to place your order? You will be charged ${total.toFixed(2)}.
               </p>
               
@@ -423,7 +423,7 @@ export const Cart: React.FC<CartProps> = ({ cart, onBack, onCheckoutComplete, on
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setIsConfirming(false)}
-                  className="w-full bg-slate-100 text-slate-700 font-bold py-4 rounded-xl"
+                  className="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-4 rounded-xl"
                 >
                   Cancel
                 </motion.button>
