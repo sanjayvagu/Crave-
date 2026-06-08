@@ -126,7 +126,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-slate-800 dark:text-slate-100">
-                      ${order.total.toFixed(2)}
+                      ₹{order.total.toFixed(2)}
                     </p>
                     <div
                       className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
@@ -273,19 +273,19 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                     <div className="space-y-3 mb-6">
                       <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
                         <span>Item Total</span>
-                        <span>${bd.itemTotal.toFixed(2)}</span>
+                        <span>₹{bd.itemTotal.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
                         <span>Delivery Fee</span>
-                        <span>${bd.deliveryFee.toFixed(2)}</span>
+                        <span>₹{bd.deliveryFee.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
                         <span>Taxes & Charges</span>
-                        <span>${bd.taxes.toFixed(2)}</span>
+                        <span>₹{bd.taxes.toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm text-[#fc8019] font-medium">
                         <span>Delivery Tip</span>
-                        <span>${bd.tipAmount.toFixed(2)}</span>
+                        <span>₹{bd.tipAmount.toFixed(2)}</span>
                       </div>
                     </div>
                   );
@@ -295,7 +295,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
 
                 <div className="flex justify-between font-bold text-lg text-slate-800 dark:text-slate-100">
                   <span>Total Paid</span>
-                  <span>${selectedReceipt.total.toFixed(2)}</span>
+                  <span>₹{selectedReceipt.total.toFixed(2)}</span>
                 </div>
 
                 {["Preparing", "Out for Delivery", "Processing"].includes(

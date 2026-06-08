@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, PanInfo } from "motion/react";
 import { Home, ShoppingCart, User, Search } from "lucide-react";
 import { Screen } from "../App";
@@ -21,6 +21,18 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   cartItemCount,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [popState, setPopState] = useState(false);
+  const prevCount = useRef(cartItemCount);
+
+  useEffect(() => {
+    if (cartItemCount > prevCount.current) {
+      setPopState(true);
+      const timer = setTimeout(() => setPopState(false), 300);
+      prevCount.current = cartItemCount;
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = cartItemCount;
+  }, [cartItemCount]);
 
   const triggerHaptic = () => {
     if (
@@ -95,18 +107,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               )}
               <div className="relative z-10 flex flex-col items-center justify-center">
                 <motion.div
-                  key={tab.id === "cart" ? `cart-${cartItemCount}` : tab.id}
-                  initial={
-                    tab.id === "cart" && cartItemCount > 0
-                      ? { scale: 1.2 }
-                      : { scale: 1 }
+                  key={tab.id}
+                  animate={
+                    tab.id === "cart" && popState
+                      ? { scale: 1.25, y: -3 }
+                      : { scale: 1, y: 0 }
                   }
-                  animate={{ scale: 1 }}
                   transition={{
-                    duration: 0.3,
+                    duration: 0.4,
                     type: "spring",
-                    stiffness: 300,
-                    damping: 15,
+                    stiffness: 400,
+                    damping: 12,
                   }}
                   className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}
                 >

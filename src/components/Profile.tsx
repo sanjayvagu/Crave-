@@ -513,7 +513,7 @@ export const Profile: React.FC<ProfileProps> = ({
                       <Wallet className="w-5 h-5 text-[#fc8019]" />
                     </div>
                     <span className="font-bold text-slate-800 dark:text-slate-100">
-                      Store Wallet ($45.50)
+                      Store Wallet (₹45.50)
                     </span>
                   </div>
                 </div>

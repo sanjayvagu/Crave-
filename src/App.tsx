@@ -167,6 +167,7 @@ export default function App() {
                 onViewHistory={() => setCurrentScreen("history")}
                 onViewProfile={() => setCurrentScreen("profile")}
                 onOpenSearch={() => setCurrentScreen("search")}
+                onUpdateCart={handleUpdateCart}
               />
             )}
 

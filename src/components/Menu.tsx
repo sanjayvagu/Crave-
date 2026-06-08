@@ -45,12 +45,6 @@ export const Menu: React.FC<MenuProps> = ({
     "All",
   );
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const filteredItems = useMemo(() => {
     return menuItems.filter((m) => {
@@ -247,23 +241,7 @@ export const Menu: React.FC<MenuProps> = ({
                       initial="hidden"
                       animate="visible"
                     >
-                      {isLoading
-                        ? [1, 2, 3].map((key) => (
-                            <div key={key} className="flex justify-between">
-                              <div className="flex-1 pr-4">
-                                <div className="w-4 h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-2"></div>
-                                <div className="h-6 w-3/4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-2"></div>
-                                <div className="h-5 w-1/4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-3"></div>
-                                <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded animate-pulse mb-1"></div>
-                                <div className="h-4 w-5/6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
-                              </div>
-                              <div className="relative">
-                                <div className="w-32 h-32 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-200 dark:bg-slate-800 w-24 h-10 rounded-xl animate-pulse"></div>
-                              </div>
-                            </div>
-                          ))
-                        : categoryItems.map((item) => {
+                      {categoryItems.map((item) => {
                             const qty = getItemQuantity(item.id);
                             return (
                               <motion.div
@@ -297,7 +275,7 @@ export const Menu: React.FC<MenuProps> = ({
                                     {item.name}
                                   </h3>
                                   <p className="font-bold text-slate-700 dark:text-slate-200 mt-1">
-                                    ${item.price.toFixed(2)}
+                                    ₹{item.price.toFixed(2)}
                                   </p>
                                   <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2 leading-relaxed">
                                     {item.description}
@@ -408,7 +386,7 @@ export const Menu: React.FC<MenuProps> = ({
                   animate={{ y: 0, opacity: 1 }}
                   className="font-bold text-lg leading-tight mt-0.5"
                 >
-                  ${totalCartValue.toFixed(2)}
+                  ₹{totalCartValue.toFixed(2)}
                 </motion.div>
               </div>
               <div className="flex items-center gap-2 font-bold uppercase tracking-wide">
@@ -494,6 +472,7 @@ export const Menu: React.FC<MenuProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
     </motion.div>
   );
 };

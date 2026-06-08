@@ -10,8 +10,8 @@ import {
   History,
   Heart,
 } from "lucide-react";
-import { RESTAURANTS } from "../data";
-import { Restaurant, Address } from "../types";
+import { RESTAURANTS, MOCK_ORDERS, MENU_ITEMS } from "../data";
+import { Restaurant, Address, MenuItem } from "../types";
 import { PullToRefresh } from "./PullToRefresh";
 
 interface HomeProps {
@@ -22,6 +22,7 @@ interface HomeProps {
   onViewHistory: () => void;
   onViewProfile: () => void;
   onOpenSearch: () => void;
+  onUpdateCart?: (item: MenuItem, delta: number) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({
@@ -32,14 +33,9 @@ export const Home: React.FC<HomeProps> = ({
   onViewHistory,
   onViewProfile,
   onOpenSearch,
+  onUpdateCart,
 }) => {
   const [isLocating, setIsLocating] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleEnableLocation = () => {
     setIsLocating(true);
@@ -64,6 +60,16 @@ export const Home: React.FC<HomeProps> = ({
     // Simulate network delay for refreshing content
     await new Promise((resolve) => setTimeout(resolve, 1500));
   };
+
+  const recommendedItems = useMemo(() => {
+    const orderedItemNames = new Set<string>();
+    MOCK_ORDERS.forEach(order => {
+      order.items.forEach(item => orderedItemNames.add(item.name));
+    });
+
+    const recommended = MENU_ITEMS.filter(item => orderedItemNames.has(item.name));
+    return recommended.slice(0, 5); // Return up to 5 items
+  }, []);
 
   return (
     <motion.div
@@ -220,13 +226,6 @@ export const Home: React.FC<HomeProps> = ({
           <div className="px-5 pb-8 pt-4">
             {/* Promotional Offers */}
             <div className="flex overflow-x-auto no-scrollbar gap-4 pb-6 -mx-5 px-5">
-              {isLoading ? (
-                <>
-                  <div className="min-w-[280px] h-36 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                  <div className="min-w-[280px] h-36 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                </>
-              ) : (
-                <>
                   <motion.div
                     whileHover={{ scale: 1.05, rotate: -1 }}
                     className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#fc8019] to-[#e86600] p-4 text-white shadow-lg overflow-hidden relative"
@@ -263,9 +262,59 @@ export const Home: React.FC<HomeProps> = ({
                       </span>
                     </div>
                   </motion.div>
-                </>
-              )}
             </div>
+
+            {/* Recommended for You */}
+            {recommendedItems.length > 0 && (
+              <div className="mt-2 mb-8">
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 tracking-tight">
+                  Recommended for You
+                </h2>
+                <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 -mx-5 px-5">
+                  {recommendedItems.map((item) => {
+                    const restaurant = RESTAURANTS.find(r => r.id === item.restaurantId);
+                    return (
+                      <motion.div
+                        key={item.id}
+                        whileHover={{ y: -4 }}
+                        whileTap={{ scale: 0.96 }}
+                        onClick={() => restaurant && onSelectRestaurant(restaurant)}
+                        className="min-w-[160px] max-w-[160px] bg-white dark:bg-slate-900 rounded-[24px] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer flex flex-col"
+                      >
+                        <div className="relative h-28 w-full bg-slate-100 dark:bg-slate-800">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                          <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[10px] font-bold text-white flex items-center gap-1 border border-white/20">
+                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                            {restaurant?.rating}
+                          </div>
+                        </div>
+                        <div className="p-3.5 flex flex-col flex-1 justify-between">
+                          <div>
+                            <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 line-clamp-1 leading-tight">{item.name}</h3>
+                            <p className="text-xs text-slate-400 line-clamp-1 mt-1">{restaurant?.name}</p>
+                          </div>
+                          <div className="mt-3 flex items-center justify-between">
+                            <span className="font-extrabold text-slate-800 dark:text-slate-100 text-sm">
+                              ₹{item.price.toFixed(2)}
+                            </span>
+                            <motion.button 
+                              whileTap={{ scale: 0.8 }}
+                              className="w-6 h-6 rounded-full bg-[#1b1c20] text-white flex items-center justify-center hover:bg-slate-800 transition-colors pointer-events-auto"
+                              onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                if (onUpdateCart) onUpdateCart(item, 1);
+                              }}
+                            >
+                              <span className="text-xs">+</span>
+                            </motion.button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Top Restaurants */}
             <div className="mt-2">
@@ -273,26 +322,7 @@ export const Home: React.FC<HomeProps> = ({
                 Top Restaurants to explore
               </h2>
               <div className="flex flex-col gap-6">
-                {isLoading ? (
-                  <>
-                    {[1, 2, 3].map((key) => (
-                      <div
-                        key={key}
-                        className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800"
-                      >
-                        <div className="h-44 bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-                        <div className="p-4 bg-white dark:bg-slate-900">
-                          <div className="flex justify-between items-start mb-2">
-                            <div className="h-6 w-1/2 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
-                            <div className="h-6 w-12 bg-slate-200 dark:bg-slate-800 rounded animate-pulse"></div>
-                          </div>
-                          <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-800 rounded animate-pulse mt-3"></div>
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  RESTAURANTS.map((restaurant) => (
+                  {RESTAURANTS.map((restaurant) => (
                     <motion.div
                       key={restaurant.id}
                       layoutId={`restaurant-${restaurant.id}`}
@@ -361,8 +391,7 @@ export const Home: React.FC<HomeProps> = ({
                         </div>
                       </div>
                     </motion.div>
-                  ))
-                )}
+                  ))}
               </div>
             </div>
 

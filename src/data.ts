@@ -9,7 +9,7 @@ export const RESTAURANTS: Restaurant[] = [
     deliveryTime: "30-35 mins",
     tags: ["Burgers", "American", "Desserts"],
     image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=800&q=80",
-    offers: "50% OFF up to $10",
+    offers: "50% OFF up to ₹10",
   },
   {
     id: "r2",
@@ -52,6 +52,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80",
     isVeg: false,
     category: "Main Course",
+    ingredients: ["Dual Premium Beef Patties", "Aged Sharp Cheddar", "Sweet Caramelized Onions", "Signature House Burger Sauce", "Toasted Brioche Bun", "Dill Pickles"],
   },
   {
     id: "m2",
@@ -62,6 +63,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1576107232684-1279f39085ec?auto=format&fit=crop&w=400&q=80",
     isVeg: true,
     category: "Recommended",
+    ingredients: ["Hand-cut Russet Potatoes", "Pure White Truffle Oil", "Grated Parmigiano-Reggiano", "Fresh Parsley Leaves", "Flaky Sea Salt"],
   },
   {
     id: "m3",
@@ -72,6 +74,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80",
     isVeg: true,
     category: "Beverages",
+    ingredients: ["Creamy Vanilla Bean Ice Cream", "Cold Whole Milk", "Finely Crushed Oreo Cookies", "Sweetened Whipped Cream", "Dark Chocolate Fudge"],
   },
   
   // Sushi Samba
@@ -84,6 +87,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1615361200141-f45040f367be?auto=format&fit=crop&w=400&q=80",
     isVeg: false,
     category: "Recommended",
+    ingredients: ["Sashimi-Grade Yellowfin Tuna", "Sriracha-infused Kewpie Mayo", "Crisp English Cucumber", "Premium Vinegared Sushi Rice", "Toasted Nori Seaweed", "Black & White Sesame Seeds"],
   },
   {
     id: "m5",
@@ -94,6 +98,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=400&q=80",
     isVeg: false,
     category: "Main Course",
+    ingredients: ["Lightly Grilled BBQ Unagi (Eel)", "Fresh Thinly-Slices Avocado", "Blanched Tender Asparagus", "Vinegared Sushi Rice", "Toasted Nori Seaweed", "Sweet Soy reduction (Eel Sauce)", "Crunchy Tempura Flakes"],
   },
 
   // Napoli Pizzeria
@@ -106,6 +111,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80",
     isVeg: true,
     category: "Main Course",
+    ingredients: ["Italian San Marzano Tomatoes", "Fresh Fior di Latte Mozzarella", "Fresh Sweet Basil Leaves", "Cold-Pressed Extra Virgin Olive Oil", "Artisanal Slow-Fermented Sourdough Crust"],
   },
   {
     id: "m7",
@@ -116,6 +122,7 @@ export const MENU_ITEMS: MenuItem[] = [
     image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80",
     isVeg: false,
     category: "Recommended",
+    ingredients: ["Neapolitan Base Tomato Sauce", "Premium Cured & Sliced Pepperoni", "Whole Milk Mozzarella", "Dried Wild Oregano", "Aromatic Extra Virgin Olive Oil", "Crispy Fermented Dough Crust"],
   }
 ];
 

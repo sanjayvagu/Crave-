@@ -18,6 +18,7 @@ export interface MenuItem {
   image: string;
   isVeg: boolean;
   category?: string;
+  ingredients?: string[];
 }
 
 export interface CartItem extends MenuItem {
