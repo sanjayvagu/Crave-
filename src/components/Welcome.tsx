@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight } from "lucide-react";
 
 interface WelcomeProps {
   onStart: () => void;
@@ -10,41 +10,49 @@ const ONBOARDING_STEPS = [
   {
     id: 1,
     title: "Yeleswaram’s fastest food delivery app",
-    description: "crave makes it simple to find the food you love. Enter your address and let us do the rest.",
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
+    description:
+      "crave makes it simple to find the food you love. Enter your address and let us do the rest.",
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 2,
     title: "Order your favorite meals",
-    description: "When you order with crave, we'll hook you up with exclusive coupons, specials and rewards.",
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80"
+    description:
+      "When you order with crave, we'll hook you up with exclusive coupons, specials and rewards.",
+    image:
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
     title: "Fastest delivery to your door",
-    description: "Fast delivery to your home, office wherever you are. We offer the fastest delivery to you.",
-    image: "https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=800&q=80"
-  }
+    description:
+      "Fast delivery to your home, office wherever you are. We offer the fastest delivery to you.",
+    image:
+      "https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=800&q=80",
+  },
 ];
 
 export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [loginState, setLoginState] = useState<'onboarding' | 'phone' | 'otp'>('onboarding');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
+  const [loginState, setLoginState] = useState<"onboarding" | "phone" | "otp">(
+    "onboarding",
+  );
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
 
   const handleNext = () => {
-    if (loginState === 'onboarding') {
+    if (loginState === "onboarding") {
       if (currentStep < ONBOARDING_STEPS.length - 1) {
-        setCurrentStep(prev => prev + 1);
+        setCurrentStep((prev) => prev + 1);
       } else {
-        setLoginState('phone');
+        setLoginState("phone");
       }
-    } else if (loginState === 'phone') {
+    } else if (loginState === "phone") {
       if (phone.length >= 10) {
-        setLoginState('otp');
+        setLoginState("otp");
       }
-    } else if (loginState === 'otp') {
+    } else if (loginState === "otp") {
       if (otp.length >= 4) {
         onStart();
       }
@@ -63,18 +71,18 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
     >
       <div className="flex-1 relative bg-orange-50/50 overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
-          {loginState === 'onboarding' ? (
-            <motion.img 
+          {loginState === "onboarding" ? (
+            <motion.img
               key={step.id}
               initial={{ opacity: 0, scale: 1.1, x: 50 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.5 }}
-              src={step.image} 
+              src={step.image}
               alt={step.title}
               className="absolute inset-0 w-full h-full object-cover object-center"
             />
-          ) : loginState === 'phone' ? (
+          ) : loginState === "phone" ? (
             <motion.div
               key="phone-bg"
               initial={{ opacity: 0 }}
@@ -82,7 +90,12 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0 }}
               className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-[#fc8019]/10"
             >
-               <h1 className="text-5xl font-black tracking-tight lowercase text-[#fc8019]" style={{ fontFamily: 'Outfit, sans-serif' }}>crave</h1>
+              <h1
+                className="text-5xl font-black tracking-tight lowercase text-[#fc8019]"
+                style={{ fontFamily: "Outfit, sans-serif" }}
+              >
+                crave
+              </h1>
             </motion.div>
           ) : (
             <motion.div
@@ -92,16 +105,24 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0 }}
               className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-[#fc8019]/10"
             >
-               <h1 className="text-5xl font-black tracking-tight lowercase text-[#fc8019]" style={{ fontFamily: 'Outfit, sans-serif' }}>crave</h1>
+              <h1
+                className="text-5xl font-black tracking-tight lowercase text-[#fc8019]"
+                style={{ fontFamily: "Outfit, sans-serif" }}
+              >
+                crave
+              </h1>
             </motion.div>
           )}
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent" />
       </div>
 
-      <div className="px-8 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end" style={{ paddingBottom: 'max(3rem, env(safe-area-inset-bottom))' }}>
+      <div
+        className="px-8 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end"
+        style={{ paddingBottom: "max(3rem, env(safe-area-inset-bottom))" }}
+      >
         <AnimatePresence mode="wait">
-          {loginState === 'onboarding' && (
+          {loginState === "onboarding" && (
             <motion.div
               key="onboarding-controls"
               initial={{ opacity: 0, y: 20 }}
@@ -110,9 +131,9 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
             >
               <div className="flex justify-center gap-2 mb-8">
                 {ONBOARDING_STEPS.map((s, idx) => (
-                  <div 
-                    key={s.id} 
-                    className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? 'w-8 bg-[#fc8019]' : 'w-2 bg-slate-200 dark:bg-slate-700'}`}
+                  <div
+                    key={s.id}
+                    className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? "w-8 bg-[#fc8019]" : "w-2 bg-slate-200 dark:bg-slate-700"}`}
                   />
                 ))}
               </div>
@@ -135,7 +156,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
             </motion.div>
           )}
 
-          {loginState === 'phone' && (
+          {loginState === "phone" && (
             <motion.div
               key="phone-controls"
               initial={{ opacity: 0, y: 20 }}
@@ -143,24 +164,30 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col gap-4"
             >
-              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Let's get started</h1>
-              <p className="text-slate-500 dark:text-slate-400 mb-4">Enter your mobile number to continue</p>
+              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">
+                Let's get started
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 mb-4">
+                Enter your mobile number to continue
+              </p>
               <div className="flex gap-2 mb-6">
                 <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 flex items-center justify-center font-bold text-slate-600 dark:text-slate-300">
                   +91
                 </div>
-                <input 
+                <input
                   type="tel"
                   placeholder="Phone Number"
                   value={phone}
-                  onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  onChange={(e) =>
+                    setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+                  }
                   className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-4 font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-[#fc8019]"
                 />
               </div>
             </motion.div>
           )}
 
-          {loginState === 'otp' && (
+          {loginState === "otp" && (
             <motion.div
               key="otp-controls"
               initial={{ opacity: 0, y: 20 }}
@@ -168,19 +195,26 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col gap-4"
             >
-              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">Verify details</h1>
-              <p className="text-slate-500 dark:text-slate-400 mb-4">OTP sent to +91 {phone} <br/><span className="text-xs text-[#fc8019] mt-1.5 font-medium inline-block bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">Sample OTP: 1234</span></p>
+              <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">
+                Verify details
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 mb-4">
+                OTP sent to +91 {phone} <br />
+                <span className="text-xs text-[#fc8019] mt-1.5 font-medium inline-block bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100">
+                  Sample OTP: 1234
+                </span>
+              </p>
               <div className="flex justify-between mb-6">
                 {[...Array(4)].map((_, i) => (
-                  <input 
+                  <input
                     key={i}
                     type="text"
                     maxLength={1}
-                    value={otp[i] || ''}
-                    onChange={e => {
-                      const newOtp = otp.split('');
+                    value={otp[i] || ""}
+                    onChange={(e) => {
+                      const newOtp = otp.split("");
                       newOtp[i] = e.target.value;
-                      setOtp(newOtp.join('').replace(/\D/g, '').slice(0, 4));
+                      setOtp(newOtp.join("").replace(/\D/g, "").slice(0, 4));
                       if (e.target.value && e.target.nextSibling) {
                         (e.target.nextSibling as HTMLInputElement).focus();
                       }
@@ -200,27 +234,36 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
             boxShadow: [
               "0px 4px 15px rgba(252, 128, 25, 0.3)",
               "0px 0px 30px rgba(252, 128, 25, 0.7)",
-              "0px 4px 15px rgba(252, 128, 25, 0.3)"
-            ]
+              "0px 4px 15px rgba(252, 128, 25, 0.3)",
+            ],
           }}
           transition={{
             boxShadow: {
               duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
-            }
+              ease: "easeInOut",
+            },
           }}
           onClick={handleNext}
-          disabled={(loginState === 'phone' && phone.length < 10) || (loginState === 'otp' && otp.length < 4)}
+          disabled={
+            (loginState === "phone" && phone.length < 10) ||
+            (loginState === "otp" && otp.length < 4)
+          }
           className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 group mt-auto disabled:opacity-50 disabled:shadow-none"
         >
-          {loginState === 'onboarding' ? (currentStep === ONBOARDING_STEPS.length - 1 ? 'Get Started' : 'Next') : loginState === 'phone' ? 'Continue' : 'Verify & Login'}
+          {loginState === "onboarding"
+            ? currentStep === ONBOARDING_STEPS.length - 1
+              ? "Get Started"
+              : "Next"
+            : loginState === "phone"
+              ? "Continue"
+              : "Verify & Login"}
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </motion.button>
-        
-        {loginState === 'onboarding' && (
-          <button 
-            onClick={onStart} 
+
+        {loginState === "onboarding" && (
+          <button
+            onClick={onStart}
             className="mt-6 text-center text-slate-500 dark:text-slate-400 font-bold text-sm hover:text-slate-800 dark:text-slate-100 transition-colors"
           >
             Continue as Guest

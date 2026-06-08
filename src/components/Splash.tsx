@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect } from "react";
+import { motion } from "motion/react";
 
 interface SplashProps {
   onComplete: () => void;
@@ -23,18 +23,21 @@ export const Splash: React.FC<SplashProps> = ({ onComplete }) => {
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ 
+        transition={{
           type: "spring",
           stiffness: 260,
           damping: 20,
-          delay: 0.2
+          delay: 0.2,
         }}
         className="flex items-center justify-center flex-col"
       >
-        <h1 className="text-6xl font-black text-white tracking-widest lowercase" style={{ fontFamily: 'Outfit, sans-serif' }}>
+        <h1
+          className="text-6xl font-black text-white tracking-widest lowercase"
+          style={{ fontFamily: "Outfit, sans-serif" }}
+        >
           crave
         </h1>
-        <motion.div 
+        <motion.div
           initial={{ width: 0 }}
           animate={{ width: 40 }}
           transition={{ delay: 0.8, duration: 0.5 }}

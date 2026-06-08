@@ -10,7 +10,8 @@ import { Tracking } from './components/Tracking';
 import { Profile } from './components/Profile';
 import { SearchScreen } from './components/SearchScreen';
 import { BottomNav } from './components/BottomNav';
-import { Restaurant, CartItem, MenuItem } from './types';
+import { Restaurant, CartItem, MenuItem, Order } from './types';
+import { RESTAURANTS, MENU_ITEMS } from './data';
 
 export type Screen = 'splash' | 'welcome' | 'home' | 'menu' | 'cart' | 'history' | 'tracking' | 'profile' | 'search';
 
@@ -53,13 +54,30 @@ export default function App() {
     setCurrentScreen('tracking');
   };
 
+  const handleReorder = (order: Order) => {
+    const restaurant = RESTAURANTS.find(r => r.name === order.restaurantName);
+    if (!restaurant) return;
+    
+    const newCart: CartItem[] = [];
+    for (const item of order.items) {
+      const menuItem = MENU_ITEMS.find(m => m.restaurantId === restaurant.id && m.name === item.name);
+      if (menuItem) {
+        newCart.push({ ...menuItem, quantity: item.quantity });
+      }
+    }
+    
+    setSelectedRestaurant(restaurant);
+    setCart(newCart);
+    setCurrentScreen('cart');
+  };
+
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const showBottomNav = ['home', 'cart', 'profile', 'search'].includes(currentScreen);
 
   return (
-    <div className="min-h-[100dvh] sm:min-h-screen bg-slate-50 dark:bg-slate-950 sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans">
+    <div className="fixed inset-0 sm:static sm:min-h-screen sm:h-auto bg-slate-50 dark:bg-slate-950 sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans">
       {/* Simulated Mobile Device Frame */}
-      <div className="w-full flex-1 sm:flex-none h-[100dvh] sm:h-[844px] sm:w-[390px] bg-slate-50 dark:bg-slate-950 relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col">
+      <div className="w-full h-full sm:flex-none sm:h-[844px] sm:w-[390px] bg-slate-50 dark:bg-slate-950 relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col">
         
         {/* Dynamic Island / Top Notch Hardware Simulation (Desktop only) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-32 bg-slate-800 rounded-b-3xl z-[100] hidden sm:block"></div>
@@ -135,6 +153,7 @@ export default function App() {
                 key="history"
                 onBack={() => setCurrentScreen('home')}
                 onTrackOrder={() => setCurrentScreen('tracking')}
+                onReorder={handleReorder}
               />
             )}
 

@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Clock, History, RotateCcw, CheckCircle2, XCircle, Receipt, X, Navigation } from 'lucide-react';
-import { MOCK_ORDERS } from '../data';
-import { Order } from '../types';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  ArrowLeft,
+  Clock,
+  History,
+  RotateCcw,
+  CheckCircle2,
+  XCircle,
+  Receipt,
+  X,
+  Navigation,
+} from "lucide-react";
+import { MOCK_ORDERS } from "../data";
+import { Order } from "../types";
 
 interface OrderHistoryProps {
   onBack: () => void;
   onTrackOrder?: () => void;
+  onReorder?: (order: Order) => void;
 }
 
-export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder }) => {
+export const OrderHistory: React.FC<OrderHistoryProps> = ({
+  onBack,
+  onTrackOrder,
+  onReorder,
+}) => {
   const [selectedReceipt, setSelectedReceipt] = useState<Order | null>(null);
 
   const calculateBreakdown = (total: number) => {
@@ -17,7 +32,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
     let itemTotal = total / 1.25; // Approximate backwards calculation
     const taxes = itemTotal * 0.08;
     let tipAmount = total - itemTotal - deliveryFee - taxes;
-    
+
     // Adjust if tip goes negative (for cancelled/small orders)
     if (tipAmount < 0) {
       tipAmount = 0;
@@ -37,8 +52,8 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
     >
       {/* Header */}
       <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
-        <motion.button 
-          whileTap={{ scale: 0.9 }} 
+        <motion.button
+          whileTap={{ scale: 0.9 }}
           onClick={onBack}
           className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
         >
@@ -49,7 +64,9 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
             <History className="w-5 h-5 text-slate-400 dark:text-slate-500" />
             Order History
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Your past orders</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Your past orders
+          </p>
         </div>
       </div>
 
@@ -59,24 +76,46 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
             key={order.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              duration: 0.4,
+              delay: index * 0.1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">{order.restaurantName}</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{order.date}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
+                  {order.restaurantName}
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                  {order.date}
+                </p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-slate-800 dark:text-slate-100">${order.total.toFixed(2)}</p>
-                <div className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
-                  order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 
-                  order.status === 'Cancelled' ? 'bg-red-100 text-red-700' :
-                  'bg-orange-100 text-orange-700'
-                }`}>
-                  {order.status === 'Delivered' && <CheckCircle2 className="w-[10px] h-[10px]" />}
-                  {order.status === 'Cancelled' && <XCircle className="w-[10px] h-[10px]" />}
-                  {(order.status === 'Processing' || order.status !== 'Delivered' && order.status !== 'Cancelled') && <Clock className="w-[10px] h-[10px]" />}
+                <p className="font-bold text-slate-800 dark:text-slate-100">
+                  ${order.total.toFixed(2)}
+                </p>
+                <div
+                  className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
+                    order.status === "Delivered"
+                      ? "bg-green-100 text-green-700"
+                      : order.status === "Cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-orange-100 text-orange-700"
+                  }`}
+                >
+                  {order.status === "Delivered" && (
+                    <CheckCircle2 className="w-[10px] h-[10px]" />
+                  )}
+                  {order.status === "Cancelled" && (
+                    <XCircle className="w-[10px] h-[10px]" />
+                  )}
+                  {(order.status === "Processing" ||
+                    (order.status !== "Delivered" &&
+                      order.status !== "Cancelled")) && (
+                    <Clock className="w-[10px] h-[10px]" />
+                  )}
                   {order.status}
                 </div>
               </div>
@@ -84,9 +123,16 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
 
             <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
               {order.items.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2 mb-1 last:mb-0">
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">{item.quantity}</span>
-                  <span className="text-sm text-slate-700 dark:text-slate-200">{item.name}</span>
+                <div
+                  key={idx}
+                  className="flex items-start gap-2 mb-1 last:mb-0"
+                >
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
+                    {item.quantity}
+                  </span>
+                  <span className="text-sm text-slate-700 dark:text-slate-200">
+                    {item.name}
+                  </span>
                 </div>
               ))}
             </div>
@@ -101,7 +147,9 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
                 <Receipt className="w-4 h-4" />
                 View Receipt
               </motion.button>
-              {['Preparing', 'Out for Delivery', 'Processing'].includes(order.status) ? (
+              {["Preparing", "Out for Delivery", "Processing"].includes(
+                order.status,
+              ) ? (
                 <motion.button
                   onClick={() => onTrackOrder && onTrackOrder()}
                   whileHover={{ scale: 1.02 }}
@@ -113,6 +161,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
                 </motion.button>
               ) : (
                 <motion.button
+                  onClick={() => onReorder && onReorder(order)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
@@ -149,7 +198,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
                   <Receipt className="w-5 h-5 text-[#fc8019]" />
                   Receipt
                 </h2>
-                <button 
+                <button
                   onClick={() => setSelectedReceipt(null)}
                   className="p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 rounded-full"
                 >
@@ -159,9 +208,13 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
 
               <div className="p-6 overflow-y-auto no-scrollbar">
                 <div className="text-center mb-6">
-                  <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">{selectedReceipt.restaurantName}</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{selectedReceipt.date}</p>
-                  <br/>
+                  <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">
+                    {selectedReceipt.restaurantName}
+                  </h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    {selectedReceipt.date}
+                  </p>
+                  <br />
                   <div className="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 tracking-wider">
                     ORDER ID: {selectedReceipt.id}
                   </div>
@@ -170,7 +223,12 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
                 <div className="space-y-4 mb-6">
                   {selectedReceipt.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
-                      <span className="text-slate-600 dark:text-slate-300"><span className="font-semibold text-slate-400 dark:text-slate-500 mr-2">{item.quantity}x</span> {item.name}</span>
+                      <span className="text-slate-600 dark:text-slate-300">
+                        <span className="font-semibold text-slate-400 dark:text-slate-500 mr-2">
+                          {item.quantity}x
+                        </span>{" "}
+                        {item.name}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -207,6 +265,30 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ onBack, onTrackOrder
                   <span>Total Paid</span>
                   <span>${selectedReceipt.total.toFixed(2)}</span>
                 </div>
+
+                {['Preparing', 'Out for Delivery', 'Processing'].includes(selectedReceipt.status) ? (
+                  <motion.button
+                    onClick={() => onTrackOrder && onTrackOrder()}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full mt-8 bg-[#fc8019] text-white font-bold py-4 rounded-xl text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30"
+                  >
+                    <Navigation className="w-5 h-5" />
+                    Track Order
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    onClick={() => {
+                      if (onReorder) onReorder(selectedReceipt);
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full mt-8 bg-[#fc8019] text-white font-bold py-4 rounded-xl text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/30"
+                  >
+                    <RotateCcw className="w-5 h-5" />
+                    Reorder Now
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           </>

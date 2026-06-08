@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { motion, useAnimation } from 'motion/react';
-import { RefreshCw } from 'lucide-react';
+import React, { useState, useRef } from "react";
+import { motion, useAnimation } from "motion/react";
+import { RefreshCw } from "lucide-react";
 
 interface PullToRefreshProps {
   onRefresh: () => Promise<void>;
@@ -8,7 +8,11 @@ interface PullToRefreshProps {
   className?: string;
 }
 
-export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, children, className = "" }) => {
+export const PullToRefresh: React.FC<PullToRefreshProps> = ({
+  onRefresh,
+  children,
+  className = "",
+}) => {
   const [pulling, setPulling] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
@@ -57,33 +61,49 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({ onRefresh, childre
 
     if (pullDistance > pullThreshold) {
       setRefreshing(true);
-      controls.start({ y: 50, transition: { type: 'spring', stiffness: 300, damping: 20 } });
-      
+      controls.start({
+        y: 50,
+        transition: { type: "spring", stiffness: 300, damping: 20 },
+      });
+
       await onRefresh();
-      
+
       setRefreshing(false);
-      controls.start({ y: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } });
+      controls.start({
+        y: 0,
+        transition: { type: "spring", stiffness: 300, damping: 20 },
+      });
     } else {
-      controls.start({ y: 0, transition: { type: 'spring', stiffness: 300, damping: 20 } });
+      controls.start({
+        y: 0,
+        transition: { type: "spring", stiffness: 300, damping: 20 },
+      });
     }
     setPullDistance(0);
   };
 
   return (
-    <div className={`relative flex flex-col h-full w-full overflow-hidden ${className}`}>
+    <div
+      className={`relative flex flex-col h-full w-full overflow-hidden ${className}`}
+    >
       {/* Refresh Indicator */}
-      <motion.div 
+      <motion.div
         className="absolute top-0 left-0 right-0 flex justify-center items-center z-40 pointer-events-none"
         style={{ height: pullThreshold, top: -pullThreshold }}
         animate={controls}
       >
-        <div className={`p-2 rounded-full bg-white dark:bg-slate-800 shadow-md transform transition-transform ${refreshing ? 'animate-spin' : ''}`}>
-          <RefreshCw className="w-5 h-5 text-[#fc8019]" style={{ transform: `rotate(${pullDistance * 3}deg)` }} />
+        <div
+          className={`p-2 rounded-full bg-white dark:bg-slate-800 shadow-md transform transition-transform ${refreshing ? "animate-spin" : ""}`}
+        >
+          <RefreshCw
+            className="w-5 h-5 text-[#fc8019]"
+            style={{ transform: `rotate(${pullDistance * 3}deg)` }}
+          />
         </div>
       </motion.div>
 
       {/* Scrollable Content */}
-      <motion.div 
+      <motion.div
         ref={scrollRef}
         animate={controls}
         onTouchStart={handleTouchStart}
