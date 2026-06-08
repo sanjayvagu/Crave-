@@ -205,10 +205,13 @@ export const Cart: React.FC<CartProps> = ({
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-slate-800 dark:text-slate-100">
-                Deliver to {addresses.find(a => a.id === selectedAddressId)?.label || "Address"}
+                Deliver to{" "}
+                {addresses.find((a) => a.id === selectedAddressId)?.label ||
+                  "Address"}
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
-                {addresses.find(a => a.id === selectedAddressId)?.value || "Please select an address"}
+                {addresses.find((a) => a.id === selectedAddressId)?.value ||
+                  "Please select an address"}
               </p>
               <p className="text-sm font-medium mt-1 text-slate-700 dark:text-slate-200">
                 35-40 mins delivery time
@@ -514,8 +517,6 @@ export const Cart: React.FC<CartProps> = ({
           </div>
         </motion.button>
       </div>
-
-
 
       <AnimatePresence>
         {isConfirming && (
