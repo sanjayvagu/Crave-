@@ -2,6 +2,7 @@ export interface Restaurant {
   id: string;
   name: string;
   rating: number;
+  reviewCount: number;
   deliveryTime: string;
   tags: string[];
   image: string;

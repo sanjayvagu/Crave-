@@ -9,6 +9,7 @@ import {
   Navigation,
   Phone,
   X,
+  Share2,
 } from "lucide-react";
 
 interface TrackingProps {
@@ -111,6 +112,17 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
+      <div className="absolute top-0 right-0 p-4 z-50 pt-[max(1.5rem,env(safe-area-inset-top))]">
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => alert("Location link shared with friends!")}
+          className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center gap-2"
+        >
+          <Share2 className="w-5 h-5" />
+          <span className="text-xs font-bold mr-1">Share</span>
+        </motion.button>
+      </div>
+
       {/* Map Placeholder Area */}
       <div className="h-2/5 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
         {/* Simulated Map Background */}

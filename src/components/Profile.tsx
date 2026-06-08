@@ -18,19 +18,36 @@ import {
   Sun,
   ShoppingBag,
   Heart,
+  Star,
+  Clock,
 } from "lucide-react";
 import { useTheme } from "../ThemeContext";
+import { RESTAURANTS } from "../data";
+import { Restaurant } from "../types";
 
 interface ProfileProps {
+  favorites: string[];
+  onToggleFavorite: (id: string) => void;
   onBack: () => void;
   onViewOrders?: () => void;
+  onSelectRestaurant?: (restaurant: Restaurant) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({ onBack, onViewOrders }) => {
+export const Profile: React.FC<ProfileProps> = ({
+  favorites,
+  onToggleFavorite,
+  onBack,
+  onViewOrders,
+  onSelectRestaurant,
+}) => {
   const [activeView, setActiveView] = useState<
     "main" | "edit" | "payment" | "address" | "wishlist"
   >("main");
   const { theme, toggleTheme } = useTheme();
+
+  const favoriteRestaurants = RESTAURANTS.filter((r) =>
+    favorites.includes(r.id),
+  );
 
   const menuItems = [
     {
@@ -43,8 +60,8 @@ export const Profile: React.FC<ProfileProps> = ({ onBack, onViewOrders }) => {
     {
       id: "wishlist",
       icon: Heart,
-      label: "Wishlist",
-      value: "4 Restaurants, 12 Items",
+      label: "Saved Restaurants",
+      value: `${favoriteRestaurants.length} Restaurants`,
     },
     { id: "edit", icon: User, label: "Edit Profile", value: "Jane Doe" },
     {
@@ -493,15 +510,72 @@ export const Profile: React.FC<ProfileProps> = ({ onBack, onViewOrders }) => {
                   <ArrowLeft className="w-5 h-5" />
                 </motion.button>
                 <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
-                  Wishlist
+                  Saved Restaurants
                 </h1>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-5 pb-32 flex flex-col items-center justify-center">
-              <Heart className="w-16 h-16 text-slate-300 dark:text-slate-700 mb-4" />
-              <p className="text-slate-500 dark:text-slate-400 font-medium">
-                Your wishlist is currently empty.
-              </p>
+            <div className="flex-1 overflow-y-auto p-5 pb-32">
+              <div className="flex flex-col gap-4">
+                {favoriteRestaurants.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-slate-500 dark:text-slate-400">
+                    <Heart className="w-16 h-16 mb-4 opacity-50" />
+                    <p className="font-medium text-lg text-slate-800 dark:text-slate-200">
+                      No saved restaurants
+                    </p>
+                    <p className="text-sm">
+                      Tap the heart icon on any restaurant to save it.
+                    </p>
+                  </div>
+                ) : (
+                  favoriteRestaurants.map((restaurant) => (
+                    <motion.div
+                      key={restaurant.id}
+                      onClick={() =>
+                        onSelectRestaurant && onSelectRestaurant(restaurant)
+                      }
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 flex cursor-pointer relative"
+                    >
+                      <motion.button
+                        whileTap={{ scale: 0.8 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleFavorite(restaurant.id);
+                        }}
+                        className="absolute top-2 right-2 w-8 h-8 z-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center p-0 border border-white/30"
+                      >
+                        <Heart className="w-4 h-4 fill-[#fc8019] text-[#fc8019]" />
+                      </motion.button>
+                      <div className="w-1/3 min-w-[100px]">
+                        <img
+                          src={restaurant.image}
+                          alt={restaurant.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-4 flex-1 flex flex-col justify-center">
+                        <h3 className="font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+                          {restaurant.name}
+                        </h3>
+                        <div className="flex items-center gap-3 mt-2 text-slate-500 dark:text-slate-400 text-xs font-medium">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 text-[#fc8019] fill-current" />
+                            <span className="font-bold text-slate-700 dark:text-slate-200">
+                              {restaurant.rating}
+                            </span>
+                          </div>
+                          <div className="w-1 h-1 bg-slate-300 rounded-full"></div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {restaurant.deliveryTime}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </div>
             </div>
           </motion.div>
         )}

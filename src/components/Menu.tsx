@@ -110,7 +110,7 @@ export const Menu: React.FC<MenuProps> = ({
               <div className="flex items-center gap-4 mt-2 text-white/90 text-sm font-medium drop-shadow-md">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-white text-white" />
-                  {restaurant.rating}
+                  {restaurant.rating} <span className="opacity-75 text-xs ml-1">({restaurant.reviewCount}+)</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />

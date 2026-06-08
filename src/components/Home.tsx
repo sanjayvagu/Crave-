@@ -8,12 +8,15 @@ import {
   Clock,
   Star,
   History,
+  Heart,
 } from "lucide-react";
 import { RESTAURANTS } from "../data";
 import { Restaurant } from "../types";
 import { PullToRefresh } from "./PullToRefresh";
 
 interface HomeProps {
+  favorites: string[];
+  onToggleFavorite: (id: string) => void;
   onSelectRestaurant: (restaurant: Restaurant) => void;
   onViewHistory: () => void;
   onViewProfile: () => void;
@@ -21,6 +24,8 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({
+  favorites,
+  onToggleFavorite,
   onSelectRestaurant,
   onViewHistory,
   onViewProfile,
@@ -270,7 +275,19 @@ export const Home: React.FC<HomeProps> = ({
                         alt={restaurant.name}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
+                      <motion.button
+                        whileTap={{ scale: 0.8 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleFavorite(restaurant.id);
+                        }}
+                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center p-0 border border-white/30"
+                      >
+                        <Heart
+                          className={`w-5 h-5 ${favorites.includes(restaurant.id) ? "fill-red-500 text-red-500" : "text-white"}`}
+                        />
+                      </motion.button>
+                      <div className="absolute top-1/2 bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex flex-col justify-end">
                         {restaurant.offers && (
                           <div className="flex items-center gap-1 text-white font-bold text-lg">
                             <Percent className="w-5 h-5 text-blue-400" />
@@ -287,10 +304,15 @@ export const Home: React.FC<HomeProps> = ({
                         >
                           {restaurant.name}
                         </motion.h3>
-                        <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-lg">
-                          <Star className="w-3 h-3 fill-current" />
-                          <span className="text-xs font-bold">
-                            {restaurant.rating}
+                        <div className="flex flex-col items-end">
+                          <div className="flex items-center gap-1 bg-green-100 text-green-700 px-2 py-1 rounded-lg">
+                            <Star className="w-3 h-3 fill-current" />
+                            <span className="text-xs font-bold">
+                              {restaurant.rating}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-slate-400 mt-1">
+                            {restaurant.reviewCount}+ reviews
                           </span>
                         </div>
                       </div>

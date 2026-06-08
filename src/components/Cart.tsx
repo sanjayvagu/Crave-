@@ -54,6 +54,8 @@ export const Cart: React.FC<CartProps> = ({
 }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState("123 Design Avenue, Tech Park Building A");
   const [tipPercentage, setTipPercentage] = useState<number>(0);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -193,13 +195,13 @@ export const Cart: React.FC<CartProps> = ({
                 Deliver to Home
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
-                123 Design Avenue, Tech Park Building A
+                {deliveryAddress}
               </p>
               <p className="text-sm font-medium mt-1 text-slate-700 dark:text-slate-200">
                 35-40 mins delivery time
               </p>
             </div>
-            <button className="text-[#fc8019] text-sm font-bold uppercase tracking-wider">
+            <button onClick={() => setShowMap(true)} className="text-[#fc8019] text-sm font-bold uppercase tracking-wider">
               Change
             </button>
           </div>
@@ -467,6 +469,63 @@ export const Cart: React.FC<CartProps> = ({
           </div>
         </motion.button>
       </div>
+
+      {/* Map Modal */}
+      <AnimatePresence>
+        {showMap && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden"
+          >
+            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowMap(false)}
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </motion.button>
+              <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
+                Select Location
+              </h1>
+            </div>
+            <div className="flex-1 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden flex flex-col">
+              {/* Simulated Map Background */}
+              <div
+                className="flex-1 w-full opacity-40 mix-blend-multiply dark:mix-blend-screen"
+                style={{
+                  backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)",
+                  backgroundSize: "20px 20px",
+                }}
+              ></div>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <MapPin className="w-12 h-12 text-[#fc8019] -mt-12 drop-shadow-xl" strokeWidth={2.5}/>
+              </div>
+            </div>
+            
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.1)] relative z-20 pb-10">
+              <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 mb-2">
+                Confirm Delivery Address
+              </h3>
+              <input
+                type="text"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-[#fc8019] transition-colors mb-4"
+              />
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowMap(false)}
+                className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30"
+              >
+                Confirm Location
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {isConfirming && (
