@@ -8,6 +8,7 @@ import {
   Star,
   Plus,
   Minus,
+  Utensils,
 } from "lucide-react";
 import { Restaurant, MenuItem, CartItem } from "../types";
 import { MENU_ITEMS } from "../data";
@@ -39,6 +40,11 @@ export const Menu: React.FC<MenuProps> = ({
     [menuItems],
   );
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dietaryFilter, setDietaryFilter] = useState<"All" | "Veg" | "Non-Veg">(
+    "All",
+  );
+  const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   React.useEffect(() => {
@@ -46,13 +52,20 @@ export const Menu: React.FC<MenuProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const filteredItems = useMemo(
-    () =>
-      activeCategory === "All"
-        ? menuItems
-        : menuItems.filter((m) => (m.category || "Other") === activeCategory),
-    [menuItems, activeCategory],
-  );
+  const filteredItems = useMemo(() => {
+    return menuItems.filter((m) => {
+      const categoryMatch =
+        activeCategory === "All" || (m.category || "Other") === activeCategory;
+      const searchMatch =
+        m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        m.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      const dietaryMatch =
+        dietaryFilter === "All" ||
+        (dietaryFilter === "Veg" && m.isVeg) ||
+        (dietaryFilter === "Non-Veg" && !m.isVeg);
+      return categoryMatch && searchMatch && dietaryMatch;
+    });
+  }, [menuItems, activeCategory, searchQuery, dietaryFilter]);
 
   const getItemQuantity = (itemId: string) => {
     return cart.find((c) => c.id === itemId)?.quantity || 0;
@@ -134,20 +147,53 @@ export const Menu: React.FC<MenuProps> = ({
 
         {/* Menu Section */}
         <div className="bg-white dark:bg-slate-900 rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
-          <div className="flex overflow-x-auto no-scrollbar gap-3 mb-6 pb-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`flex-shrink-0 whitespace-nowrap px-5 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${
-                  activeCategory === category
-                    ? "bg-slate-800 text-white shadow-slate-800/20"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:bg-slate-950"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-bold text-xl text-slate-800 dark:text-slate-100">
+                Menu
+              </h2>
+              <div className="flex items-center gap-2">
+                {(["All", "Veg", "Non-Veg"] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setDietaryFilter(filter)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors border ${
+                      dietaryFilter === filter
+                        ? "border-[#fc8019] bg-orange-50 text-[#fc8019] dark:bg-[#fc8019]/10"
+                        : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    }`}
+                  >
+                    {filter === "Veg" && (
+                      <div className="w-3 h-3 border border-green-500 flex items-center justify-center rounded-sm">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                      </div>
+                    )}
+                    {filter === "Non-Veg" && (
+                      <div className="w-3 h-3 border border-red-500 flex items-center justify-center rounded-sm">
+                        <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
+                      </div>
+                    )}
+                    {filter === "All" && (
+                      <div className="w-3 h-3 flex justify-center items-center">
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#fc8019]"></div>
+                      </div>
+                    )}
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative mt-2">
+              <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search dishes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 pl-12 pr-4 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-[#fc8019]/50 transition-all font-medium placeholder:text-slate-400 placeholder:font-normal"
+              />
+            </div>
           </div>
 
           <motion.div
@@ -290,7 +336,14 @@ export const Menu: React.FC<MenuProps> = ({
                                           className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
                                         >
                                           <motion.button
-                                            whileTap={{ scale: 0.8 }}
+                                            whileTap={{
+                                              scale: 0.8,
+                                              transition: {
+                                                type: "spring",
+                                                stiffness: 400,
+                                                damping: 10,
+                                              },
+                                            }}
                                             onClick={() =>
                                               onUpdateCart(item, -1)
                                             }
@@ -302,12 +355,19 @@ export const Menu: React.FC<MenuProps> = ({
                                             key={qty}
                                             initial={{ scale: 1.5, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
-                                            className="text-slate-800 dark:text-slate-100"
+                                            className="text-slate-800 dark:text-slate-100 font-bold"
                                           >
                                             {qty}
                                           </motion.span>
                                           <motion.button
-                                            whileTap={{ scale: 0.8 }}
+                                            whileTap={{
+                                              scale: 0.8,
+                                              transition: {
+                                                type: "spring",
+                                                stiffness: 400,
+                                                damping: 10,
+                                              },
+                                            }}
                                             onClick={() =>
                                               onUpdateCart(item, 1)
                                             }
@@ -339,7 +399,7 @@ export const Menu: React.FC<MenuProps> = ({
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="absolute bottom-6 left-5 right-5 z-50"
+            className="absolute bottom-6 left-5 right-5 z-40"
             onClick={onCheckout}
           >
             <motion.div
@@ -370,6 +430,79 @@ export const Menu: React.FC<MenuProps> = ({
                 <div className="bg-white/20 p-1.5 rounded-full backdrop-blur-sm">
                   <ArrowLeft className="w-4 h-4 rotate-180" />
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Category Menu Button */}
+      <AnimatePresence>
+        {!isMenuModalOpen && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsMenuModalOpen(true)}
+            className={`absolute right-5 z-30 bg-[#2d2e32] text-white font-bold rounded-full px-4 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.3)] border border-[#3e3f43] flex items-center justify-center gap-2 transition-all duration-300 ${totalCartItems > 0 ? "bottom-[100px]" : "bottom-8"}`}
+          >
+            <Utensils className="w-5 h-5 text-white" />
+            <span className="text-sm">Menu</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Jump to Category Modal */}
+      <AnimatePresence>
+        {isMenuModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-5"
+            onClick={() => setIsMenuModalOpen(false)}
+          >
+            <motion.div
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "100%", opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] p-6 mb-16 shadow-2xl origin-bottom"
+            >
+              <h3 className="font-bold text-xs uppercase text-slate-500 mb-4 tracking-wider text-center">
+                Jump to Category
+              </h3>
+              <div className="flex flex-col max-h-[50vh] overflow-y-auto no-scrollbar pb-2">
+                {categories.map((c) => {
+                  const count =
+                    c === "All"
+                      ? menuItems.length
+                      : menuItems.filter((m) => (m.category || "Other") === c)
+                          .length;
+                  return (
+                    <button
+                      key={c}
+                      className={`flex justify-between items-center py-3.5 border-b border-slate-100 dark:border-slate-800/60 last:border-0 ${activeCategory === c ? "text-[#fc8019] font-bold" : "text-slate-800 dark:text-slate-200"}`}
+                      onClick={() => {
+                        setActiveCategory(c);
+                        setIsMenuModalOpen(false);
+                      }}
+                    >
+                      <span
+                        className={`text-[15px] ${activeCategory === c ? "font-bold" : "font-medium"}`}
+                      >
+                        {c}
+                      </span>
+                      <span
+                        className={`text-sm ${activeCategory === c ? "font-bold text-[#fc8019]" : "font-medium opacity-50"}`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </motion.div>
           </motion.div>

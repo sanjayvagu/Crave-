@@ -13,12 +13,19 @@ import {
   XCircle,
   Tag,
   X,
+  CreditCard,
+  Banknote,
+  Smartphone,
+  Check,
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import { CartItem, MenuItem } from "../types";
+import { CartItem, MenuItem, Address } from "../types";
 
 interface CartProps {
   cart: CartItem[];
+  addresses: Address[];
+  selectedAddressId: string;
+  onSelectAddressId: (id: string) => void;
   onBack: () => void;
   onCheckoutComplete: () => void;
   onUpdateCart: (item: MenuItem, delta: number) => void;
@@ -49,6 +56,9 @@ const NumberTicker = ({ value }: { value: number }) => {
 
 export const Cart: React.FC<CartProps> = ({
   cart,
+  addresses,
+  selectedAddressId,
+  onSelectAddressId,
   onBack,
   onCheckoutComplete,
   onUpdateCart,
@@ -56,10 +66,9 @@ export const Cart: React.FC<CartProps> = ({
 }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showMap, setShowMap] = useState(false);
-  const [deliveryAddress, setDeliveryAddress] = useState(
-    "123 Design Avenue, Tech Park Building A",
-  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    "card" | "upi" | "cash"
+  >("upi");
   const [tipPercentage, setTipPercentage] = useState<number>(0);
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -196,17 +205,17 @@ export const Cart: React.FC<CartProps> = ({
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-slate-800 dark:text-slate-100">
-                Deliver to Home
+                Deliver to {addresses.find(a => a.id === selectedAddressId)?.label || "Address"}
               </h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
-                {deliveryAddress}
+                {addresses.find(a => a.id === selectedAddressId)?.value || "Please select an address"}
               </p>
               <p className="text-sm font-medium mt-1 text-slate-700 dark:text-slate-200">
                 35-40 mins delivery time
               </p>
             </div>
             <button
-              onClick={() => setShowMap(true)}
+              onClick={() => setIsConfirming(true)}
               className="text-[#fc8019] text-sm font-bold uppercase tracking-wider"
             >
               Change
@@ -348,21 +357,37 @@ export const Cart: React.FC<CartProps> = ({
                           {item.name}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
-                          <button
+                          <motion.button
+                            whileTap={{
+                              scale: 0.8,
+                              transition: {
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 10,
+                              },
+                            }}
                             onClick={() => onUpdateCart(item, -1)}
                             className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
                           >
                             <Minus className="w-3 h-3" />
-                          </button>
+                          </motion.button>
                           <span className="text-sm font-medium w-4 text-center">
                             {item.quantity}
                           </span>
-                          <button
+                          <motion.button
+                            whileTap={{
+                              scale: 0.8,
+                              transition: {
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 10,
+                              },
+                            }}
                             onClick={() => onUpdateCart(item, 1)}
-                            className="w-6 h-6 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
+                            className="w-6 h-6 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50 dark:hover:bg-[#fc8019]/10"
                           >
                             <Plus className="w-3 h-3" />
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     </div>
@@ -490,66 +515,7 @@ export const Cart: React.FC<CartProps> = ({
         </motion.button>
       </div>
 
-      {/* Map Modal */}
-      <AnimatePresence>
-        {showMap && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden"
-          >
-            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setShowMap(false)}
-                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </motion.button>
-              <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
-                Select Location
-              </h1>
-            </div>
-            <div className="flex-1 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden flex flex-col">
-              {/* Simulated Map Background */}
-              <div
-                className="flex-1 w-full opacity-40 mix-blend-multiply dark:mix-blend-screen"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(#cbd5e1 1px, transparent 1px)",
-                  backgroundSize: "20px 20px",
-                }}
-              ></div>
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <MapPin
-                  className="w-12 h-12 text-[#fc8019] -mt-12 drop-shadow-xl"
-                  strokeWidth={2.5}
-                />
-              </div>
-            </div>
 
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.1)] relative z-20 pb-10">
-              <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 mb-2">
-                Confirm Delivery Address
-              </h3>
-              <input
-                type="text"
-                value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold text-slate-800 dark:text-slate-100 outline-none focus:border-[#fc8019] transition-colors mb-4"
-              />
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowMap(false)}
-                className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30"
-              >
-                Confirm Location
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <AnimatePresence>
         {isConfirming && (
@@ -557,17 +523,30 @@ export const Cart: React.FC<CartProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex flex-col justify-end bg-slate-900/40 backdrop-blur-sm"
+            className="absolute inset-0 z-[100] flex flex-col justify-end bg-slate-900/60 backdrop-blur-sm"
           >
             <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-32"
+              className="bg-slate-50 dark:bg-slate-950 rounded-t-3xl shadow-2xl flex flex-col w-full h-[85vh] overflow-hidden"
             >
+              <div className="flex justify-between items-center p-5 bg-white dark:bg-slate-900 shadow-sm shrink-0 border-b border-slate-100 dark:border-slate-800">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
+                  Checkout
+                </h2>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsConfirming(false)}
+                  className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500"
+                >
+                  <X className="w-5 h-5" />
+                </motion.button>
+              </div>
+
               {isProcessing ? (
-                <div className="flex flex-col items-center justify-center py-6">
+                <div className="flex-1 flex flex-col items-center justify-center p-6">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{
@@ -578,56 +557,137 @@ export const Cart: React.FC<CartProps> = ({
                     className="w-16 h-16 rounded-full border-4 border-[#fc8019] border-t-transparent mb-6"
                   />
                   <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-                    Processing your order...
+                    Processing Payment...
                   </h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-center mb-6">
-                    Please wait while we confirm with the restaurant.
+                  <p className="text-slate-500 dark:text-slate-400 text-center">
+                    Securely verifying your transaction.
                   </p>
                 </div>
               ) : (
-                <>
-                  <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
-                    <CheckCircle2 className="w-8 h-8" />
+                <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6 pb-32">
+                  {/* Delivery Address Section */}
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+                      Delivery Address
+                    </h3>
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                      {addresses.map((addr) => (
+                        <div
+                          key={addr.id}
+                          onClick={() => onSelectAddressId(addr.id)}
+                          className={`p-4 flex gap-3 border-b border-slate-100 dark:border-slate-800 last:border-0 cursor-pointer ${selectedAddressId === addr.id ? "bg-orange-50/50 dark:bg-orange-900/10" : ""}`}
+                        >
+                          <div
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 ${selectedAddressId === addr.id ? "border-[#fc8019]" : "border-slate-300 dark:border-slate-600"}`}
+                          >
+                            {selectedAddressId === addr.id && (
+                              <div className="w-2.5 h-2.5 bg-[#fc8019] rounded-full" />
+                            )}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <MapPin
+                                className={`w-4 h-4 ${selectedAddressId === addr.id ? "text-[#fc8019]" : "text-slate-400"}`}
+                              />
+                              <span
+                                className={`font-bold ${selectedAddressId === addr.id ? "text-slate-800 dark:text-slate-100" : "text-slate-600 dark:text-slate-300"}`}
+                              >
+                                {addr.label}
+                              </span>
+                            </div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug pl-6">
+                              {addr.value}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-                    Confirm Your Order
-                  </h2>
-                  <p className="text-slate-500 dark:text-slate-400 text-center mb-6">
-                    Are you ready to place your order? You will be charged $
-                    {total.toFixed(2)}.
-                  </p>
 
-                  <div className="flex flex-col w-full gap-3">
+                  {/* Payment Method Section */}
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+                      Payment Method
+                    </h3>
+                    <div className="grid gap-3">
+                      {[
+                        {
+                          id: "upi",
+                          icon: Smartphone,
+                          label: "UPI",
+                          desc: "Google Pay, PhonePe",
+                        },
+                        {
+                          id: "card",
+                          icon: CreditCard,
+                          label: "Credit/Debit Card",
+                          desc: "Visa, MasterCard",
+                        },
+                        {
+                          id: "cash",
+                          icon: Banknote,
+                          label: "Cash on Delivery",
+                          desc: "Pay at your doorstep",
+                        },
+                      ].map((method) => {
+                        const Icon = method.icon;
+                        const isSelected = selectedPaymentMethod === method.id;
+                        return (
+                          <div
+                            key={method.id}
+                            onClick={() =>
+                              setSelectedPaymentMethod(method.id as any)
+                            }
+                            className={`p-4 rounded-2xl border cursor-pointer flex items-center justify-between transition-all ${isSelected ? "border-[#fc8019] bg-orange-50 dark:bg-[#fc8019]/10 shadow-[0_4px_15px_rgb(252,128,25,0.15)]" : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm"}`}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#fc8019] text-white shadow-md" : "bg-slate-100 dark:bg-slate-800 text-slate-500"}`}
+                              >
+                                <Icon className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h4
+                                  className={`font-bold text-base ${isSelected ? "text-slate-800 dark:text-slate-100" : "text-slate-700 dark:text-slate-200"}`}
+                                >
+                                  {method.label}
+                                </h4>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                  {method.desc}
+                                </p>
+                              </div>
+                            </div>
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center border-2 ${isSelected ? "border-[#fc8019] bg-[#fc8019] text-white" : "border-slate-300 dark:border-slate-600"}`}
+                            >
+                              {isSelected && <Check className="w-3.5 h-3.5" />}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Bill Summary inside Checkout */}
+                  <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                    <div>
+                      <span className="text-slate-500 dark:text-slate-400 text-sm">
+                        Total Amount
+                      </span>
+                      <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100">
+                        ${total.toFixed(2)}
+                      </h3>
+                    </div>
                     <motion.button
                       whileTap={{ scale: 0.95 }}
                       onClick={handleConfirmOrder}
-                      animate={{
-                        boxShadow: [
-                          "0px 4px 15px rgba(252, 128, 25, 0.3)",
-                          "0px 0px 30px rgba(252, 128, 25, 0.7)",
-                          "0px 4px 15px rgba(252, 128, 25, 0.3)",
-                        ],
-                      }}
-                      transition={{
-                        boxShadow: {
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        },
-                      }}
-                      className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-xl"
+                      className="bg-[#fc8019] text-white px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-orange-500/30"
                     >
-                      Confirm Order
-                    </motion.button>
-                    <motion.button
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setIsConfirming(false)}
-                      className="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-4 rounded-xl"
-                    >
-                      Cancel
+                      Place Order
+                      <ChevronRight className="w-5 h-5" />
                     </motion.button>
                   </div>
-                </>
+                </div>
               )}
             </motion.div>
           </motion.div>

@@ -185,6 +185,9 @@ export default function App() {
               <Cart
                 key="cart"
                 cart={cart}
+                addresses={addresses}
+                selectedAddressId={selectedAddressId}
+                onSelectAddressId={setSelectedAddressId}
                 onUpdateCart={handleUpdateCart}
                 onUpdateInstructions={handleUpdateInstructions}
                 onBack={() => setCurrentScreen("home")}
