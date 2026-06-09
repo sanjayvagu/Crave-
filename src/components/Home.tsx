@@ -130,6 +130,8 @@ export const Home: React.FC<HomeProps> = ({
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
+      {/* Background fill for safe-area-inset-top */}
+      <div className={`absolute top-0 left-0 right-0 h-[50vh] z-0 transition-colors duration-500 ${serviceType === "food" ? "bg-[#fc8019] dark:bg-[#e06d10]" : "bg-[#380e52] dark:bg-[#2e0b44]"}`} />
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
@@ -348,7 +350,7 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
+          <div className="px-5 pb-8 pt-6 min-h-screen bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
 
           {/* Conditional Content based on Serviceability */}
           {!selectedCity.isServiceable ? (
