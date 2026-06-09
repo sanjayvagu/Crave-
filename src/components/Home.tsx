@@ -130,12 +130,12 @@ export const Home: React.FC<HomeProps> = ({
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
-      {/* Background fill for safe-area-inset-top */}
-      <div className={`absolute top-0 left-0 right-0 h-[50vh] z-0 transition-colors duration-500 ${serviceType === "food" ? "bg-[#fc8019] dark:bg-[#e06d10]" : "bg-[#380e52] dark:bg-[#2e0b44]"}`} />
+      {/* Background fill for safe-area-inset-top and header */}
+      <div className={`absolute top-0 left-0 right-0 h-[60vh] z-0 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]" : "from-[#380e52] to-[#1d0628] dark:from-[#2e0b44] dark:to-[#16041f]"}`} />
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]" : "from-[#380e52] to-[#1d0628] dark:from-[#2e0b44] dark:to-[#16041f]"}`}>
+          <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-transparent">
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
