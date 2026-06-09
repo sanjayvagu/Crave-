@@ -135,7 +135,7 @@ export const Home: React.FC<HomeProps> = ({
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-transparent">
+          <div className="relative z-10 pt-safe pb-12 px-4 transition-colors duration-500 bg-transparent">
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}

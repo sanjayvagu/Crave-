@@ -111,7 +111,7 @@ export const Profile: React.FC<ProfileProps> = ({
             exit={{ opacity: 0, x: -20 }}
             className="flex flex-col h-full w-full absolute inset-0"
           >
-            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-4 px-5 pb-5 pt-safe bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={onBack}

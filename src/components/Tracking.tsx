@@ -138,7 +138,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
             initial={{ opacity: 0, y: -50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            className="absolute top-0 left-0 right-0 z-[60] p-4 pt-[max(1.5rem,env(safe-area-inset-top))] flex justify-center pointer-events-none"
+            className="absolute top-0 left-0 right-0 z-[60] p-4 pt-safe flex justify-center pointer-events-none"
           >
             <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-sm w-full mx-8">
               <span className="font-bold text-lg">{toast.message}</span>
@@ -150,7 +150,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 right-0 p-4 z-50 pt-[max(1.5rem,env(safe-area-inset-top))]">
+      <div className="absolute top-0 right-0 p-4 z-50 pt-safe">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => alert("Location link shared with friends!")}

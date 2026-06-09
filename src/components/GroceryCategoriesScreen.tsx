@@ -82,7 +82,7 @@ export const GroceryCategoriesScreen: React.FC<GroceryCategoriesScreenProps> = (
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
-      <div className="px-5 pb-4 pt-[max(3rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="px-5 pb-4 pt-safe bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
         <div className="flex items-center gap-3 mb-4">
           <button
             onClick={onBack}
