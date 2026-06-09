@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { motion } from "motion/react";
+import React, { useState, useMemo, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   MapPin,
   Search,
@@ -46,6 +46,34 @@ export const Home: React.FC<HomeProps> = ({
 }) => {
   const [isLocating, setIsLocating] = useState(false);
   const [showCitySelector, setShowCitySelector] = useState(false);
+
+  const foodCycles = [
+    { text: "EatRight", left: "Hamburger.png", right: "Green%20Salad.png" },
+    { text: "Pizza", left: "Pizza.png", right: "Taco.png" },
+    { text: "Biryani", left: "Pot%20of%20Food.png", right: "Poultry%20Leg.png" },
+    { text: "Cake", left: "Shortcake.png", right: "Pancakes.png" },
+    { text: "Sweets", left: "Doughnut.png", right: "Chocolate%20Bar.png" }
+  ];
+
+  const groceryCycles = [
+    { text: "Groceries", left: "Red%20Apple.png", right: "Shopping%20Cart.png" },
+    { text: "Vegetables", left: "Broccoli.png", right: "Carrot.png" },
+    { text: "Fruits", left: "Banana.png", right: "Grapes.png" },
+    { text: "Dairy", left: "Glass%20of%20Milk.png", right: "Cheese%20Wedge.png" }
+  ];
+
+  const [cycleIndex, setCycleIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCycleIndex((prev) => prev + 1);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentCycle = serviceType === "food" 
+    ? foodCycles[cycleIndex % foodCycles.length]
+    : groceryCycles[cycleIndex % groceryCycles.length];
 
   const handleEnableLocation = () => {
     setIsLocating(true);
@@ -257,12 +285,25 @@ export const Home: React.FC<HomeProps> = ({
               onClick={onOpenSearch}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="relative z-10 mt-5 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer"
+              className="relative z-10 mt-5 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer overflow-hidden"
             >
               <Search className="w-5 h-5 text-slate-400 ml-1" />
-              <p className="flex-1 ml-3 text-slate-400 text-sm font-medium">
-                Search for '{serviceType === "food" ? "EatRight" : "Groceries"}'
-              </p>
+              <div className="flex-1 ml-3 text-slate-400 text-sm font-medium flex items-center h-5 overflow-hidden gap-[3px]">
+                <span>Search for '</span>
+                <AnimatePresence mode="popLayout">
+                  <motion.span
+                    key={currentCycle.text}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="text-slate-600 dark:text-slate-300 font-bold max-w-[150px] truncate"
+                  >
+                    {currentCycle.text}
+                  </motion.span>
+                </AnimatePresence>
+                <span>'</span>
+              </div>
               <div className="text-[#fc8019] mx-1 border-l border-slate-200 dark:border-slate-700 pl-3">
                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
               </div>
@@ -270,14 +311,24 @@ export const Home: React.FC<HomeProps> = ({
             
             {/* Animated Foodie/Instacart Text Banner Overlay */}
             {serviceType === "food" && (
-                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none">
-                     <motion.img 
-                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pizza.png" 
-                         className="w-12 h-12 absolute -left-2 top-0 rotate-[-15deg] drop-shadow-lg"
-                         animate={{ rotate: [-15, -5, -15], y: [0, -5, 0] }}
-                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                     />
-                     <div className="flex flex-col items-center">
+                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none h-16 w-full max-w-[280px] mx-auto">
+                     <AnimatePresence mode="popLayout">
+                         <motion.img 
+                             key={`left-${currentCycle.left}`}
+                             src={`https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.left}`} 
+                             className="w-12 h-12 absolute -left-2 top-0 drop-shadow-lg"
+                             initial={{ x: 30, opacity: 0, rotate: -15 }}
+                             animate={{ x: 0, opacity: 1, rotate: [-15, -5, -15], y: [0, -5, 0] }}
+                             exit={{ x: -30, opacity: 0, rotate: -15 }}
+                             transition={{ 
+                               x: { type: "spring", stiffness: 300, damping: 30 }, 
+                               opacity: { duration: 0.2 },
+                               rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+                               y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+                             }}
+                         />
+                     </AnimatePresence>
+                     <div className="flex flex-col items-center z-10">
                          <h2 className="text-[#fc8019] font-black text-4xl tracking-tighter drop-shadow-sm italic uppercase" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
                              FOODIE VERSE
                          </h2>
@@ -285,23 +336,47 @@ export const Home: React.FC<HomeProps> = ({
                              Order Now
                          </div>
                      </div>
-                     <motion.img 
-                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pot%20of%20Food.png" 
-                         className="w-12 h-12 absolute -right-2 top-2 rotate-[10deg] drop-shadow-lg"
-                         animate={{ rotate: [10, 20, 10], y: [0, -5, 0] }}
-                         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                     />
+                     <AnimatePresence mode="popLayout">
+                         <motion.img 
+                             key={`right-${currentCycle.right}`}
+                             src={
+                               currentCycle.right.includes("Cart") 
+                                 ? `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/${currentCycle.right}`
+                                 : `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.right}`
+                             } 
+                             className="w-12 h-12 absolute -right-2 top-2 drop-shadow-lg"
+                             initial={{ x: 30, opacity: 0, rotate: 10 }}
+                             animate={{ x: 0, opacity: 1, rotate: [10, 20, 10], y: [0, -5, 0] }}
+                             exit={{ x: -30, opacity: 0, rotate: 10 }}
+                             transition={{ 
+                               x: { type: "spring", stiffness: 300, damping: 30 }, 
+                               opacity: { duration: 0.2 },
+                               rotate: { repeat: Infinity, duration: 3.5, ease: "easeInOut" },
+                               y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" }
+                             }}
+                         />
+                     </AnimatePresence>
                 </div>
             )}
             {serviceType === "grocery" && (
-                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none">
-                     <motion.img 
-                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Red%20Apple.png" 
-                         className="w-10 h-10 absolute -left-2 top-0 rotate-[-15deg] drop-shadow-lg"
-                         animate={{ rotate: [-15, -5, -15], y: [0, -5, 0] }}
-                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                     />
-                     <div className="flex flex-col items-center max-w-[200px]">
+                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none h-16 w-full max-w-[280px] mx-auto">
+                     <AnimatePresence mode="popLayout">
+                         <motion.img 
+                             key={`g-left-${currentCycle.left}`}
+                             src={`https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.left}`} 
+                             className="w-10 h-10 absolute -left-2 top-4 drop-shadow-lg"
+                             initial={{ x: 30, opacity: 0, rotate: -15 }}
+                             animate={{ x: 0, opacity: 1, rotate: [-15, -5, -15], y: [0, -5, 0] }}
+                             exit={{ x: -30, opacity: 0, rotate: -15 }}
+                             transition={{ 
+                               x: { type: "spring", stiffness: 300, damping: 30 }, 
+                               opacity: { duration: 0.2 },
+                               rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" },
+                               y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+                             }}
+                         />
+                     </AnimatePresence>
+                     <div className="flex flex-col items-center max-w-[200px] z-10">
                          <h2 className="text-[#16a34a] font-black text-xl text-center leading-tight tracking-tight drop-shadow-sm" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
                              Your cart, delivered before you're ready.
                          </h2>
@@ -309,12 +384,26 @@ export const Home: React.FC<HomeProps> = ({
                              Shop Now
                          </div>
                      </div>
-                     <motion.img 
-                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" 
-                         className="w-10 h-10 absolute -right-2 top-2 rotate-[10deg] drop-shadow-lg"
-                         animate={{ rotate: [10, 20, 10], y: [0, -5, 0] }}
-                         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-                     />
+                     <AnimatePresence mode="popLayout">
+                         <motion.img 
+                             key={`g-right-${currentCycle.right}`}
+                             src={
+                               currentCycle.right.includes("Cart") 
+                                 ? `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/${currentCycle.right}`
+                                 : `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.right}`
+                             } 
+                             className="w-10 h-10 absolute -right-2 top-4 drop-shadow-lg"
+                             initial={{ x: 30, opacity: 0, rotate: 10 }}
+                             animate={{ x: 0, opacity: 1, rotate: [10, 20, 10], y: [0, -5, 0] }}
+                             exit={{ x: -30, opacity: 0, rotate: 10 }}
+                             transition={{ 
+                               x: { type: "spring", stiffness: 300, damping: 30 }, 
+                               opacity: { duration: 0.2 },
+                               rotate: { repeat: Infinity, duration: 3.5, ease: "easeInOut" },
+                               y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" }
+                             }}
+                         />
+                     </AnimatePresence>
                 </div>
             )}
           </div>

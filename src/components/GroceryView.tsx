@@ -3,21 +3,7 @@ import { motion } from "motion/react";
 import { Clock, Star, Percent, Zap } from "lucide-react";
 import { MenuItem } from "../types";
 
-const GROCERY_ITEMS: MenuItem[] = [
-  { id: "g1", restaurantId: "instamart", name: "Farm Fresh Tomatoes", price: 40, description: "500g", isVeg: true, image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g2", restaurantId: "instamart", name: "Amul Taaza Milk", price: 34, description: "500ml pouch", isVeg: true, image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g3", restaurantId: "instamart", name: "Lay's Magic Masala", price: 20, description: "50g pack", isVeg: true, image: "https://images.unsplash.com/photo-1566478989037-eade3f7e540b?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g4", restaurantId: "instamart", name: "Aashirvaad Atta", price: 245, description: "5kg bag", isVeg: true, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g5", restaurantId: "instamart", name: "Dove Soap Bar", price: 55, description: "100g", isVeg: true, image: "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=1200&q=100" },
-];
-
-const RECOMMENDED_ITEMS: MenuItem[] = [
-  { id: "g6", restaurantId: "instamart", name: "Maggi 2-Minute Noodles", price: 14, description: "70g", isVeg: true, image: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g7", restaurantId: "instamart", name: "Surf Excel Easy Wash", price: 110, description: "1kg", isVeg: true, image: "https://images.unsplash.com/photo-1581646271587-1dbdd986d7e0?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g8", restaurantId: "instamart", name: "Fortune Sunlite Oil", price: 140, description: "1L pouch", isVeg: true, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g9", restaurantId: "instamart", name: "Brooke Bond Red Label", price: 130, description: "250g", isVeg: true, image: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=1200&q=100" },
-  { id: "g10", restaurantId: "instamart", name: "Dettol Handwash", price: 99, description: "200ml", isVeg: true, image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=100" },
-];
+import { GROCERY_ITEMS, RECOMMENDED_GROCERY_ITEMS } from "../data";
 
 interface GroceryViewProps {
   onUpdateCart?: (item: MenuItem, delta: number) => void;
@@ -240,7 +226,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
           </h2>
         </div>
         <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 -mx-5 px-5">
-          {RECOMMENDED_ITEMS.map((item) => (
+          {RECOMMENDED_GROCERY_ITEMS.map((item) => (
             <motion.div
               key={item.id}
               whileHover={{ y: -4 }}

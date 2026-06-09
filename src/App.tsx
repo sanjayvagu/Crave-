@@ -253,6 +253,7 @@ export default function App() {
               <GroceryCategoriesScreen
                 key="grocery_categories"
                 onBack={() => setCurrentScreen("home")}
+                onUpdateCart={handleUpdateCart}
               />
             )}
           </AnimatePresence>
