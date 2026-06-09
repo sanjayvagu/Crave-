@@ -133,7 +133,7 @@ export const Home: React.FC<HomeProps> = ({
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className="relative z-20 pt-[max(1.5rem,env(safe-area-inset-top))] pb-10 bg-gradient-to-b from-[#fc8019]/15 via-[#fc8019]/5 to-transparent dark:from-[#fc8019]/15 dark:via-[#fc8019]/5 dark:to-transparent px-4">
+          <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 bg-gradient-to-b from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a] px-4">
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
@@ -148,8 +148,7 @@ export const Home: React.FC<HomeProps> = ({
                 className="flex items-center shrink-0 cursor-pointer group"
               >
                 <h1
-                  className="text-2xl font-black tracking-tight lowercase text-slate-800 dark:text-slate-100 flex items-baseline"
-                  style={{ fontFamily: "Outfit, sans-serif" }}
+                  className="text-[26px] font-black tracking-tighter lowercase flex items-baseline text-white"
                 >
                   {"cra".split("").map((char, index) => (
                     <motion.span
@@ -161,7 +160,7 @@ export const Home: React.FC<HomeProps> = ({
                         delay: index * 0.1,
                         ease: "easeInOut",
                       }}
-                      className="inline-block group-hover:text-[#fc8019] transition-colors"
+                      className="inline-block"
                     >
                       {char}
                     </motion.span>
@@ -174,7 +173,7 @@ export const Home: React.FC<HomeProps> = ({
                       delay: 0.3,
                       ease: "easeInOut",
                     }}
-                    className="text-[#fc8019] inline-block origin-bottom"
+                    className="inline-block origin-bottom text-slate-900"
                   >
                     v
                   </motion.span>
@@ -186,7 +185,7 @@ export const Home: React.FC<HomeProps> = ({
                       delay: 0.4,
                       ease: "easeInOut",
                     }}
-                    className="inline-block group-hover:text-[#fc8019] transition-colors"
+                    className="inline-block"
                   >
                     e
                   </motion.span>
@@ -203,14 +202,14 @@ export const Home: React.FC<HomeProps> = ({
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="w-1 h-1 rounded-full bg-[#fc8019] self-end mb-1.5 ml-0.5 group-hover:scale-150 transition-transform"
+                  className="w-1.5 h-1.5 rounded-full bg-white self-end mb-2 ml-[3px]"
                 />
               </motion.div>
 
               {/* Address */}
               <div
                 onClick={() => setShowCitySelector(true)}
-                className="flex flex-col flex-1 items-center justify-center truncate cursor-pointer group"
+                className="flex flex-col flex-1 items-center justify-center cursor-pointer group px-2"
               >
                 <div className="flex items-center gap-1">
                   {isLocating ? (
@@ -221,17 +220,17 @@ export const Home: React.FC<HomeProps> = ({
                         repeat: Infinity,
                         ease: "linear",
                       }}
-                      className="w-3.5 h-3.5 shrink-0 rounded-full border-2 border-[#fc8019] border-t-transparent"
+                      className="w-[14px] h-[14px] shrink-0 rounded-full border-2 border-white border-t-transparent"
                     />
                   ) : (
-                    <MapPin className="text-[#fc8019] w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
+                    <MapPin className="text-white/90 w-[14px] h-[14px] shrink-0 group-hover:scale-110 transition-transform" strokeWidth={2.5} />
                   )}
-                  <div className="flex items-center font-bold text-sm text-slate-800 dark:text-slate-100">
+                  <div className="flex items-center font-extrabold text-[15px] text-white tracking-tight">
                     {selectedCity.name}{" "}
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-[#fc8019] transition-colors ml-0.5" />
+                    <ChevronDown className="w-[14px] h-[14px] text-white/80 group-hover:text-white transition-colors ml-0.5" strokeWidth={2.5}/>
                   </div>
                 </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-32 text-center group-hover:text-slate-800 dark:text-slate-100 transition-colors">
+                <p className="text-[11px] text-white/70 font-medium tracking-wide">
                   {isLocating
                     ? "Locating..."
                     : selectedCity.pinCodes[0] || "Select Location"}
@@ -243,7 +242,7 @@ export const Home: React.FC<HomeProps> = ({
                 <motion.div
                   onClick={onViewProfile}
                   whileTap={{ scale: 0.9 }}
-                  className="cursor-pointer w-9 h-9 rounded-full overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700"
+                  className="cursor-pointer w-9 h-9 rounded-full overflow-hidden shadow-sm border border-white/20"
                 >
                   <img
                     src="https://i.pravatar.cc/100?img=11"
@@ -256,22 +255,22 @@ export const Home: React.FC<HomeProps> = ({
 
             {/* Service Toggle */}
             {selectedCity.name === "Prathipadu" && selectedCity.isServiceable && (
-              <div className="relative z-10 flex bg-slate-100/80 dark:bg-slate-800/80 p-1 mt-5 mx-1 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
+              <div className="relative z-10 flex bg-black/10 p-1 mt-5 mx-1 rounded-2xl border border-white/10 backdrop-blur-md">
                  <motion.div
-                   className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white dark:bg-slate-700 shadow-sm border border-slate-100 dark:border-slate-600"
+                   className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white shadow-sm"
                    animate={{ x: serviceType === "food" ? 0 : "100%" }}
                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
                  />
                  <button
                     onClick={() => onServiceTypeChange("food")}
-                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "food" ? "text-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
+                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "food" ? "text-[#fc8019]" : "text-white/80 hover:text-white"}`}
                  >
                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Hamburger.png" alt="Food" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "food" ? "scale-110" : "scale-90 opacity-80"}`} />
                    Food Delivery
                  </button>
                  <button
                     onClick={() => onServiceTypeChange("grocery")}
-                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
+                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-[#fc8019]" : "text-white/80 hover:text-white"}`}
                  >
                    {serviceType === "grocery" && <div className="absolute top-[-6px] bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">10 mins</div>}
                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" alt="Grocery" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "grocery" ? "scale-110" : "scale-90 opacity-80"}`} />
@@ -285,10 +284,10 @@ export const Home: React.FC<HomeProps> = ({
               onClick={onOpenSearch}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="relative z-10 mt-5 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer overflow-hidden"
+              className="relative z-10 mt-6 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-[0_4px_20px_rgb(0,0,0,0.1)] rounded-full p-[14px] px-5 cursor-pointer overflow-hidden"
             >
-              <Search className="w-5 h-5 text-slate-400 ml-1" />
-              <div className="flex-1 ml-3 text-slate-400 text-sm font-medium flex items-center h-5 overflow-hidden gap-[3px]">
+              <Search className="w-5 h-5 text-slate-400" strokeWidth={2.5} />
+              <div className="flex-1 ml-3 text-slate-400 text-[15px] font-medium flex items-center h-5 overflow-hidden gap-[3px]">
                 <span>Search for '</span>
                 <AnimatePresence mode="popLayout">
                   <motion.span
@@ -297,118 +296,59 @@ export const Home: React.FC<HomeProps> = ({
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -20, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="text-slate-600 dark:text-slate-300 font-bold max-w-[150px] truncate"
+                    className="text-slate-700 dark:text-slate-300 font-bold max-w-[150px] truncate"
                   >
                     {currentCycle.text}
                   </motion.span>
                 </AnimatePresence>
                 <span>'</span>
               </div>
-              <div className="text-[#fc8019] mx-1 border-l border-slate-200 dark:border-slate-700 pl-3">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              <div className="text-[#fc8019] ml-2">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
               </div>
             </motion.div>
             
-            {/* Animated Foodie/Instacart Text Banner Overlay */}
-            {serviceType === "food" && (
-                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none h-16 w-full max-w-[280px] mx-auto">
-                     <AnimatePresence mode="popLayout">
-                         <motion.img 
-                             key={`left-${currentCycle.left}`}
-                             src={`https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.left}`} 
-                             className="w-12 h-12 absolute -left-2 top-0 drop-shadow-lg"
-                             initial={{ x: 30, opacity: 0, rotate: -15 }}
-                             animate={{ x: 0, opacity: 1, rotate: [-15, -5, -15], y: [0, -5, 0] }}
-                             exit={{ x: -30, opacity: 0, rotate: -15 }}
-                             transition={{ 
-                               x: { type: "spring", stiffness: 300, damping: 30 }, 
-                               opacity: { duration: 0.2 },
-                               rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" },
-                               y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
-                             }}
-                         />
-                     </AnimatePresence>
-                     <div className="flex flex-col items-center z-10">
-                         <h2 className="text-[#fc8019] font-black text-4xl tracking-tighter drop-shadow-sm italic uppercase" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
-                             FOODIE VERSE
-                         </h2>
-                         <div className="mt-[-8px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#fc8019] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-widest shadow-sm">
-                             Order Now
-                         </div>
-                     </div>
-                     <AnimatePresence mode="popLayout">
-                         <motion.img 
-                             key={`right-${currentCycle.right}`}
-                             src={
-                               currentCycle.right.includes("Cart") 
-                                 ? `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/${currentCycle.right}`
-                                 : `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.right}`
-                             } 
-                             className="w-12 h-12 absolute -right-2 top-2 drop-shadow-lg"
-                             initial={{ x: 30, opacity: 0, rotate: 10 }}
-                             animate={{ x: 0, opacity: 1, rotate: [10, 20, 10], y: [0, -5, 0] }}
-                             exit={{ x: -30, opacity: 0, rotate: 10 }}
-                             transition={{ 
-                               x: { type: "spring", stiffness: 300, damping: 30 }, 
-                               opacity: { duration: 0.2 },
-                               rotate: { repeat: Infinity, duration: 3.5, ease: "easeInOut" },
-                               y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" }
-                             }}
-                         />
-                     </AnimatePresence>
+            {/* Animated Banner Overlay */}
+            <div className="relative z-10 mt-[26px] mb-2 flex items-center justify-center">
+              {serviceType === "food" ? (
+                <div className="flex items-center gap-1.5 pointer-events-none relative">
+                   <motion.img 
+                       src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pizza.png" 
+                       className="w-[42px] h-[42px] drop-shadow-md z-10 relative -mr-2"
+                       animate={{ y: [0, -4, 0] }}
+                       transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                   />
+                   <div className="flex flex-col items-center">
+                       <h2 className="text-[#ffed4a] font-black text-[28px] leading-none tracking-tighter drop-shadow-md italic pr-2" style={{ fontFamily: "'Outfit', 'Inter', sans-serif" }}>
+                           FOODIE VERSE
+                       </h2>
+                       <div className="mt-[3px] bg-white text-[#fc8019] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
+                           Order Now
+                       </div>
+                   </div>
                 </div>
-            )}
-            {serviceType === "grocery" && (
-                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none h-16 w-full max-w-[280px] mx-auto">
-                     <AnimatePresence mode="popLayout">
-                         <motion.img 
-                             key={`g-left-${currentCycle.left}`}
-                             src={`https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.left}`} 
-                             className="w-10 h-10 absolute -left-2 top-4 drop-shadow-lg"
-                             initial={{ x: 30, opacity: 0, rotate: -15 }}
-                             animate={{ x: 0, opacity: 1, rotate: [-15, -5, -15], y: [0, -5, 0] }}
-                             exit={{ x: -30, opacity: 0, rotate: -15 }}
-                             transition={{ 
-                               x: { type: "spring", stiffness: 300, damping: 30 }, 
-                               opacity: { duration: 0.2 },
-                               rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" },
-                               y: { repeat: Infinity, duration: 4, ease: "easeInOut" }
-                             }}
-                         />
-                     </AnimatePresence>
-                     <div className="flex flex-col items-center max-w-[200px] z-10">
-                         <h2 className="text-[#16a34a] font-black text-xl text-center leading-tight tracking-tight drop-shadow-sm" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
-                             Your cart, delivered before you're ready.
-                         </h2>
-                         <div className="mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#16a34a] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-widest shadow-sm">
-                             Shop Now
-                         </div>
-                     </div>
-                     <AnimatePresence mode="popLayout">
-                         <motion.img 
-                             key={`g-right-${currentCycle.right}`}
-                             src={
-                               currentCycle.right.includes("Cart") 
-                                 ? `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/${currentCycle.right}`
-                                 : `https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/${currentCycle.right}`
-                             } 
-                             className="w-10 h-10 absolute -right-2 top-4 drop-shadow-lg"
-                             initial={{ x: 30, opacity: 0, rotate: 10 }}
-                             animate={{ x: 0, opacity: 1, rotate: [10, 20, 10], y: [0, -5, 0] }}
-                             exit={{ x: -30, opacity: 0, rotate: 10 }}
-                             transition={{ 
-                               x: { type: "spring", stiffness: 300, damping: 30 }, 
-                               opacity: { duration: 0.2 },
-                               rotate: { repeat: Infinity, duration: 3.5, ease: "easeInOut" },
-                               y: { repeat: Infinity, duration: 3.5, ease: "easeInOut" }
-                             }}
-                         />
-                     </AnimatePresence>
+              ) : (
+                <div className="flex flex-col items-center pointer-events-none w-full max-w-[260px]">
+                   <div className="flex items-center justify-center w-full relative">
+                       <motion.img 
+                           src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Green%20Salad.png" 
+                           className="w-[36px] h-[36px] drop-shadow-md absolute -left-4"
+                           animate={{ y: [0, -3, 0], rotate: [0, 5, 0] }}
+                           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                       />
+                       <h2 className="text-white font-black text-xl text-center leading-tight tracking-tight drop-shadow-md px-4" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
+                           Your cart, delivered before you're ready.
+                       </h2>
+                   </div>
+                   <div className="mt-[8px] bg-white text-[#fc8019] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
+                       Shop Now
+                   </div>
                 </div>
-            )}
+              )}
+            </div>
           </div>
 
-          <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-3xl -mt-4 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
+          <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
 
           {/* Conditional Content based on Serviceability */}
           {!selectedCity.isServiceable ? (
