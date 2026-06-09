@@ -133,7 +133,7 @@ export const Home: React.FC<HomeProps> = ({
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 bg-gradient-to-b from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a] px-4">
+          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]" : "from-[#380e52] to-[#1d0628] dark:from-[#2e0b44] dark:to-[#16041f]"}`}>
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
@@ -270,7 +270,7 @@ export const Home: React.FC<HomeProps> = ({
                  </button>
                  <button
                     onClick={() => onServiceTypeChange("grocery")}
-                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-[#fc8019]" : "text-white/80 hover:text-white"}`}
+                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-[#48126b]" : "text-white/80 hover:text-white"}`}
                  >
                    {serviceType === "grocery" && <div className="absolute top-[-6px] bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">10 mins</div>}
                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" alt="Grocery" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "grocery" ? "scale-110" : "scale-90 opacity-80"}`} />
@@ -340,7 +340,7 @@ export const Home: React.FC<HomeProps> = ({
                            Your cart, delivered before you're ready.
                        </h2>
                    </div>
-                   <div className="mt-[8px] bg-white text-[#fc8019] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
+                   <div className="mt-[8px] bg-white text-[#48126b] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
                        Shop Now
                    </div>
                 </div>
