@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion, PanInfo } from "motion/react";
 import { Splash } from "./components/Splash";
 import { Welcome } from "./components/Welcome";
@@ -44,112 +44,6 @@ export default function App() {
 
   const selectedCity = CITIES.find(c => c.id === selectedCityId) || CITIES[0];
 
-  let topColorLight = "#ffffff";
-  let topColorDark = "#0f172a";
-  let bottomColorLight = "#f8fafc";
-  let bottomColorDark = "#020617";
-  
-  let bgClassLight = "bg-slate-50";
-  let bgClassDark = "dark:bg-slate-950";
-
-  const isDark = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
-  
-  if (currentScreen === "splash") {
-    topColorLight = "#fc8019";
-    topColorDark = "#fc8019";
-    bottomColorLight = "#fc8019";
-    bottomColorDark = "#fc8019";
-    bgClassLight = "bg-[#fc8019]";
-    bgClassDark = "dark:bg-[#fc8019]";
-  } else if (currentScreen === "home") {
-    if (serviceType === "food") {
-      topColorLight = "#fc8019";
-      topColorDark = "#e06d10";
-      bottomColorLight = "#f8fafc";
-      bottomColorDark = "#020617";
-      bgClassLight = "bg-slate-50"; 
-      bgClassDark = "dark:bg-slate-950";
-    } else {
-      topColorLight = "#380e52";
-      topColorDark = "#2e0b44";
-      bottomColorLight = "#f8fafc";
-      bottomColorDark = "#020617";
-      bgClassLight = "bg-slate-50";
-      bgClassDark = "dark:bg-slate-950";
-    }
-  } else if (currentScreen === "welcome") {
-    topColorLight = "#ffffff";
-    topColorDark = "#0f172a";
-    bottomColorLight = "#ffffff";
-    bottomColorDark = "#0f172a";
-    bgClassLight = "bg-white";
-    bgClassDark = "dark:bg-slate-900";
-  } else if (currentScreen === "cart") {
-    topColorLight = "#ffffff";
-    topColorDark = "#0f172a";
-    bottomColorLight = "#ffffff";
-    bottomColorDark = "#0f172a";
-    bgClassLight = "bg-white";
-    bgClassDark = "dark:bg-slate-900";
-  } else if (currentScreen === "menu") {
-    topColorLight = "#000000";
-    topColorDark = "#000000";
-    bottomColorLight = "#f8fafc";
-    bottomColorDark = "#020617";
-    bgClassLight = "bg-slate-50";
-    bgClassDark = "dark:bg-slate-950";
-  } else if (currentScreen === "search") {
-    topColorLight = "#ffffff";
-    topColorDark = "#0f172a";
-    bottomColorLight = "#f8fafc";
-    bottomColorDark = "#020617";
-    bgClassLight = "bg-slate-50";
-    bgClassDark = "dark:bg-slate-950";
-  } else if (currentScreen === "tracking") {
-    topColorLight = "#1e293b";
-    topColorDark = "#1e293b";
-    bottomColorLight = "#ffffff";
-    bottomColorDark = "#0f172a";
-    bgClassLight = "bg-[#1e293b]"; // Map background
-    bgClassDark = "dark:bg-[#1e293b]";
-  } else {
-    // profile, history, etc
-    topColorLight = "#ffffff";
-    topColorDark = "#0f172a";
-    bottomColorLight = "#f8fafc";
-    bottomColorDark = "#020617";
-    bgClassLight = "bg-slate-50";
-    bgClassDark = "dark:bg-slate-950";
-  }
-
-  const activeTopColor = isDark ? topColorDark : topColorLight;
-  const activeBottomColor = isDark ? bottomColorDark : bottomColorLight;
-
-  useEffect(() => {
-    // Dynamic theme-color meta tag for Safari Top/Bottom bars (it drives the UI tinting in iOS 15+)
-    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!metaThemeColor) {
-      metaThemeColor = document.createElement("meta");
-      metaThemeColor.setAttribute("name", "theme-color");
-      document.head.appendChild(metaThemeColor);
-    }
-    
-    // We use the activeTopColor as the theme-color meta tag value to tint the status bar.
-    // iOS Safari 15+ sometimes uses this for the bottom bar too if scrolling, 
-    // unless the bottom element has a different color. 
-    metaThemeColor.setAttribute("content", activeTopColor);
-
-    // Update html and body backgroundColor to activeBottomColor to help with bottom safe area overscroll tint
-    document.documentElement.style.backgroundColor = activeBottomColor;
-    document.body.style.backgroundColor = activeBottomColor;
-    // clear the linear gradient workaround to prefer natural native colors
-    document.documentElement.style.background = "";
-    document.body.style.background = "";
-
-    document.body.className = `sm:bg-slate-900 sm:dark:bg-slate-900 transition-colors duration-500`;
-
-    // But for the actual container, apply the bgClass
-  }, [currentScreen, serviceType, isDark, activeTopColor, activeBottomColor, bgClassLight, bgClassDark]);
 
   const handleToggleFavorite = (restaurantId: string) => {
     setFavorites((prev) =>
@@ -226,9 +120,9 @@ export default function App() {
   );
 
   return (
-    <div className={`fixed inset-0 sm:static sm:min-h-screen sm:h-auto sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans transition-colors duration-500 ${bgClassLight} ${bgClassDark}`}>
+    <div className="fixed inset-0 sm:static sm:min-h-screen sm:h-auto bg-slate-50 dark:bg-slate-950 sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans">
       {/* Simulated Mobile Device Frame */}
-      <div className={`w-full h-full sm:flex-none sm:h-[844px] sm:w-[390px] relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col transition-colors duration-500 ${bgClassLight} ${bgClassDark}`}>
+      <div className="w-full h-full sm:flex-none sm:h-[844px] sm:w-[390px] bg-slate-50 dark:bg-slate-950 relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col">
         {/* Dynamic Island / Top Notch Hardware Simulation (Desktop only) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-32 bg-slate-800 rounded-b-3xl z-[100] hidden sm:block"></div>
 

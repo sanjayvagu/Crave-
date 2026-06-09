@@ -77,7 +77,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
-      <div className="px-5 pb-4 pt-safe bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="px-5 pb-4 pt-[max(3rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
         <div className="relative">
           <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input

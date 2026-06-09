@@ -72,21 +72,16 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
       <div className="flex-1 relative bg-orange-50/50 overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
           {loginState === "onboarding" ? (
-            <motion.div
+            <motion.img
               key={step.id}
               initial={{ opacity: 0, scale: 1.1, x: 50 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.5 }}
-              className="absolute inset-0"
-            >
-              <img
-                src={step.image}
-                alt={step.title}
-                className="absolute inset-0 w-full h-full object-cover object-center"
-              />
-              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white via-white/40 to-transparent dark:from-slate-900 dark:via-slate-900/40 z-10 pointer-events-none" />
-            </motion.div>
+              src={step.image}
+              alt={step.title}
+              className="absolute inset-0 w-full h-full object-cover object-center"
+            />
           ) : loginState === "phone" ? (
             <motion.div
               key="phone-bg"

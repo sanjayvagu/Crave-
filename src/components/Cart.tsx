@@ -60,9 +60,9 @@ export const Cart: React.FC<CartProps> = ({
   onUpdateCart,
   onUpdateInstructions,
 }) => {
-  const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [showPaymentScreen, setShowPaymentScreen] = useState(false);
   const [addressType, setAddressType] = useState("Home");
   const [deliveryAddress, setDeliveryAddress] = useState(
     "123 Design Avenue, Tech Park Building A",
@@ -201,7 +201,7 @@ export const Cart: React.FC<CartProps> = ({
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 px-5 pb-5 pt-safe bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onBack}
@@ -412,52 +412,7 @@ export const Cart: React.FC<CartProps> = ({
           </div>
         </div>
 
-        {/* Payment Selection */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-            Payment Method
-          </h3>
-          <div className="space-y-3 mt-3">
-            {[
-              { id: "Credit Card", icon: CreditCard },
-              { id: "UPI", icon: Smartphone },
-              { id: "Cash on Delivery", icon: Banknote },
-            ].map((method) => (
-              <div
-                key={method.id}
-                onClick={() => setPaymentMethod(method.id)}
-                className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
-                  paymentMethod === method.id
-                    ? "border-[#fc8019] bg-orange-50/50 dark:bg-slate-800"
-                    : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      paymentMethod === method.id
-                        ? "bg-orange-100 text-[#fc8019]"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500"
-                    }`}
-                  >
-                    <method.icon className="w-5 h-5" />
-                  </div>
-                  <span className="font-bold text-sm text-slate-800 dark:text-slate-100">
-                    {method.id}
-                  </span>
-                </div>
-                <div className="relative flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600">
-                  {paymentMethod === method.id && (
-                    <motion.div
-                      layoutId="radioCheck"
-                      className="w-2.5 h-2.5 rounded-full bg-[#fc8019]"
-                    />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Payment selection now happens on a dedicated screen before finalizing */}
 
         {/* Order Summary */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
@@ -602,10 +557,10 @@ export const Cart: React.FC<CartProps> = ({
       {/* Slide to Pay Area */}
       <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
         <AnimatePresence mode="wait">
-          {!isConfirming && !isProcessing ? (
+          {!isProcessing ? (
             <motion.button
               key="proceed-btn"
-              onClick={() => setIsConfirming(true)}
+              onClick={() => setShowPaymentScreen(true)}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -623,29 +578,6 @@ export const Cart: React.FC<CartProps> = ({
                 </div>
               </div>
             </motion.button>
-          ) : isConfirming && !isProcessing ? (
-            <motion.div
-              key="confirm-options"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="flex flex-col gap-3"
-            >
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                onClick={handleConfirmOrder}
-                className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg shadow-green-500/30 shrink-0"
-              >
-                Confirm Order
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setIsConfirming(false)}
-                className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 py-4 rounded-2xl font-bold text-lg text-center transition-colors shrink-0"
-              >
-                Cancel
-              </motion.button>
-            </motion.div>
           ) : (
             <motion.div
               key="confirmed-btn"
@@ -662,6 +594,101 @@ export const Cart: React.FC<CartProps> = ({
       </>
       )}
 
+      {/* Payment Screen Modal */}
+      <AnimatePresence>
+        {showPaymentScreen && (
+          <motion.div
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute inset-0 z-50 flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden"
+          >
+            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowPaymentScreen(false)}
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </motion.button>
+              <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
+                Payment Method
+              </h1>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
+                How would you like to pay?
+              </h2>
+
+              <div className="space-y-4">
+                {[
+                  { id: "Credit Card", icon: CreditCard, subtitle: "Pay securely with your card" },
+                  { id: "UPI", icon: Smartphone, subtitle: "Google Pay, PhonePe, Paytm" },
+                  { id: "Cash on Delivery", icon: Banknote, subtitle: "Pay when you receive the order" },
+                ].map((method) => (
+                  <div
+                    key={method.id}
+                    onClick={() => setPaymentMethod(method.id)}
+                    className={`flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all ${
+                      paymentMethod === method.id
+                        ? "border-[#fc8019] bg-orange-50/50 dark:bg-slate-800"
+                        : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    }`}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        paymentMethod === method.id
+                          ? "bg-orange-100 text-[#fc8019]"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                      }`}
+                    >
+                      <method.icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100">
+                        {method.id}
+                      </h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {method.subtitle}
+                      </p>
+                    </div>
+                    <div className="relative flex items-center justify-center w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0">
+                      {paymentMethod === method.id && (
+                        <motion.div
+                          layoutId="paymentRadioCheck"
+                          className="w-3 h-3 rounded-full bg-[#fc8019]"
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-5 py-6 pb-[max(2rem,env(safe-area-inset-bottom))] shrink-0">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Total to Pay</span>
+                <span className="font-bold text-xl text-slate-800 dark:text-slate-100">
+                  ₹<NumberTicker value={total} />
+                </span>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setShowPaymentScreen(false);
+                  handleConfirmOrder();
+                }}
+                className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-colors shadow-[0_10px_20px_rgba(96,178,70,0.3)]"
+              >
+                Confirm & Pay
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Map Modal */}
       <AnimatePresence>
         {showMap && (
@@ -671,7 +698,7 @@ export const Cart: React.FC<CartProps> = ({
             exit={{ opacity: 0 }}
             className="absolute inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden"
           >
-            <div className="flex items-center gap-4 px-5 pb-5 pt-safe bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowMap(false)}
