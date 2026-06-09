@@ -8,10 +8,11 @@ import { Cart } from "./components/Cart";
 import { OrderHistory } from "./components/OrderHistory";
 import { Tracking } from "./components/Tracking";
 import { Profile } from "./components/Profile";
+import { GroceryCategoriesScreen } from "./components/GroceryCategoriesScreen";
 import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
-import { Restaurant, CartItem, MenuItem, Order, Address } from "./types";
-import { RESTAURANTS, MENU_ITEMS } from "./data";
+import { Restaurant, CartItem, MenuItem, Order, Address, City } from "./types";
+import { RESTAURANTS, MENU_ITEMS, CITIES } from "./data";
 
 export type Screen =
   | "splash"
@@ -36,6 +37,13 @@ export default function App() {
     { id: "2", label: "Work", value: "456 Creative Boulevard" },
   ]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("1");
+  const [selectedCityId, setSelectedCityId] = useState<string>(CITIES[0].id);
+  const [serviceType, setServiceType] = useState<"food" | "grocery">("food");
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const selectedCity = CITIES.find(c => c.id === selectedCityId) || CITIES[0];
+
 
   const handleToggleFavorite = (restaurantId: string) => {
     setFavorites((prev) =>
@@ -158,7 +166,11 @@ export default function App() {
             {currentScreen === "home" && (
               <Home
                 key="home"
+                serviceType={serviceType}
+                onServiceTypeChange={setServiceType}
                 favorites={favorites}
+                selectedCity={selectedCity}
+                onSelectCity={setSelectedCityId}
                 activeAddress={addresses.find(
                   (a) => a.id === selectedAddressId,
                 )}
@@ -166,7 +178,10 @@ export default function App() {
                 onSelectRestaurant={handleSelectRestaurant}
                 onViewHistory={() => setCurrentScreen("history")}
                 onViewProfile={() => setCurrentScreen("profile")}
-                onOpenSearch={() => setCurrentScreen("search")}
+                onOpenSearch={(query) => {
+                  setSearchQuery(typeof query === "string" ? query : "");
+                  setCurrentScreen("search");
+                }}
                 onUpdateCart={handleUpdateCart}
               />
             )}
@@ -224,10 +239,20 @@ export default function App() {
               />
             )}
 
-            {currentScreen === "search" && (
+            {currentScreen === "search" && serviceType === "food" && (
               <SearchScreen
                 key="search"
+                initialQuery={searchQuery}
+                selectedCityId={selectedCityId}
                 onSelectRestaurant={handleSelectRestaurant}
+                onBack={() => setCurrentScreen("home")}
+              />
+            )}
+
+            {currentScreen === "search" && serviceType === "grocery" && (
+              <GroceryCategoriesScreen
+                key="grocery_categories"
+                onBack={() => setCurrentScreen("home")}
               />
             )}
           </AnimatePresence>
@@ -238,6 +263,7 @@ export default function App() {
             currentScreen={currentScreen}
             onNavigate={setCurrentScreen}
             cartItemCount={cartItemCount}
+            serviceType={serviceType}
           />
         )}
 

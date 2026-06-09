@@ -1,9 +1,17 @@
-import { Restaurant, MenuItem } from "./types";
+import { Restaurant, MenuItem, Order, City } from "./types";
+
+export const CITIES: City[] = [
+  { id: "c1", name: "Yeleswaram", isServiceable: true, pinCodes: ["533429"] },
+  { id: "c2", name: "Prathipadu", isServiceable: true, pinCodes: ["533432"] },
+  { id: "c4", name: "Pune", isServiceable: false, pinCodes: ["411001"] },
+  { id: "c5", name: "Jaipur", isServiceable: false, pinCodes: ["302001"] }
+];
 
 export const RESTAURANTS: Restaurant[] = [
   {
     id: "r1",
-    name: "Truffles & Co.",
+    cityId: "c1",
+    name: "Truffles & Co. (Yeleswaram)",
     rating: 4.8,
     reviewCount: 1240,
     deliveryTime: "30-35 mins",
@@ -13,7 +21,8 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: "r2",
-    name: "Sushi Samba",
+    cityId: "c2",
+    name: "Sushi Samba (Prathipadu)",
     rating: 4.9,
     reviewCount: 890,
     deliveryTime: "40-45 mins",
@@ -23,7 +32,8 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: "r3",
-    name: "Napoli Pizzeria",
+    cityId: "c2",
+    name: "Napoli Pizzeria (Prathipadu)",
     rating: 4.6,
     reviewCount: 3200,
     deliveryTime: "25-30 mins",
@@ -32,7 +42,8 @@ export const RESTAURANTS: Restaurant[] = [
   },
   {
     id: "r4",
-    name: "Spice Symphony",
+    cityId: "c1",
+    name: "Spice Symphony (Yeleswaram)",
     rating: 4.4,
     reviewCount: 450,
     deliveryTime: "35-40 mins",

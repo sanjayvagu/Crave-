@@ -1,23 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Search } from "lucide-react";
+import { Search, Mic } from "lucide-react";
 import { RESTAURANTS } from "../data";
 import { Restaurant } from "../types";
 
 interface SearchScreenProps {
   onSelectRestaurant: (restaurant: Restaurant) => void;
+  initialQuery?: string;
+  selectedCityId: string;
+  onBack?: () => void;
 }
 
 export const SearchScreen: React.FC<SearchScreenProps> = ({
   onSelectRestaurant,
+  initialQuery = "",
+  selectedCityId,
+  onBack,
 }) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
+  const [isListening, setIsListening] = useState(false);
+
+  const startListening = () => {
+    if (
+      !("webkitSpeechRecognition" in window) &&
+      !("SpeechRecognition" in window)
+    ) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+      setIsListening(false);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error);
+      if (event.error === "not-allowed") {
+        alert("Microphone access was denied. Please allow microphone access to use voice search.");
+      }
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
 
   const results = query
     ? RESTAURANTS.filter(
         (r) =>
-          r.name.toLowerCase().includes(query.toLowerCase()) ||
-          r.tags.some((tag) => tag.toLowerCase().includes(query.toLowerCase())),
+          r.cityId === selectedCityId && (r.name.toLowerCase().includes(query.toLowerCase()) ||
+          r.tags.some((tag) => tag.toLowerCase().includes(query.toLowerCase()))),
       )
     : [];
 
@@ -38,8 +86,18 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for restaurants, items..."
-            className="w-full bg-slate-100 dark:bg-slate-800 rounded-2xl py-3.5 pl-12 pr-4 outline-none text-slate-800 dark:text-slate-100 placeholder-slate-500 font-medium border border-slate-200 dark:border-slate-700 focus:border-[#fc8019]/50 transition-colors shadow-inner"
+            className="w-full bg-slate-100 dark:bg-slate-800 rounded-2xl py-3.5 pl-12 pr-12 outline-none text-slate-800 dark:text-slate-100 placeholder-slate-500 font-medium border border-slate-200 dark:border-slate-700 focus:border-[#fc8019]/50 transition-colors shadow-inner"
           />
+          <button
+            onClick={startListening}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors z-10 ${
+              isListening
+                ? "bg-red-100 text-red-500 dark:bg-red-900/30 animate-pulse"
+                : "text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+            }`}
+          >
+            <Mic className="w-4 h-4" />
+          </button>
         </div>
       </div>
 

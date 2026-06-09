@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, PanInfo } from "motion/react";
-import { Home, ShoppingCart, User, Search } from "lucide-react";
+import { Home, ShoppingCart, User, Search, LayoutGrid } from "lucide-react";
 import { Screen } from "../App";
 
 interface BottomNavProps {
   currentScreen: Screen;
   onNavigate: (screen: Screen) => void;
   cartItemCount: number;
+  serviceType?: "food" | "grocery";
 }
 
 const TABS = [
@@ -19,6 +20,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   currentScreen,
   onNavigate,
   cartItemCount,
+  serviceType,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [popState, setPopState] = useState(false);
@@ -149,13 +151,23 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         onClick={() => onNavigate("search")}
         className={`w-[64px] h-[64px] shrink-0 rounded-full flex flex-col items-center justify-center shadow-[0_8px_32px_rgb(0,0,0,0.08)] border border-white/60 dark:border-slate-700/60 backdrop-blur-2xl transition-colors duration-300 ${currentScreen === "search" ? "bg-slate-200/80 dark:bg-slate-800/80 text-blue-600 dark:text-blue-400" : "bg-white/80 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400"}`}
       >
-        <Search
-          className="w-6 h-6"
-          style={{
-            fill: currentScreen === "search" ? "currentColor" : "none",
-            strokeWidth: currentScreen === "search" ? 3 : 2.5,
-          }}
-        />
+        {serviceType === "grocery" ? (
+          <LayoutGrid
+            className="w-6 h-6"
+            style={{
+              fill: currentScreen === "search" ? "currentColor" : "none",
+              strokeWidth: currentScreen === "search" ? 3 : 2.5,
+            }}
+          />
+        ) : (
+          <Search
+            className="w-6 h-6"
+            style={{
+              fill: currentScreen === "search" ? "currentColor" : "none",
+              strokeWidth: currentScreen === "search" ? 3 : 2.5,
+            }}
+          />
+        )}
       </button>
     </div>
   );

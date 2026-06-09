@@ -1,5 +1,13 @@
+export interface City {
+  id: string;
+  name: string;
+  isServiceable: boolean;
+  pinCodes: string[];
+}
+
 export interface Restaurant {
   id: string;
+  cityId?: string;
   name: string;
   rating: number;
   reviewCount: number;

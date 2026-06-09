@@ -1,6 +1,6 @@
 {
   "name": "Crave",
   "description": "Premium React-based mobile-first UI inspired by Swiggy, featuring glassmorphism and motion graphics.",
-  "requestFramePermissions": ["geolocation"],
+  "requestFramePermissions": ["geolocation", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

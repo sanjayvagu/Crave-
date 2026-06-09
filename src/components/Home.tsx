@@ -10,24 +10,33 @@ import {
   History,
   Heart,
 } from "lucide-react";
-import { RESTAURANTS, MOCK_ORDERS, MENU_ITEMS } from "../data";
-import { Restaurant, Address, MenuItem } from "../types";
+import { RESTAURANTS, MOCK_ORDERS, MENU_ITEMS, CITIES } from "../data";
+import { Restaurant, Address, MenuItem, City } from "../types";
 import { PullToRefresh } from "./PullToRefresh";
+import { GroceryView } from "./GroceryView";
 
 interface HomeProps {
+  serviceType: "food" | "grocery";
+  onServiceTypeChange: (type: "food" | "grocery") => void;
   favorites: string[];
   activeAddress?: Address;
+  selectedCity: City;
+  onSelectCity: (cityId: string) => void;
   onToggleFavorite: (id: string) => void;
   onSelectRestaurant: (restaurant: Restaurant) => void;
   onViewHistory: () => void;
   onViewProfile: () => void;
-  onOpenSearch: () => void;
+  onOpenSearch: (query?: string) => void;
   onUpdateCart?: (item: MenuItem, delta: number) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({
+  serviceType,
+  onServiceTypeChange,
   favorites,
   activeAddress,
+  selectedCity,
+  onSelectCity,
   onToggleFavorite,
   onSelectRestaurant,
   onViewHistory,
@@ -36,6 +45,7 @@ export const Home: React.FC<HomeProps> = ({
   onUpdateCart,
 }) => {
   const [isLocating, setIsLocating] = useState(false);
+  const [showCitySelector, setShowCitySelector] = useState(false);
 
   const handleEnableLocation = () => {
     setIsLocating(true);
@@ -44,6 +54,12 @@ export const Home: React.FC<HomeProps> = ({
         (position) => {
           setTimeout(() => {
             setIsLocating(false);
+            // Simulate capturing an unserviceable city randomly or just the first unserviceable one
+            // We'll pick 'Pune' to demonstrate the GPS scenario.
+            import("../data").then((module) => {
+               const randomIndex = Math.floor(Math.random() * module.CITIES.length);
+               onSelectCity(module.CITIES[randomIndex].id);
+            });
           }, 800);
         },
         (error) => {
@@ -61,15 +77,22 @@ export const Home: React.FC<HomeProps> = ({
     await new Promise((resolve) => setTimeout(resolve, 1500));
   };
 
+  const cityRestaurants = useMemo(() => {
+    return RESTAURANTS.filter(r => r.cityId === selectedCity.id);
+  }, [selectedCity.id]);
+
   const recommendedItems = useMemo(() => {
     const orderedItemNames = new Set<string>();
-    MOCK_ORDERS.forEach(order => {
-      order.items.forEach(item => orderedItemNames.add(item.name));
+    MOCK_ORDERS.forEach((order) => {
+      order.items.forEach((item) => orderedItemNames.add(item.name));
     });
 
-    const recommended = MENU_ITEMS.filter(item => orderedItemNames.has(item.name));
+    const recommended = MENU_ITEMS.filter((item) => {
+      const parentRest = RESTAURANTS.find(r => r.id === item.restaurantId);
+      return orderedItemNames.has(item.name) && parentRest?.cityId === selectedCity.id;
+    });
     return recommended.slice(0, 5); // Return up to 5 items
-  }, []);
+  }, [selectedCity.id]);
 
   return (
     <motion.div
@@ -81,9 +104,10 @@ export const Home: React.FC<HomeProps> = ({
     >
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
-          {/* Header - Glassmorphic */}
-          <div className="sticky top-0 z-50 pt-[max(1.5rem,env(safe-area-inset-top))] pb-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-white/20 dark:border-slate-700/50 px-4">
-            <div className="flex items-center justify-between gap-2">
+          {/* Header & Hero Section */}
+          <div className="relative z-20 pt-[max(1.5rem,env(safe-area-inset-top))] pb-10 bg-gradient-to-b from-[#fc8019]/15 via-[#fc8019]/5 to-transparent dark:from-[#fc8019]/15 dark:via-[#fc8019]/5 dark:to-transparent px-4">
+            
+            <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -157,7 +181,7 @@ export const Home: React.FC<HomeProps> = ({
 
               {/* Address */}
               <div
-                onClick={handleEnableLocation}
+                onClick={() => setShowCitySelector(true)}
                 className="flex flex-col flex-1 items-center justify-center truncate cursor-pointer group"
               >
                 <div className="flex items-center gap-1">
@@ -174,27 +198,20 @@ export const Home: React.FC<HomeProps> = ({
                   ) : (
                     <MapPin className="text-[#fc8019] w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
                   )}
-                  <div className="flex items-center font-bold text-xs text-slate-800 dark:text-slate-100">
-                    {activeAddress?.label || "Location"}{" "}
-                    <ChevronDown className="w-3 h-3 text-slate-500 dark:text-slate-400 group-hover:text-[#fc8019] transition-colors" />
+                  <div className="flex items-center font-bold text-sm text-slate-800 dark:text-slate-100">
+                    {selectedCity.name}{" "}
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-[#fc8019] transition-colors ml-0.5" />
                   </div>
                 </div>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-32 text-center pl-2 group-hover:text-slate-800 dark:text-slate-100 transition-colors">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate w-32 text-center group-hover:text-slate-800 dark:text-slate-100 transition-colors">
                   {isLocating
                     ? "Locating..."
-                    : activeAddress?.value || "Select Location"}
+                    : selectedCity.pinCodes[0] || "Select Location"}
                 </p>
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-3 shrink-0">
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={onViewHistory}
-                  className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700"
-                >
-                  <History className="w-4 h-4" />
-                </motion.button>
+              <div className="flex items-center gap-2.5 shrink-0">
                 <motion.div
                   onClick={onViewProfile}
                   whileTap={{ scale: 0.9 }}
@@ -209,23 +226,118 @@ export const Home: React.FC<HomeProps> = ({
               </div>
             </div>
 
-            {/* Search Bar Placeholder */}
+            {/* Service Toggle */}
+            {selectedCity.name === "Prathipadu" && selectedCity.isServiceable && (
+              <div className="relative z-10 flex bg-slate-100/80 dark:bg-slate-800/80 p-1 mt-5 mx-1 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
+                 <motion.div
+                   className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white dark:bg-slate-700 shadow-sm border border-slate-100 dark:border-slate-600"
+                   animate={{ x: serviceType === "food" ? 0 : "100%" }}
+                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                 />
+                 <button
+                    onClick={() => onServiceTypeChange("food")}
+                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "food" ? "text-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
+                 >
+                   <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Hamburger.png" alt="Food" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "food" ? "scale-110" : "scale-90 opacity-80"}`} />
+                   Food Delivery
+                 </button>
+                 <button
+                    onClick={() => onServiceTypeChange("grocery")}
+                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"}`}
+                 >
+                   {serviceType === "grocery" && <div className="absolute top-[-6px] bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">10 mins</div>}
+                   <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" alt="Grocery" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "grocery" ? "scale-110" : "scale-90 opacity-80"}`} />
+                   Groceries
+                 </button>
+              </div>
+            )}
+
+            {/* Search Bar */}
             <motion.div
               onClick={onOpenSearch}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="mt-4 flex items-center bg-white dark:bg-slate-900 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-3 border border-slate-100 dark:border-slate-800 cursor-pointer"
+              className="relative z-10 mt-5 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-sm rounded-2xl p-3.5 border border-slate-200 dark:border-slate-700 cursor-pointer"
             >
-              <Search className="w-5 h-5 text-slate-400 dark:text-slate-500 ml-1" />
-              <p className="flex-1 ml-3 text-slate-400 dark:text-slate-500">
-                Search for restaurants, cuisines...
+              <Search className="w-5 h-5 text-slate-400 ml-1" />
+              <p className="flex-1 ml-3 text-slate-400 text-sm font-medium">
+                Search for '{serviceType === "food" ? "EatRight" : "Groceries"}'
               </p>
+              <div className="text-[#fc8019] mx-1 border-l border-slate-200 dark:border-slate-700 pl-3">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+              </div>
             </motion.div>
+            
+            {/* Animated Foodie/Instacart Text Banner Overlay */}
+            {serviceType === "food" && (
+                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none">
+                     <motion.img 
+                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pizza.png" 
+                         className="w-12 h-12 absolute -left-2 top-0 rotate-[-15deg] drop-shadow-lg"
+                         animate={{ rotate: [-15, -5, -15], y: [0, -5, 0] }}
+                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                     />
+                     <div className="flex flex-col items-center">
+                         <h2 className="text-[#fc8019] font-black text-4xl tracking-tighter drop-shadow-sm italic uppercase" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
+                             FOODIE VERSE
+                         </h2>
+                         <div className="mt-[-8px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#fc8019] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-widest shadow-sm">
+                             Order Now
+                         </div>
+                     </div>
+                     <motion.img 
+                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pot%20of%20Food.png" 
+                         className="w-12 h-12 absolute -right-2 top-2 rotate-[10deg] drop-shadow-lg"
+                         animate={{ rotate: [10, 20, 10], y: [0, -5, 0] }}
+                         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                     />
+                </div>
+            )}
+            {serviceType === "grocery" && (
+                <div className="relative z-10 mt-6 mb-2 flex items-center justify-center pointer-events-none">
+                     <motion.img 
+                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Red%20Apple.png" 
+                         className="w-10 h-10 absolute -left-2 top-0 rotate-[-15deg] drop-shadow-lg"
+                         animate={{ rotate: [-15, -5, -15], y: [0, -5, 0] }}
+                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                     />
+                     <div className="flex flex-col items-center max-w-[200px]">
+                         <h2 className="text-[#16a34a] font-black text-xl text-center leading-tight tracking-tight drop-shadow-sm" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
+                             Your cart, delivered before you're ready.
+                         </h2>
+                         <div className="mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#16a34a] text-[10px] font-bold px-3 py-0.5 rounded-full uppercase tracking-widest shadow-sm">
+                             Shop Now
+                         </div>
+                     </div>
+                     <motion.img 
+                         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" 
+                         className="w-10 h-10 absolute -right-2 top-2 rotate-[10deg] drop-shadow-lg"
+                         animate={{ rotate: [10, 20, 10], y: [0, -5, 0] }}
+                         transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+                     />
+                </div>
+            )}
           </div>
 
-          <div className="px-5 pb-8 pt-4">
-            {/* Promotional Offers */}
-            <div className="flex overflow-x-auto no-scrollbar gap-4 pb-6 -mx-5 px-5">
+          <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-3xl -mt-4 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
+
+          {/* Conditional Content based on Serviceability */}
+          {!selectedCity.isServiceable ? (
+            <div className="flex flex-col items-center justify-center pt-20 px-6 text-center">
+              <div className="w-32 h-32 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                <MapPin className="w-12 h-12 text-[#fc8019] opacity-50" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">Unserviceable Area</h2>
+              <p className="text-slate-500 dark:text-slate-400">
+                Coming soon to {selectedCity.name}!
+              </p>
+            </div>
+          ) : serviceType === "grocery" ? (
+            <GroceryView onUpdateCart={onUpdateCart} />
+          ) : (
+            <>
+              {/* Promotional Offers */}
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-6 -mx-5 px-5">
                   <motion.div
                     whileHover={{ scale: 1.05, rotate: -1 }}
                     className="min-w-[280px] h-36 rounded-3xl bg-gradient-to-br from-[#fc8019] to-[#e86600] p-4 text-white shadow-lg overflow-hidden relative"
@@ -262,6 +374,41 @@ export const Home: React.FC<HomeProps> = ({
                       </span>
                     </div>
                   </motion.div>
+            </div>
+
+            {/* Categories */}
+            <div className="mb-8 cursor-grab active:cursor-grabbing">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+                  What's on your mind?
+                </h2>
+              </div>
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-2 -mx-5 px-5">
+                {[
+                  { name: "Burgers", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Hamburger.png" },
+                  { name: "Pizzas", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pizza.png" },
+                  { name: "Sushi", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Sushi.png" },
+                  { name: "Healthy", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Green%20Salad.png" },
+                  { name: "Indian", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Curry%20Rice.png" },
+                  { name: "Desserts", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Ice%20Cream.png" },
+                  { name: "Drinks", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Tropical%20Drink.png" },
+                ].map((category, idx) => (
+                  <motion.div
+                    key={idx}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => onOpenSearch(category.name)}
+                    className="flex flex-col items-center gap-2 cursor-pointer shrink-0"
+                  >
+                    <div className="w-[72px] h-[72px] bg-slate-50 dark:bg-slate-800/50 rounded-full shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center p-3">
+                      <img src={category.image} alt={category.name} className="w-full h-full object-contain drop-shadow-md" />
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      {category.name}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             {/* Recommended for You */}
@@ -322,7 +469,7 @@ export const Home: React.FC<HomeProps> = ({
                 Top Restaurants to explore
               </h2>
               <div className="flex flex-col gap-6">
-                  {RESTAURANTS.map((restaurant) => (
+                  {cityRestaurants.map((restaurant) => (
                     <motion.div
                       key={restaurant.id}
                       layoutId={`restaurant-${restaurant.id}`}
@@ -395,6 +542,9 @@ export const Home: React.FC<HomeProps> = ({
               </div>
             </div>
 
+            </>
+            )}
+
             {/* Footer */}
             <div className="mt-12 py-10 border-t border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center">
               <div className="flex flex-col items-center shrink-0 mb-4 cursor-pointer group">
@@ -423,6 +573,52 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         </div>
       </PullToRefresh>
+
+      {/* City Selector Modal */}
+      {showCitySelector && (
+        <div className="absolute inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm"
+             onClick={() => setShowCitySelector(false)}>
+          <motion.div 
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl flex flex-col max-h-[80vh]"
+          >
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">Select City</h2>
+            <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar pb-6">
+              {CITIES.map((city) => (
+                <button
+                  key={city.id}
+                  onClick={() => {
+                    onSelectCity(city.id);
+                    setShowCitySelector(false);
+                  }}
+                  className={`flex items-center justify-between p-4 rounded-2xl border transition-colors ${
+                    selectedCity.id === city.id
+                      ? "border-[#fc8019] bg-orange-50 dark:bg-[#fc8019]/10"
+                      : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  <div className="flex flex-col items-start">
+                    <span className={`font-bold text-lg ${selectedCity.id === city.id ? "text-[#fc8019]" : "text-slate-800 dark:text-slate-100"}`}>
+                      {city.name}
+                    </span>
+                    {!city.isServiceable && (
+                      <span className="text-xs text-red-500 font-medium">Coming Soon</span>
+                    )}
+                  </div>
+                  {selectedCity.id === city.id && (
+                     <div className="w-5 h-5 rounded-full bg-[#fc8019] flex items-center justify-center">
+                       <div className="w-2 h-2 rounded-full bg-white" />
+                     </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 };

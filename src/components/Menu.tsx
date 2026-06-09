@@ -301,7 +301,7 @@ export const Menu: React.FC<MenuProps> = ({
                                           exit={{ scale: 0.8, opacity: 0 }}
                                           whileTap={{ scale: 0.9 }}
                                           onClick={() => onUpdateCart(item, 1)}
-                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-24 relative z-20"
+                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-28 relative z-20"
                                         >
                                           ADD
                                         </motion.button>
@@ -311,7 +311,7 @@ export const Menu: React.FC<MenuProps> = ({
                                           initial={{ scale: 0.8, opacity: 0 }}
                                           animate={{ scale: 1, opacity: 1 }}
                                           exit={{ scale: 0.8, opacity: 0 }}
-                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-24 h-[38px] px-2 relative z-20"
+                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-28 h-[38px] px-2 relative z-20 shrink-0"
                                         >
                                           <motion.button
                                             whileTap={{ scale: 0.8 }}

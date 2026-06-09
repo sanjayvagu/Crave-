@@ -489,21 +489,23 @@ export const Cart: React.FC<CartProps> = ({
                           {item.name}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
-                          <button
+                          <motion.button
+                            whileTap={{ scale: 0.8 }}
                             onClick={() => onUpdateCart(item, -1)}
-                            className="w-6 h-6 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
+                            className="w-8 h-8 shrink-0 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
                           >
                             <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="text-sm font-medium w-4 text-center">
+                          </motion.button>
+                          <span className="text-sm font-medium w-6 text-center">
                             {item.quantity}
                           </span>
-                          <button
+                          <motion.button
+                            whileTap={{ scale: 0.8 }}
                             onClick={() => onUpdateCart(item, 1)}
-                            className="w-6 h-6 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
+                            className="w-8 h-8 shrink-0 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
                           >
                             <Plus className="w-3 h-3" />
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     </div>
@@ -599,36 +601,63 @@ export const Cart: React.FC<CartProps> = ({
 
       {/* Slide to Pay Area */}
       <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
-        <motion.button
-          onClick={handleConfirmOrder}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          animate={{
-            boxShadow: [
-              "0px 10px 20px rgba(96, 178, 70, 0.3)",
-              "0px 0px 30px rgba(96, 178, 70, 0.7)",
-              "0px 10px 20px rgba(96, 178, 70, 0.3)",
-            ],
-          }}
-          transition={{
-            boxShadow: {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            },
-          }}
-          className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-between px-6 transition-colors"
-        >
-          <span className="flex items-center">
-            Pay ₹<NumberTicker value={total} />
-          </span>
-          <div className="flex items-center gap-2">
-            <span>Proceed</span>
-            <div className="bg-white/20 p-1.5 rounded-full">
-              <ChevronRight className="w-5 h-5" />
-            </div>
-          </div>
-        </motion.button>
+        <AnimatePresence mode="wait">
+          {!isConfirming && !isProcessing ? (
+            <motion.button
+              key="proceed-btn"
+              onClick={() => setIsConfirming(true)}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-between px-6 transition-colors shadow-[0_10px_20px_rgba(96,178,70,0.3)]"
+            >
+              <span className="flex items-center">
+                Pay ₹<NumberTicker value={total} />
+              </span>
+              <div className="flex items-center gap-2">
+                <span>Proceed</span>
+                <div className="bg-white/20 p-1.5 rounded-full">
+                  <ChevronRight className="w-5 h-5" />
+                </div>
+              </div>
+            </motion.button>
+          ) : isConfirming && !isProcessing ? (
+            <motion.div
+              key="confirm-options"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="flex flex-col gap-3"
+            >
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleConfirmOrder}
+                className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg shadow-green-500/30 shrink-0"
+              >
+                Confirm Order
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsConfirming(false)}
+                className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 py-4 rounded-2xl font-bold text-lg text-center transition-colors shrink-0"
+              >
+                Cancel
+              </motion.button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="confirmed-btn"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full bg-[#fc8019] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(252,128,25,0.3)]"
+            >
+              <CheckCircle2 className="w-6 h-6" />
+              Order Confirmed!
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       </>
       )}
@@ -722,43 +751,6 @@ export const Cart: React.FC<CartProps> = ({
                 Confirm Location
               </motion.button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {isProcessing && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex flex-col justify-end bg-slate-900/40 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-2xl flex flex-col items-center pb-32"
-            >
-              <div className="flex flex-col items-center justify-center py-6">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  className="w-16 h-16 rounded-full border-4 border-[#fc8019] border-t-transparent mb-6"
-                />
-                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
-                  Processing Payment...
-                </h2>
-                <p className="text-slate-500 dark:text-slate-400 text-center mb-6">
-                  Securely authenticating {paymentMethod}. Please wait.
-                </p>
-              </div>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
