@@ -8,10 +8,6 @@
   --color-brand-orange: #fc8019;
 }
 
-body {
-  @apply bg-slate-50 dark:bg-slate-950 sm:bg-slate-900 sm:dark:bg-slate-900;
-}
-
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

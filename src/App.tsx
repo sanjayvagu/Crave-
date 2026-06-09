@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion, PanInfo } from "motion/react";
 import { Splash } from "./components/Splash";
 import { Welcome } from "./components/Welcome";
@@ -44,6 +44,45 @@ export default function App() {
 
   const selectedCity = CITIES.find(c => c.id === selectedCityId) || CITIES[0];
 
+  useEffect(() => {
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let themeColor = isDark ? "#0f172a" : "#f8fafc"; // slate-950 : slate-50
+    let bgClassLight = "bg-slate-50";
+    let bgClassDark = "dark:bg-slate-950";
+    
+    if (currentScreen === "splash") {
+      themeColor = "#fc8019";
+      bgClassLight = "bg-[#fc8019]";
+      bgClassDark = "dark:bg-[#fc8019]";
+    } else if (currentScreen === "home") {
+      if (serviceType === "food") {
+        themeColor = isDark ? "#e06d10" : "#fc8019";
+        bgClassLight = "bg-[#fc8019]";
+        bgClassDark = "dark:bg-[#e06d10]";
+      } else {
+        themeColor = isDark ? "#2e0b44" : "#380e52";
+        bgClassLight = "bg-[#380e52]";
+        bgClassDark = "dark:bg-[#2e0b44]";
+      }
+    } else if (currentScreen === "menu") {
+      themeColor = "#000000"; // dark for images
+    }
+    
+    // Update theme-color meta tag
+    let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", themeColor);
+    } else {
+      metaThemeColor = document.createElement("meta");
+      metaThemeColor.setAttribute("name", "theme-color");
+      metaThemeColor.setAttribute("content", themeColor);
+      document.head.appendChild(metaThemeColor);
+    }
+
+    // Update body class for overscroll color
+    document.body.className = `sm:bg-slate-900 sm:dark:bg-slate-900 transition-colors duration-500 ${bgClassLight} ${bgClassDark}`;
+
+  }, [currentScreen, serviceType]);
 
   const handleToggleFavorite = (restaurantId: string) => {
     setFavorites((prev) =>
@@ -119,10 +158,17 @@ export default function App() {
     currentScreen,
   );
 
+  let topBackgroundColorClass = "bg-slate-50 dark:bg-slate-950";
+  if (currentScreen === "splash") {
+    topBackgroundColorClass = "bg-[#fc8019]";
+  } else if (currentScreen === "home") {
+    topBackgroundColorClass = serviceType === "food" ? "bg-[#fc8019] dark:bg-[#e06d10]" : "bg-[#380e52] dark:bg-[#2e0b44]";
+  }
+
   return (
-    <div className="fixed inset-0 sm:static sm:min-h-screen sm:h-auto bg-slate-50 dark:bg-slate-950 sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans">
+    <div className={`fixed inset-0 sm:static sm:min-h-screen sm:h-auto sm:bg-slate-900 sm:dark:bg-slate-900 flex items-center justify-center p-0 sm:p-8 font-sans transition-colors duration-500 ${topBackgroundColorClass}`}>
       {/* Simulated Mobile Device Frame */}
-      <div className="w-full h-full sm:flex-none sm:h-[844px] sm:w-[390px] bg-slate-50 dark:bg-slate-950 relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col">
+      <div className={`w-full h-full sm:flex-none sm:h-[844px] sm:w-[390px] relative overflow-hidden sm:rounded-[40px] sm:shadow-2xl sm:border-[8px] sm:border-slate-800 flex flex-col transition-colors duration-500 ${topBackgroundColorClass}`}>
         {/* Dynamic Island / Top Notch Hardware Simulation (Desktop only) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-32 bg-slate-800 rounded-b-3xl z-[100] hidden sm:block"></div>
 
