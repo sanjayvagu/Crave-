@@ -16,6 +16,7 @@ import { MENU_ITEMS } from "../data";
 interface MenuProps {
   restaurant: Restaurant;
   cart: CartItem[];
+  isVendorOnline?: boolean;
   onUpdateCart: (item: MenuItem, delta: number) => void;
   onBack: () => void;
   onCheckout: () => void;
@@ -24,6 +25,7 @@ interface MenuProps {
 export const Menu: React.FC<MenuProps> = ({
   restaurant,
   cart,
+  isVendorOnline = true,
   onUpdateCart,
   onBack,
   onCheckout,
@@ -141,6 +143,12 @@ export const Menu: React.FC<MenuProps> = ({
 
         {/* Menu Section */}
         <div className="bg-white  rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
+          {!isVendorOnline && (
+            <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-6 flex flex-col items-center justify-center text-center">
+              <span className="text-orange-600 font-bold text-lg mb-1">Currently Offline</span>
+              <span className="text-orange-500/80 text-sm font-medium">This vendor is not accepting orders at the moment.</span>
+            </div>
+          )}
           <div className="flex flex-col gap-4 mb-6">
             <div className="flex items-center justify-between">
               <h2 className="font-bold text-xl text-slate-800 ">
@@ -293,7 +301,11 @@ export const Menu: React.FC<MenuProps> = ({
 
                                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
                                     <AnimatePresence mode="popLayout">
-                                      {qty === 0 ? (
+                                      {!isVendorOnline ? (
+                                        <div className="bg-slate-100 text-slate-400 font-bold text-[10px] px-2 py-2 rounded-xl shadow-sm border border-slate-200 flex items-center justify-center w-28 relative z-20 whitespace-nowrap overflow-hidden">
+                                          Unavailable
+                                        </div>
+                                      ) : qty === 0 ? (
                                         <motion.button
                                           key="add"
                                           initial={{ scale: 0.8, opacity: 0 }}

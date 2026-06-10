@@ -7,11 +7,18 @@ import { GROCERY_ITEMS, RECOMMENDED_GROCERY_ITEMS } from "../data";
 
 interface GroceryViewProps {
   onUpdateCart?: (item: MenuItem, delta: number) => void;
+  isVendorOnline?: boolean;
 }
 
-export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
+export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart, isVendorOnline = true }) => {
   return (
     <div className="flex flex-col animate-fade-in pb-10">
+      {!isVendorOnline && (
+        <div className="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-6 mx-5 flex flex-col items-center justify-center text-center">
+          <span className="text-orange-600 font-bold text-lg mb-1">Currently Offline</span>
+          <span className="text-orange-500/80 text-sm font-medium">Store is not accepting orders at the moment.</span>
+        </div>
+      )}
       {/* Promotional Offers */}
       <div className="flex overflow-x-auto no-scrollbar gap-4 pb-6 -mx-5 px-5">
           <motion.div
@@ -201,16 +208,20 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                     <span className="text-[10px] text-slate-400 line-through">₹{Math.round(item.price * 1.1)}</span>
                     <span className="font-bold text-slate-800  text-base">₹{item.price}</span>
                   </div>
-                  <motion.button 
-                    whileTap={{ scale: 0.8 }}
-                    className="w-8 h-8 rounded-full bg-[#16a34a] text-white flex items-center justify-center hover:bg-[#15803d] transition-colors relative z-20 shadow-sm"
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      if (onUpdateCart) onUpdateCart(item, 1);
-                    }}
-                  >
-                    <span className="text-xl font-medium leading-none pb-0.5">+</span>
-                  </motion.button>
+                  {isVendorOnline ? (
+                    <motion.button 
+                      whileTap={{ scale: 0.8 }}
+                      className="w-8 h-8 rounded-full bg-[#16a34a] text-white flex items-center justify-center hover:bg-[#15803d] transition-colors relative z-20 shadow-sm"
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        if (onUpdateCart) onUpdateCart(item, 1);
+                      }}
+                    >
+                      <span className="text-xl font-medium leading-none pb-0.5">+</span>
+                    </motion.button>
+                  ) : (
+                    <div className="text-[10px] text-slate-400 font-bold bg-slate-100 px-2 py-1 rounded-md">Offline</div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -248,16 +259,20 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                   <div className="flex flex-col">
                     <span className="font-bold text-slate-800  text-base">₹{item.price}</span>
                   </div>
-                  <motion.button 
-                    whileTap={{ scale: 0.8 }}
-                    className="w-8 h-8 rounded-full bg-[#16a34a] text-white flex items-center justify-center hover:bg-[#15803d] transition-colors relative z-20 shadow-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onUpdateCart) onUpdateCart(item, 1);
-                    }}
-                  >
-                    <span className="text-xl font-medium leading-none pb-0.5">+</span>
-                  </motion.button>
+                  {isVendorOnline ? (
+                    <motion.button 
+                      whileTap={{ scale: 0.8 }}
+                      className="w-8 h-8 rounded-full bg-[#16a34a] text-white flex items-center justify-center hover:bg-[#15803d] transition-colors relative z-20 shadow-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onUpdateCart) onUpdateCart(item, 1);
+                      }}
+                    >
+                      <span className="text-xl font-medium leading-none pb-0.5">+</span>
+                    </motion.button>
+                  ) : (
+                    <div className="text-[10px] text-slate-400 font-bold bg-slate-100 px-2 py-1 rounded-md">Offline</div>
+                  )}
                 </div>
               </div>
             </motion.div>

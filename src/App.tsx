@@ -12,6 +12,7 @@ import { GroceryCategoriesScreen } from "./components/GroceryCategoriesScreen";
 import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
 import { VendorDashboard } from "./components/VendorDashboard";
+import { RiderDashboard } from "./components/RiderDashboard";
 import { Restaurant, CartItem, MenuItem, Order, Address, City } from "./types";
 import { RESTAURANTS, MENU_ITEMS, CITIES } from "./data";
 
@@ -25,7 +26,8 @@ export type Screen =
   | "tracking"
   | "profile"
   | "search"
-  | "vendor_dashboard";
+  | "vendor_dashboard"
+  | "rider_dashboard";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("splash");
@@ -33,6 +35,8 @@ export default function App() {
     useState<Restaurant | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isVendorOnline, setIsVendorOnline] = useState<boolean>(true);
+  const [isRiderOnline, setIsRiderOnline] = useState<boolean>(true);
 
   const [addresses, setAddresses] = useState<Address[]>([
     { id: "1", label: "Home", value: "123 Design Avenue" },
@@ -169,6 +173,7 @@ export default function App() {
               <Home
                 key="home"
                 serviceType={serviceType}
+                isVendorOnline={isVendorOnline}
                 onServiceTypeChange={setServiceType}
                 favorites={favorites}
                 selectedCity={selectedCity}
@@ -193,6 +198,7 @@ export default function App() {
                 key="menu"
                 restaurant={selectedRestaurant}
                 cart={cart}
+                isVendorOnline={isVendorOnline}
                 onUpdateCart={handleUpdateCart}
                 onBack={() => setCurrentScreen("home")}
                 onCheckout={() => setCurrentScreen("cart")}
@@ -239,12 +245,24 @@ export default function App() {
                 onViewOrders={() => setCurrentScreen("history")}
                 onSelectRestaurant={handleSelectRestaurant}
                 onOpenVendorDashboard={() => setCurrentScreen("vendor_dashboard")}
+                onOpenRiderDashboard={() => setCurrentScreen("rider_dashboard")}
               />
             )}
 
             {currentScreen === "vendor_dashboard" && (
               <VendorDashboard
                 key="vendor"
+                isOnline={isVendorOnline}
+                onToggleOnline={() => setIsVendorOnline(p => !p)}
+                onLogout={() => setCurrentScreen("home")}
+              />
+            )}
+
+            {currentScreen === "rider_dashboard" && (
+              <RiderDashboard
+                key="rider"
+                isOnline={isRiderOnline}
+                onToggleOnline={() => setIsRiderOnline(p => !p)}
                 onLogout={() => setCurrentScreen("home")}
               />
             )}

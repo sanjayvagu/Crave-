@@ -19,6 +19,7 @@ interface HomeProps {
   serviceType: "food" | "grocery";
   onServiceTypeChange: (type: "food" | "grocery") => void;
   favorites: string[];
+  isVendorOnline?: boolean;
   activeAddress?: Address;
   selectedCity: City;
   onSelectCity: (cityId: string) => void;
@@ -34,6 +35,7 @@ export const Home: React.FC<HomeProps> = ({
   serviceType,
   onServiceTypeChange,
   favorites,
+  isVendorOnline = true,
   activeAddress,
   selectedCity,
   onSelectCity,
@@ -358,7 +360,7 @@ export const Home: React.FC<HomeProps> = ({
               </p>
             </div>
           ) : serviceType === "grocery" ? (
-            <GroceryView onUpdateCart={onUpdateCart} />
+            <GroceryView onUpdateCart={onUpdateCart} isVendorOnline={isVendorOnline} />
           ) : (
             <>
               {/* Promotional Offers */}

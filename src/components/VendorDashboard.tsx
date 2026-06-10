@@ -37,6 +37,8 @@ import {
 import { MOCK_ORDERS } from "../data";
 
 interface VendorDashboardProps {
+  isOnline?: boolean;
+  onToggleOnline?: () => void;
   onLogout: () => void;
 }
 
@@ -50,7 +52,7 @@ const TABS = [
   { id: "profile", icon: Store, label: "Store" },
 ];
 
-export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) => {
+export const VendorDashboard: React.FC<VendorDashboardProps> = ({ isOnline = true, onToggleOnline, onLogout }) => {
   const [screen, setScreen] = useState<InternalScreen>("splash");
   const [activeTab, setActiveTab] = useState<Tab>("orders");
   const [orders, setOrders] = useState<any[]>([]);
@@ -297,10 +299,13 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                     <p className="text-xs font-medium text-white/80">Manage your business</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-[10px] font-bold text-white uppercase tracking-widest">Online</span>
-                </div>
+                <button 
+                  onClick={onToggleOnline}
+                  className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm cursor-pointer hover:bg-black/30 transition-colors"
+                >
+                  <div className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-400 animate-pulse" : "bg-slate-400"}`} />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-widest">{isOnline ? "Online" : "Offline"}</span>
+                </button>
               </div>
             </div>
 

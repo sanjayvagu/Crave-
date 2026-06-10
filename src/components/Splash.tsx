@@ -33,7 +33,7 @@ export const Splash: React.FC<SplashProps> = ({ onComplete }) => {
       >
         <h1
           className="text-6xl font-black text-white tracking-widest lowercase"
-          style={{ fontFamily: "Outfit, sans-serif" }}
+          style={{ fontFamily: "'Outfit', sans-serif" }}
         >
           crave
         </h1>
@@ -41,7 +41,7 @@ export const Splash: React.FC<SplashProps> = ({ onComplete }) => {
           initial={{ width: 0 }}
           animate={{ width: 40 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="h-1 bg-white  mt-4 rounded-full"
+          className="h-1 bg-white mt-4 rounded-full"
         />
       </motion.div>
     </motion.div>

@@ -19,6 +19,7 @@ import {
   Star,
   Clock,
   Store,
+  Bike,
 } from "lucide-react";
 import { RESTAURANTS } from "../data";
 import { Restaurant, Address } from "../types";
@@ -34,6 +35,7 @@ interface ProfileProps {
   onViewOrders?: () => void;
   onSelectRestaurant?: (restaurant: Restaurant) => void;
   onOpenVendorDashboard?: () => void;
+  onOpenRiderDashboard?: () => void;
 }
 
 export const Profile: React.FC<ProfileProps> = ({
@@ -47,6 +49,7 @@ export const Profile: React.FC<ProfileProps> = ({
   onViewOrders,
   onSelectRestaurant,
   onOpenVendorDashboard,
+  onOpenRiderDashboard,
 }) => {
   const [activeView, setActiveView] = useState<
     "main" | "edit" | "payment" | "address" | "wishlist"
@@ -90,6 +93,13 @@ export const Profile: React.FC<ProfileProps> = ({
       label: "Vendor Dashboard",
       value: "Manage your restaurant",
       onClick: onOpenVendorDashboard,
+    },
+    {
+      id: "rider_dashboard",
+      icon: Bike,
+      label: "Rider Dashboard",
+      value: "Deliver for crave",
+      onClick: onOpenRiderDashboard,
     },
   ];
 
