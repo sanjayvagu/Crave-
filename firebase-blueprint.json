@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "An order placed by a customer",
+      "type": "object",
+      "properties": {
+        "customer_id": { "type": "string", "description": "The user ID of the customer" },
+        "status": { "type": "string", "enum": ["pending", "preparing", "ready", "picked_up", "delivered", "cancelled"] },
+        "total_amount": { "type": "number" },
+        "created_at": { "type": "string" },
+        "customer_name": { "type": "string" },
+        "delivery_address": { "type": "string" },
+        "items": { "type": "number" },
+        "order_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+               "quantity": { "type": "number" },
+               "price_at_time": { "type": "number" },
+               "special_instructions": { "type": "string" },
+               "product_name": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["status", "total_amount", "created_at", "customer_name"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "A product offered by the vendor",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "is_available": { "type": "boolean" }
+      },
+      "required": ["name", "price", "is_available"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Stores user orders."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Stores vendor products."
+    }
+  }
+}

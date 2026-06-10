@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { db } from "../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 import {
   Home,
   CheckCircle2,
@@ -10,10 +12,14 @@ import {
   Phone,
   X,
   Share2,
+  MessageCircle,
+  Headset,
+  Send,
 } from "lucide-react";
 
 interface TrackingProps {
   onGoHome: () => void;
+  orderId?: string;
 }
 
 const STATUSES = [
@@ -47,12 +53,13 @@ const STATUSES = [
   },
 ];
 
-export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
+export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [timeLeft, setTimeLeft] = useState(() =>
     Math.floor(Math.random() * (30 * 60 - 20 * 60 + 1) + 20 * 60),
   );
   const [showDialer, setShowDialer] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     subtext: string;
@@ -85,19 +92,63 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
 
   useEffect(() => {
     let timers: NodeJS.Timeout[] = [];
+    let unsubscribe: (() => void) | undefined;
 
-    STATUSES.forEach((status, index) => {
-      if (index === 0) return;
-      const timer = setTimeout(() => {
-        setCurrentStep(index);
-        setToast({
-          message: status.label,
-          subtext: status.subtext,
-          id: Date.now(),
-        });
-      }, status.delay);
-      timers.push(timer);
-    });
+    if (orderId) {
+      unsubscribe = onSnapshot(
+        doc(db, "orders", orderId),
+        (snapshot) => {
+          if (!snapshot.exists()) return;
+          const data = snapshot.data();
+          const newStatus = data.status;
+          let stepIndex = 0;
+          switch (newStatus) {
+            case "pending":
+            case "accepted":
+              stepIndex = 0;
+              break;
+            case "preparing":
+            case "ready":
+              stepIndex = 1;
+              break;
+            case "assigned":
+            case "picked_up":
+              stepIndex = 2;
+              break;
+            case "delivered":
+              stepIndex = 3;
+              break;
+          }
+          setCurrentStep(stepIndex);
+
+          const statusObj = STATUSES[stepIndex];
+          if (statusObj) {
+            setToast({
+              message: statusObj.label,
+              subtext: statusObj.subtext,
+              id: Date.now(),
+            });
+          }
+        },
+        (error) => {
+          console.error("Firestore Error:", error);
+        }
+      );
+    } else {
+      // 2. Local Fallback Mock Simulation
+      STATUSES.forEach((status, index) => {
+        if (index === 0) return;
+        const timer = setTimeout(() => {
+          setCurrentStep(index);
+          setToast({
+            message: status.label,
+            subtext: status.subtext,
+            id: Date.now(),
+          });
+        }, status.delay);
+        timers.push(timer);
+      });
+    }
 
     const countdownInterval = setInterval(() => {
       setTimeLeft((prev) => {
@@ -112,8 +163,11 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
     return () => {
       timers.forEach((t) => clearTimeout(t));
       clearInterval(countdownInterval);
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
-  }, []);
+  }, [orderId]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -150,7 +204,15 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 right-0 p-4 z-50 pt-[max(1.5rem,env(safe-area-inset-top))]">
+      <div className="absolute top-0 right-0 p-4 z-50 pt-[max(1.5rem,env(safe-area-inset-top))] flex gap-3">
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowChat(true)}
+          className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center gap-2"
+        >
+          <MessageCircle className="w-5 h-5" />
+          <span className="text-xs font-bold mr-1">Help</span>
+        </motion.button>
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => alert("Location link shared with friends!")}
@@ -162,38 +224,55 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
       </div>
 
       {/* Map Placeholder Area */}
-      <div className="h-2/5 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden">
-        {/* Simulated Map Background */}
+      <div className="h-2/5 w-full bg-[#f0f2f5] dark:bg-[#1a1c23] relative overflow-hidden">
+        {/* Grid Background */}
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-40 mix-blend-overlay dark:opacity-20"
           style={{
-            backgroundImage: "radial-gradient(#cbd5e1 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(#94a3b8 1px, transparent 1px)",
             backgroundSize: "20px 20px",
           }}
         ></div>
 
+        {/* Abstract Map Blocks (Parks, Buildings) */}
+        <div className="absolute inset-0">
+           <div className="absolute top-4 left-4 w-32 h-24 bg-white/60 dark:bg-slate-800/60 rounded-xl"></div>
+           <div className="absolute top-1/2 right-8 w-24 h-32 bg-[#dcfce7]/60 dark:bg-[#166534]/40 rounded-xl"></div>
+           <div className="absolute bottom-8 left-12 w-40 h-16 bg-white/60 dark:bg-slate-800/60 rounded-xl"></div>
+           <div className="absolute top-8 right-1/3 w-20 h-20 bg-blue-100/60 dark:bg-blue-900/40 rounded-full blur-md"></div>
+        </div>
+
         {/* Route line simulation */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 pointer-events-none">
           <svg
-            className="w-full h-full text-slate-400 dark:text-slate-500"
+            className="w-full h-full text-blue-500/60 dark:text-blue-400/60 drop-shadow-md"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
           >
             <path
-              d="M 20 80 Q 40 20, 80 20"
+              d="M 15 85 L 35 85 L 35 45 L 75 45 L 75 25"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
-              strokeDasharray="4 4"
+              strokeWidth="4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
             />
           </svg>
         </div>
 
+        {/* Restaurant Location */}
+        <div className="absolute top-[85%] left-[15%] -translate-x-1/2 -translate-y-1/2">
+           <div className="w-8 h-8 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-full shadow-lg flex items-center justify-center">
+             <ChefHat className="w-4 h-4" />
+           </div>
+        </div>
+
         {/* Home Location */}
-        <div className="absolute top-1/4 right-1/4">
+        <div className="absolute top-[25%] left-[75%] -translate-x-1/2 -translate-y-1/2">
           <div className="relative">
             <div className="w-12 h-12 bg-[#fc8019]/20 rounded-full animate-ping absolute -inset-2"></div>
-            <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-full shadow-lg flex items-center justify-center relative z-10 text-[#fc8019]">
+            <div className="w-8 h-8 bg-white dark:bg-slate-800 rounded-full shadow-lg flex items-center justify-center relative z-10 text-[#fc8019]">
               <Home className="w-4 h-4" />
             </div>
           </div>
@@ -201,15 +280,34 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
 
         {/* Courier Location (animates along route) */}
         <AnimatePresence>
-          {currentStep >= 2 && currentStep < 3 && (
+          {currentStep >= 1 && (
             <motion.div
-              initial={{ x: -100, y: 100, opacity: 0 }}
-              animate={{ x: "-10%", y: "-10%", opacity: 1 }}
-              transition={{ duration: 4, ease: "linear" }}
-              className="absolute top-[40%] left-[40%]"
+              initial={{ left: "15%", top: "85%" }}
+              animate={
+                currentStep === 3
+                  ? { left: "75%", top: "25%" }
+                  : currentStep === 2
+                    ? {
+                        left: ["15%", "35%", "35%", "75%", "75%"],
+                        top: ["85%", "85%", "45%", "45%", "25%"],
+                      }
+                    : { left: "15%", top: "85%" }
+              }
+              transition={
+                currentStep === 2
+                  ? {
+                      duration: 6,
+                      ease: "linear",
+                      times: [0, 0.166, 0.5, 0.833, 1],
+                      repeat: Infinity,
+                    }
+                  : { duration: 0.5 }
+              }
+              className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
             >
               <div className="relative">
-                <div className="w-10 h-10 bg-slate-800 rounded-full shadow-xl flex items-center justify-center relative z-10 text-white">
+                <div className="w-10 h-10 bg-[#fc8019]/30 rounded-full animate-ping absolute inset-0"></div>
+                <div className="w-10 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full shadow-2xl flex items-center justify-center relative z-10">
                   <Bike className="w-5 h-5" />
                 </div>
               </div>
@@ -221,7 +319,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onGoHome}
-          className="absolute left-5 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm"
+          className="absolute left-5 w-10 h-10 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md flex items-center justify-center text-slate-700 dark:text-slate-200 shadow-sm z-30"
           style={{ top: "max(1.25rem, env(safe-area-inset-top))" }}
         >
           <Home className="w-5 h-5" />
@@ -439,6 +537,70 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome }) => {
                 >
                   <Phone className="w-7 h-7 fill-current transform rotate-[135deg]" />
                 </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mock Customer Support Chat Modal */}
+      <AnimatePresence>
+        {showChat && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex items-end justify-center bg-slate-900/40 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="bg-slate-50 dark:bg-slate-950 w-full h-[80%] rounded-t-3xl shadow-2xl flex flex-col relative overflow-hidden"
+            >
+              {/* Header */}
+              <div className="bg-white dark:bg-slate-900 p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-full flex items-center justify-center overflow-hidden">
+                     <Headset className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100">Customer Support</h3>
+                    <p className="text-xs text-green-500 font-medium">● Online</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowChat(false)}
+                  className="p-2 text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Chat Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex justify-center">
+                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 bg-slate-200/50 dark:bg-slate-800/50 px-2 py-1 rounded">Today</span>
+                </div>
+                <div className="flex items-end gap-2">
+                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/40 rounded-full flex shrink-0 items-center justify-center overflow-hidden">
+                     <Headset className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="bg-white dark:bg-slate-900 p-3 rounded-2xl rounded-bl-sm border border-slate-100 dark:border-slate-800 shadow-sm max-w-[80%]">
+                     <p className="text-sm text-slate-700 dark:text-slate-300">Hi! I'm your support agent. How can I help you with your order today?</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input */}
+              <div className="bg-white dark:bg-slate-900 p-4 border-t border-slate-200 dark:border-slate-800 shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
+                <div className="flex items-center gap-2">
+                  <input type="text" placeholder="Type your message..." className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-full px-4 py-3 outline-none text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500" />
+                  <button className="w-10 h-10 bg-[#fc8019] text-white rounded-full flex items-center justify-center shrink-0 shadow-md" onClick={() => alert("Message sent!")}>
+                    <Send className="w-4 h-4 ml-0.5" />
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>

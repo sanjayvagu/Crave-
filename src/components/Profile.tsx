@@ -20,6 +20,7 @@ import {
   Heart,
   Star,
   Clock,
+  Store,
 } from "lucide-react";
 import { useTheme } from "../ThemeContext";
 import { RESTAURANTS } from "../data";
@@ -35,6 +36,7 @@ interface ProfileProps {
   onBack: () => void;
   onViewOrders?: () => void;
   onSelectRestaurant?: (restaurant: Restaurant) => void;
+  onOpenVendorDashboard?: () => void;
 }
 
 export const Profile: React.FC<ProfileProps> = ({
@@ -47,6 +49,7 @@ export const Profile: React.FC<ProfileProps> = ({
   onBack,
   onViewOrders,
   onSelectRestaurant,
+  onOpenVendorDashboard,
 }) => {
   const [activeView, setActiveView] = useState<
     "main" | "edit" | "payment" | "address" | "wishlist"
@@ -92,6 +95,13 @@ export const Profile: React.FC<ProfileProps> = ({
       onClick: toggleTheme,
     },
     { id: null, icon: Bell, label: "Notifications", value: "On" },
+    {
+      id: "vendor_dashboard",
+      icon: Store,
+      label: "Vendor Dashboard",
+      value: "Manage your restaurant",
+      onClick: onOpenVendorDashboard,
+    },
   ];
 
   return (

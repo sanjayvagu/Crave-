@@ -11,6 +11,7 @@ import { Profile } from "./components/Profile";
 import { GroceryCategoriesScreen } from "./components/GroceryCategoriesScreen";
 import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
+import { VendorDashboard } from "./components/VendorDashboard";
 import { Restaurant, CartItem, MenuItem, Order, Address, City } from "./types";
 import { RESTAURANTS, MENU_ITEMS, CITIES } from "./data";
 
@@ -23,7 +24,8 @@ export type Screen =
   | "history"
   | "tracking"
   | "profile"
-  | "search";
+  | "search"
+  | "vendor_dashboard";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("splash");
@@ -236,6 +238,14 @@ export default function App() {
                 onBack={() => setCurrentScreen("home")}
                 onViewOrders={() => setCurrentScreen("history")}
                 onSelectRestaurant={handleSelectRestaurant}
+                onOpenVendorDashboard={() => setCurrentScreen("vendor_dashboard")}
+              />
+            )}
+
+            {currentScreen === "vendor_dashboard" && (
+              <VendorDashboard
+                key="vendor"
+                onLogout={() => setCurrentScreen("home")}
               />
             )}
 
