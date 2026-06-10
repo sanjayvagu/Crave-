@@ -7,7 +7,7 @@ interface BottomNavProps {
   currentScreen: Screen;
   onNavigate: (screen: Screen) => void;
   cartItemCount: number;
-  serviceType?: "food" | "grocery";
+  serviceType?: "food" | "grocery" | "pharmacy";
 }
 
 const TABS = [

@@ -68,6 +68,22 @@ export const RECOMMENDED_GROCERY_ITEMS: MenuItem[] = [
   { id: "g10", restaurantId: "instamart", name: "Dettol Handwash", price: 99, description: "200ml", isVeg: true, category: "Care", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=100" },
 ];
 
+export const PHARMACY_ITEMS: MenuItem[] = [
+  { id: "p1", restaurantId: "instamart", name: "Dolo 650 Tablet", price: 30, description: "15 Tablets", isVeg: true, category: "Medicines", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p2", restaurantId: "instamart", name: "Vicks Vaporub", price: 145, description: "50g", isVeg: true, category: "First Aid", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p3", restaurantId: "instamart", name: "Honitus Cough Syrup", price: 110, description: "100ml", isVeg: true, category: "Medicines", image: "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p4", restaurantId: "instamart", name: "Revital H Capsules", price: 290, description: "30 Capsules", isVeg: true, category: "Vitamins", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p5", restaurantId: "instamart", name: "Band-Aid Washproof", price: 65, description: "Pack of 20", isVeg: true, category: "First Aid", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=100" },
+];
+
+export const RECOMMENDED_PHARMACY_ITEMS: MenuItem[] = [
+  { id: "p6", restaurantId: "instamart", name: "Pudina Hara Pearls", price: 50, description: "Strip of 10", isVeg: true, category: "Medicines", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p7", restaurantId: "instamart", name: "Himalaya Liv.52", price: 150, description: "100 Tablets", isVeg: true, category: "Vitamins", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p8", restaurantId: "instamart", name: "Volini Pain Relief Spray", price: 195, description: "60g", isVeg: true, category: "Health Care", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p9", restaurantId: "instamart", name: "Eno Regular Flexipack", price: 80, description: "6x5g sachets", isVeg: true, category: "Medicines", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+  { id: "p10", restaurantId: "instamart", name: "Detox Green Tea", price: 210, description: "25 Tea Bags", isVeg: true, category: "Health Care", image: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=1200&q=100" },
+];
+
 export const MENU_ITEMS: MenuItem[] = [
   // Truffles & Co.
   {

@@ -14,10 +14,11 @@ import { RESTAURANTS, MOCK_ORDERS, MENU_ITEMS, CITIES } from "../data";
 import { Restaurant, Address, MenuItem, City } from "../types";
 import { PullToRefresh } from "./PullToRefresh";
 import { GroceryView } from "./GroceryView";
+import { PharmacyView } from "./PharmacyView";
 
 interface HomeProps {
-  serviceType: "food" | "grocery";
-  onServiceTypeChange: (type: "food" | "grocery") => void;
+  serviceType: "food" | "grocery" | "pharmacy";
+  onServiceTypeChange: (type: "food" | "grocery" | "pharmacy") => void;
   favorites: string[];
   isVendorOnline?: boolean;
   activeAddress?: Address;
@@ -64,6 +65,13 @@ export const Home: React.FC<HomeProps> = ({
     { text: "Dairy", left: "Glass%20of%20Milk.png", right: "Cheese%20Wedge.png" }
   ];
 
+  const pharmacyCycles = [
+    { text: "Medicines", left: "Pill.png", right: "Stethoscope.png" },
+    { text: "First Aid", left: "Adhesive%20Bandage.png", right: "Syringe.png" },
+    { text: "Vitamins", left: "Mango.png", right: "Pill.png" },
+    { text: "Health Care", left: "Drop%20of%20Blood.png", right: "Soap.png" }
+  ];
+
   const [cycleIndex, setCycleIndex] = useState(0);
 
   useEffect(() => {
@@ -75,7 +83,9 @@ export const Home: React.FC<HomeProps> = ({
 
   const currentCycle = serviceType === "food" 
     ? foodCycles[cycleIndex % foodCycles.length]
-    : groceryCycles[cycleIndex % groceryCycles.length];
+    : serviceType === "grocery" 
+      ? groceryCycles[cycleIndex % groceryCycles.length]
+      : pharmacyCycles[cycleIndex % pharmacyCycles.length];
 
   const handleEnableLocation = () => {
     setIsLocating(true);
@@ -131,7 +141,13 @@ export const Home: React.FC<HomeProps> = ({
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405]  " : "from-[#380e52] to-[#1d0628]  "}`}>
+          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${
+            serviceType === "food" 
+              ? "from-[#fc8019] to-[#f27405]  " 
+              : serviceType === "grocery" 
+                ? "from-[#380e52] to-[#1d0628]  "
+                : "from-[#20615b] to-[#1a514c]  "
+          }`}>
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
@@ -252,7 +268,7 @@ export const Home: React.FC<HomeProps> = ({
             </div>
 
             {/* Service Toggle */}
-            {selectedCity.name === "Prathipadu" && selectedCity.isServiceable && (
+            {(selectedCity.name === "Prathipadu" || selectedCity.name === "Yeleswaram") && selectedCity.isServiceable && (
               <div className="relative z-10 flex bg-black/10 p-1 mt-5 mx-1 rounded-2xl border border-white/10 backdrop-blur-md">
                  <motion.div
                    className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white shadow-sm"
@@ -266,14 +282,25 @@ export const Home: React.FC<HomeProps> = ({
                    <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Hamburger.png" alt="Food" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "food" ? "scale-110" : "scale-90 opacity-80"}`} />
                    Food Delivery
                  </button>
-                 <button
-                    onClick={() => onServiceTypeChange("grocery")}
-                    className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-[#48126b]" : "text-white/80 hover:text-white"}`}
-                 >
-                   {serviceType === "grocery" && <div className="absolute top-[-6px] bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">10 mins</div>}
-                   <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" alt="Grocery" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "grocery" ? "scale-110" : "scale-90 opacity-80"}`} />
-                   Groceries
-                 </button>
+                 {selectedCity.name === "Prathipadu" ? (
+                   <button
+                      onClick={() => onServiceTypeChange("grocery")}
+                      className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "grocery" ? "text-[#48126b]" : "text-white/80 hover:text-white"}`}
+                   >
+                     {serviceType === "grocery" && <div className="absolute top-[-6px] bg-blue-600 text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">10 mins</div>}
+                     <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Shopping%20Cart.png" alt="Grocery" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "grocery" ? "scale-110" : "scale-90 opacity-80"}`} />
+                     Groceries
+                   </button>
+                 ) : (
+                   <button
+                      onClick={() => onServiceTypeChange("pharmacy")}
+                      className={`relative z-10 flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors duration-300 flex items-center justify-center gap-2 ${serviceType === "pharmacy" ? "text-[#20615b]" : "text-white/80 hover:text-white"}`}
+                   >
+                     {serviceType === "pharmacy" && <div className="absolute top-[-6px] bg-[#1a514c] text-white text-[8px] px-1.5 py-0.5 rounded shadow-sm leading-tight lowercase">15 mins</div>}
+                     <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Pill.png" alt="Pharmacy" className={`w-5 h-5 drop-shadow-sm transition-transform duration-300 ${serviceType === "pharmacy" ? "scale-110" : "scale-90 opacity-80"}`} />
+                     Medicine
+                   </button>
+                 )}
               </div>
             )}
 
@@ -309,38 +336,151 @@ export const Home: React.FC<HomeProps> = ({
             {/* Animated Banner Overlay */}
             <div className="relative z-10 mt-[26px] mb-2 flex items-center justify-center">
               {serviceType === "food" ? (
-                <div className="flex items-center gap-1.5 pointer-events-none relative">
-                   <motion.img 
-                       src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Pizza.png" 
-                       className="w-[42px] h-[42px] drop-shadow-md z-10 relative -mr-2"
-                       animate={{ y: [0, -4, 0] }}
-                       transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                   />
-                   <div className="flex flex-col items-center">
-                       <h2 className="text-[#ffed4a] font-black text-[28px] leading-none tracking-tighter drop-shadow-md italic pr-2" style={{ fontFamily: "'Outfit', 'Inter', sans-serif" }}>
-                           FOODIE VERSE
-                       </h2>
-                       <div className="mt-[3px] bg-white text-[#fc8019] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
-                           Order Now
+                <div className="flex flex-col items-center pointer-events-none w-full relative pt-2 pb-6">
+                   <div className="flex flex-row items-center justify-center w-full relative z-10 px-2 mt-4 space-x-5">
+                       <motion.div 
+                         initial={{ scale: 0, opacity: 0, x: -20 }}
+                         animate={{ scale: 1, opacity: 1, x: 0 }}
+                         transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.1 }}
+                         className="relative flex justify-center shrink-0"
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[56px] h-[56px] text-white drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)] relative z-10">
+                           <path fillRule="evenodd" d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248zM15.75 14.25a3.75 3.75 0 11-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 011.925-3.545 3.75 3.75 0 013.255 3.717z" clipRule="evenodd" />
+                         </svg>
+                       </motion.div>
+                       
+                       <div className="flex flex-col text-left justify-center">
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#ffcca5] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Cravings <span className="font-extrabold text-white">Satisfied.</span>
+                           </motion.div>
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#ffcca5] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Delivered <span className="font-extrabold text-white">Hot.</span>
+                           </motion.div>
                        </div>
                    </div>
+                   
+                   <motion.div 
+                     initial={{ opacity: 0, y: 15 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                     className="mt-8 flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 shadow-lg"
+                   >
+                     <span className="relative flex h-2 w-2">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span>
+                     </span>
+                     <span className="text-[11px] text-white font-bold tracking-wider uppercase">Hot & Fresh Meals</span>
+                   </motion.div>
+                </div>
+              ) : serviceType === "grocery" ? (
+                <div className="flex flex-col items-center pointer-events-none w-full relative pt-2 pb-6">
+                   <div className="flex flex-row items-center justify-center w-full relative z-10 px-2 mt-4 space-x-5">
+                       <motion.div 
+                         initial={{ scale: 0, opacity: 0, x: -20 }}
+                         animate={{ scale: 1, opacity: 1, x: 0 }}
+                         transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.1 }}
+                         className="relative flex justify-center shrink-0"
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[56px] h-[56px] text-white drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)] relative z-10">
+                           <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
+                         </svg>
+                       </motion.div>
+                       
+                       <div className="flex flex-col text-left justify-center">
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#d8aef5] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Pantry <span className="font-extrabold text-white">Stocked.</span>
+                           </motion.div>
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#d8aef5] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Delivered <span className="font-extrabold text-white">Fresh.</span>
+                           </motion.div>
+                       </div>
+                   </div>
+                   
+                   <motion.div 
+                     initial={{ opacity: 0, y: 15 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                     className="mt-8 flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 shadow-lg"
+                   >
+                     <span className="relative flex h-2 w-2">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                     </span>
+                     <span className="text-[11px] text-white font-bold tracking-wider uppercase">Daily Household Needs</span>
+                   </motion.div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center pointer-events-none w-full max-w-[260px]">
-                   <div className="flex items-center justify-center w-full relative">
-                       <motion.img 
-                           src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Green%20Salad.png" 
-                           className="w-[36px] h-[36px] drop-shadow-md absolute -left-4"
-                           animate={{ y: [0, -3, 0], rotate: [0, 5, 0] }}
-                           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                       />
-                       <h2 className="text-white font-black text-xl text-center leading-tight tracking-tight drop-shadow-md px-4" style={{ fontFamily: "Outfit, Arial, sans-serif" }}>
-                           Your cart, delivered before you're ready.
-                       </h2>
+                <div className="flex flex-col items-center pointer-events-none w-full relative pt-2 pb-6">
+                   <div className="flex flex-row items-center justify-center w-full relative z-10 px-2 mt-4 space-x-5">
+                       <motion.div 
+                         initial={{ scale: 0, opacity: 0, x: -20 }}
+                         animate={{ scale: 1, opacity: 1, x: 0 }}
+                         transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.1 }}
+                         className="relative flex justify-center shrink-0"
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[56px] h-[56px] text-white drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)] relative z-10">
+                           <path fillRule="evenodd" d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z" clipRule="evenodd" />
+                         </svg>
+                       </motion.div>
+                       
+                       <div className="flex flex-col text-left justify-center">
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#a5ccca] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Instant <span className="font-extrabold text-white">Relief.</span>
+                           </motion.div>
+                           <motion.div 
+                             initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                             transition={{ duration: 0.8, delay: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                             className="text-[#a5ccca] font-medium text-[26px] leading-[1.1] tracking-tight" 
+                             style={{ fontFamily: "'Inter', sans-serif" }}
+                           >
+                               Delivered <span className="font-extrabold text-white">Faster.</span>
+                           </motion.div>
+                       </div>
                    </div>
-                   <div className="mt-[8px] bg-white text-[#48126b] text-[9px] font-bold px-[12px] py-[3px] rounded-full uppercase tracking-[0.2em] shadow-sm">
-                       Shop Now
-                   </div>
+                   
+                   <motion.div 
+                     initial={{ opacity: 0, y: 15 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                     className="mt-8 flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md px-5 py-2 rounded-full border border-white/20 shadow-lg"
+                   >
+                     <span className="relative flex h-2 w-2">
+                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                       <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                     </span>
+                     <span className="text-[11px] text-white font-bold tracking-wider uppercase">Genuine Medicines & Care</span>
+                   </motion.div>
                 </div>
               )}
             </div>
@@ -361,6 +501,8 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           ) : serviceType === "grocery" ? (
             <GroceryView onUpdateCart={onUpdateCart} isVendorOnline={isVendorOnline} />
+          ) : serviceType === "pharmacy" ? (
+            <PharmacyView onUpdateCart={onUpdateCart} isVendorOnline={isVendorOnline} />
           ) : (
             <>
               {/* Promotional Offers */}

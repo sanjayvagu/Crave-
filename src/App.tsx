@@ -9,6 +9,7 @@ import { OrderHistory } from "./components/OrderHistory";
 import { Tracking } from "./components/Tracking";
 import { Profile } from "./components/Profile";
 import { GroceryCategoriesScreen } from "./components/GroceryCategoriesScreen";
+import { PharmacyCategoriesScreen } from "./components/PharmacyCategoriesScreen";
 import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
 import { VendorDashboard } from "./components/VendorDashboard";
@@ -44,7 +45,7 @@ export default function App() {
   ]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("1");
   const [selectedCityId, setSelectedCityId] = useState<string>(CITIES[0].id);
-  const [serviceType, setServiceType] = useState<"food" | "grocery">("food");
+  const [serviceType, setServiceType] = useState<"food" | "grocery" | "pharmacy">("food");
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -177,7 +178,20 @@ export default function App() {
                 onServiceTypeChange={setServiceType}
                 favorites={favorites}
                 selectedCity={selectedCity}
-                onSelectCity={setSelectedCityId}
+                onSelectCity={(cityId) => {
+                  setSelectedCityId(cityId);
+                  // Ensure correct serviceType for city
+                  const newCity = CITIES.find((c) => c.id === cityId);
+                  if (newCity) {
+                    if (newCity.name === "Prathipadu" && serviceType === "pharmacy") {
+                      setServiceType("food");
+                    } else if (newCity.name === "Yeleswaram" && serviceType === "grocery") {
+                      setServiceType("food");
+                    } else if (newCity.name !== "Prathipadu" && newCity.name !== "Yeleswaram") {
+                      setServiceType("food");
+                    }
+                  }
+                }}
                 activeAddress={addresses.find(
                   (a) => a.id === selectedAddressId,
                 )}
@@ -280,6 +294,14 @@ export default function App() {
             {currentScreen === "search" && serviceType === "grocery" && (
               <GroceryCategoriesScreen
                 key="grocery_categories"
+                onBack={() => setCurrentScreen("home")}
+                onUpdateCart={handleUpdateCart}
+              />
+            )}
+
+            {currentScreen === "search" && serviceType === "pharmacy" && (
+              <PharmacyCategoriesScreen
+                key="pharmacy_categories"
                 onBack={() => setCurrentScreen("home")}
                 onUpdateCart={handleUpdateCart}
               />
