@@ -82,12 +82,8 @@ export const Home: React.FC<HomeProps> = ({
         (position) => {
           setTimeout(() => {
             setIsLocating(false);
-            // Simulate capturing an unserviceable city randomly or just the first unserviceable one
-            // We'll pick 'Pune' to demonstrate the GPS scenario.
-            import("../data").then((module) => {
-               const randomIndex = Math.floor(Math.random() * module.CITIES.length);
-               onSelectCity(module.CITIES[randomIndex].id);
-            });
+            const randomIndex = Math.floor(Math.random() * CITIES.length);
+            onSelectCity(CITIES[randomIndex].id);
           }, 800);
         },
         (error) => {

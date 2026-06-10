@@ -153,8 +153,6 @@ export const MENU_ITEMS: MenuItem[] = [
   }
 ];
 
-import { Order } from "./types";
-
 export const MOCK_ORDERS: Order[] = [
   {
     id: "ORD-ACTIVE1",
