@@ -41,6 +41,12 @@ export const Welcome: React.FC<WelcomeProps> = ({ onStart }) => {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
 
+  React.useEffect(() => {
+    if (loginState === "otp") {
+      setOtp("1234");
+    }
+  }, [loginState]);
+
   const handleNext = () => {
     if (loginState === "onboarding") {
       if (currentStep < ONBOARDING_STEPS.length - 1) {

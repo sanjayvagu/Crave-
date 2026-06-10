@@ -462,12 +462,18 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                 </motion.div>
               </div>
               <div>
-                <h3 className="font-bold text-slate-800  text-lg mb-0.5">
+                <h3 className="font-bold text-slate-800 text-lg mb-0.5">
                   {STATUSES[currentStep].label}
                 </h3>
-                <p className="text-slate-500  text-sm font-medium">
+                <p className="text-slate-500 text-sm font-medium">
                   {STATUSES[currentStep].subtext}
                 </p>
+                {currentStep === 2 && (
+                  <div className="mt-3 bg-white px-3 py-2 rounded-xl border border-slate-200 inline-block shadow-sm">
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-0.5">Delivery OTP</p>
+                    <p className="text-xl font-black text-slate-800 tracking-widest">1234</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>

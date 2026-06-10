@@ -11,6 +11,7 @@ import {
   LogOut,
   TrendingUp,
   CheckCircle,
+  CheckCircle2,
   X,
   Navigation,
   Wallet,
@@ -18,7 +19,9 @@ import {
   Star,
   ChevronRight,
   BellRing,
-  Package
+  Package,
+  Store,
+  CloudSun
 } from "lucide-react";
 import { 
   BarChart, 
@@ -45,6 +48,249 @@ const TABS = [
   { id: "earnings", icon: Wallet, label: "Earnings" },
   { id: "profile", icon: Settings, label: "Profile" },
 ];
+
+const MockMap: React.FC<{ status: string }> = ({ status }) => {
+  const isDropoff = status === "picked_up";
+  const [distance, setDistance] = useState(2.4);
+  const [eta, setEta] = useState(12);
+
+  useEffect(() => {
+    // Simulate real-time progress
+    const interval = setInterval(() => {
+      setDistance(prev => {
+        const next = prev - 0.1;
+        return next > 0 ? Number(next.toFixed(1)) : 0;
+      });
+      setEta(prev => {
+        const next = prev - 1;
+        return next > 0 ? next : 0;
+      });
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return (
+    <div className="relative w-full h-48 bg-[#f8fafc] rounded-2xl overflow-hidden mb-4 border border-slate-200">
+      {/* Map Background Pattern */}
+      <div 
+        className="absolute inset-0 opacity-40"
+        style={{
+          backgroundImage: `
+            radial-gradient(#cbd5e1 1px, transparent 1px)
+          `,
+          backgroundSize: '24px 24px'
+        }}
+      />
+      {/* Route SVG */}
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 150" preserveAspectRatio="none">
+        <motion.path
+          d={isDropoff ? "M 150 120 C 150 60, 250 100, 250 30" : "M 50 120 C 50 60, 150 100, 150 30"}
+          fill="none"
+          stroke="#cbd5e1"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray="8 8"
+        />
+        <motion.path
+          d={isDropoff ? "M 150 120 C 150 60, 250 100, 250 30" : "M 50 120 C 50 60, 150 100, 150 30"}
+          fill="none"
+          stroke="#fc8019"
+          strokeWidth="4"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 4, ease: "linear", repeat: Infinity }}
+        />
+      </svg>
+      
+      {/* Location Markers */}
+      <motion.div 
+        className="absolute bg-white rounded-full p-2 shadow-lg flex items-center justify-center z-10 border border-slate-100"
+        style={{ left: isDropoff ? 'calc(50% - 18px)' : 'calc(16.6% - 18px)', top: 'calc(80% - 18px)' }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+      >
+        <Bike className="w-5 h-5 text-slate-800" />
+      </motion.div>
+      
+      <motion.div 
+        className="absolute bg-[#fc8019] rounded-full p-2 shadow-lg shadow-orange-500/30 flex items-center justify-center z-10"
+        style={{ left: isDropoff ? 'calc(83.3% - 18px)' : 'calc(50% - 18px)', top: 'calc(20% - 18px)' }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+      >
+        {isDropoff ? <MapPin className="w-5 h-5 text-white" /> : <Store className="w-5 h-5 text-white" />}
+      </motion.div>
+
+      {/* Turn-by-Turn Navigation Overlay */}
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute top-2 left-2 right-2 bg-slate-900/90 backdrop-blur-md text-white rounded-xl p-3 shadow-lg flex items-center justify-between border border-slate-700/50 z-20"
+      >
+        <div className="flex items-center gap-3">
+          <div className="bg-[#fc8019] p-2 rounded-lg">
+            <motion.div
+              animate={{ rotate: [0, -15, 0] }}
+              transition={{ repeat: Infinity, duration: 2, repeatDelay: 1 }}
+            >
+              <Navigation className="w-5 h-5 text-white transform -rotate-45" />
+            </motion.div>
+          </div>
+          <div>
+            <p className="text-sm font-bold line-clamp-1">{isDropoff ? 'Turn right on Park Ave' : 'Head north on Main St'}</p>
+            <p className="text-xs text-slate-300 font-medium tracking-wide">
+              {distance.toFixed(1)} km remaining
+            </p>
+          </div>
+        </div>
+        <div className="text-right shrink-0 ml-2 border-l border-slate-700 pl-3">
+          <p className="text-xl font-black text-emerald-400">{eta}</p>
+          <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold leading-none">Min</p>
+        </div>
+      </motion.div>
+
+      {/* Weather Indicator Overlay */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+        className="absolute top-[4.5rem] right-2 bg-white/90 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-md flex items-center gap-1.5 border border-slate-200 z-20"
+      >
+        <CloudSun className="w-4 h-4 text-[#fc8019]" />
+        <span className="text-[10px] font-bold text-slate-700 pb-[1px]">68°F Clear</span>
+      </motion.div>
+    </div>
+  );
+};
+
+export const ActiveDeliveryOverlay: React.FC<{
+  order: any;
+  onClose: () => void;
+  onUpdateStatus: (id: string, status: string) => void;
+  triggerHaptic: () => void;
+}> = ({ order, onClose, onUpdateStatus, triggerHaptic }) => {
+  const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+
+  if (!order) return null;
+
+  const handleMarkDelivered = () => {
+    if (otp !== "1234") {
+      triggerHaptic();
+      setError("Invalid OTP. Hint: Use 1234");
+      return;
+    }
+    triggerHaptic();
+    onUpdateStatus(order.id, "delivered");
+    onClose();
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: "100%" }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: "100%" }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      className="fixed inset-0 z-[120] bg-slate-50 flex flex-col font-sans"
+    >
+      <div className="bg-white border-b border-slate-200 pt-[max(1.5rem,env(safe-area-inset-top))] pb-4 px-5 flex items-center justify-between shadow-sm z-10 relative">
+        <button onClick={onClose} className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 transition-colors">
+          <ChevronRight className="w-6 h-6 text-slate-700 rotate-180" />
+        </button>
+        <h2 className="font-bold text-lg text-slate-800">Active Delivery</h2>
+        <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+           <Package className="w-5 h-5 text-[#fc8019]" />
+        </div>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto no-scrollbar pb-40 bg-slate-50 relative">
+        <div className="p-5">
+           <div className="bg-white rounded-3xl p-2 shadow-sm border border-slate-200 mb-6">
+             <MockMap status={order.status} />
+           </div>
+
+           <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 mb-6 relative overflow-hidden">
+             <div className="absolute top-0 right-0 bg-[#fc8019] text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+               {order.status === "assigned" ? "Pickup" : "Dropoff"}
+             </div>
+             <div className="mb-4 pr-10">
+                <h3 className="font-bold text-slate-900 text-lg">{order.restaurant_name || "Restaurant"}</h3>
+                <p className="text-sm font-bold text-[#fc8019] flex items-center gap-1"><MapPin className="w-3.5 h-3.5"/> {order.restaurant_address || "Pickup address"}</p>
+             </div>
+             
+             <div className="flex items-center gap-3 my-4">
+               <div className="h-full flex flex-col items-center">
+                 <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+                 <div className="w-0.5 h-6 bg-slate-200 my-1"></div>
+                 <div className="w-2 h-2 rounded-full bg-[#fc8019]"></div>
+               </div>
+               <div>
+                 <div className="mb-4 text-sm text-slate-500 font-medium leading-none">Pickup</div>
+                 <div className="text-sm text-slate-800 font-bold leading-none">{order.delivery_address || "Customer address"}</div>
+               </div>
+             </div>
+           </div>
+
+           <div className="bg-white rounded-3xl p-5 shadow-sm border border-slate-200">
+             <h3 className="font-bold text-slate-800 mb-3">Order Details</h3>
+             <div className="flex justify-between items-center py-3 border-b border-slate-100">
+               <span className="text-slate-500 font-medium">Order ID</span>
+               <span className="font-bold text-slate-800">{order.id.substring(0, 8)}</span>
+             </div>
+             <div className="flex justify-between items-center py-3 border-b border-slate-100">
+               <span className="text-slate-500 font-medium">Customer</span>
+               <span className="font-bold text-slate-800">{order.customer_name || "Guest"}</span>
+             </div>
+             <div className="flex justify-between items-center py-3">
+               <span className="text-slate-500 font-medium">Items</span>
+               <span className="font-bold text-slate-800">{order.items || 1} items</span>
+             </div>
+           </div>
+        </div>
+      </div>
+      
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-5 shadow-[0_-10px_20px_rgb(0,0,0,0.05)] pb-[max(1.5rem,env(safe-area-inset-bottom))] z-20">
+         {order.status === "assigned" ? (
+            <motion.button
+              whileTap={{ scale: 0.96 }}
+              onClick={() => {
+                triggerHaptic();
+                onUpdateStatus(order.id, "picked_up");
+              }}
+              className="w-full bg-[#fc8019] text-white font-bold py-4 text-base rounded-2xl shadow-orange-500/20 shadow-lg hover:bg-orange-600 transition"
+            >
+              Confirm Pickup
+            </motion.button>
+         ) : (
+            <div className="flex flex-col gap-3">
+              <input 
+                type="text" 
+                placeholder="Enter 4-digit Delivery OTP" 
+                value={otp}
+                onChange={(e) => {
+                  setOtp(e.target.value);
+                  setError("");
+                }}
+                maxLength={4}
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-4 text-center font-bold text-lg tracking-widest outline-none focus:border-emerald-500 transition-colors"
+              />
+              {error && <p className="text-red-500 text-xs font-bold text-center mt-[-4px]">{error}</p>}
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={handleMarkDelivered}
+                className="w-full bg-emerald-500 text-white font-bold py-4 text-base rounded-2xl shadow-emerald-500/20 shadow-lg hover:bg-emerald-600 transition flex items-center justify-center gap-2"
+              >
+                <CheckCircle className="w-5 h-5" />
+                Mark Delivered
+              </motion.button>
+            </div>
+         )}
+      </div>
+    </motion.div>
+  );
+};
 
 export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true, onToggleOnline, onLogout }) => {
   const [screen, setScreen] = useState<InternalScreen>("splash");
@@ -240,13 +486,30 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
                     <p className="text-xs font-medium text-white/80">Deliver & Earn</p>
                   </div>
                 </div>
-                <button 
+                <motion.div 
                   onClick={onToggleOnline}
-                  className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm cursor-pointer hover:bg-black/30 transition-colors"
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative flex items-center w-[90px] h-8 rounded-full p-1 border shadow-sm cursor-pointer transition-colors duration-300 select-none ${
+                    isOnline 
+                      ? "bg-emerald-500/20 border-emerald-400/30 justify-end" 
+                      : "bg-black/20 border-white/20 justify-start"
+                  }`}
                 >
-                  <div className={`w-2 h-2 rounded-full ${isOnline ? "bg-green-400 animate-pulse" : "bg-slate-400"}`} />
-                  <span className="text-[10px] font-bold text-white uppercase tracking-widest">{isOnline ? "Online" : "Offline"}</span>
-                </button>
+                  <span className={`absolute left-2.5 text-[10px] font-black uppercase tracking-widest pointer-events-none transition-opacity duration-300 ${isOnline ? 'opacity-100 text-emerald-100' : 'opacity-0'}`}>
+                    ON
+                  </span>
+                  <span className={`absolute right-2.5 text-[10px] font-black uppercase tracking-widest pointer-events-none transition-opacity duration-300 ${!isOnline ? 'opacity-100 text-slate-200' : 'opacity-0'}`}>
+                    OFF
+                  </span>
+                  <motion.div 
+                    layout
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    className={`w-6 h-6 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.15)] z-10 flex items-center justify-center ${isOnline ? "bg-emerald-400" : "bg-slate-300"}`}
+                  >
+                     <div className={`w-2 h-2 rounded-full ${isOnline ? "bg-white" : "bg-slate-500"}`} />
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
 
@@ -275,11 +538,18 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
                             key={order.id}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-white border-2 border-[#fc8019] rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] relative overflow-hidden"
+                            onClick={() => {
+                              triggerHaptic();
+                              setExpandedOrderId(order.id);
+                            }}
+                            className="bg-white border-2 border-[#fc8019] rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
                           >
-                             <div className="absolute top-0 right-0 bg-[#fc8019] text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                             <div className="absolute top-0 right-0 bg-[#fc8019] z-20 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
                                {order.status === "assigned" ? "Pickup" : "Dropoff"}
                              </div>
+                             
+                             <MockMap status={order.status} />
+                             
                              <div className="mb-4">
                                 <h3 className="font-bold text-slate-900 text-lg">{order.restaurant_name || "Restaurant"}</h3>
                                 <p className="text-sm font-bold text-[#fc8019] flex items-center gap-1"><MapPin className="w-3.5 h-3.5"/> {order.restaurant_address || "Pickup address"}</p>
@@ -300,18 +570,26 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
                              <div className="mt-6 flex gap-2">
                                {order.status === "assigned" ? (
                                   <button
-                                    onClick={() => updateOrderStatus(order.id, "picked_up")}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      triggerHaptic();
+                                      updateOrderStatus(order.id, "picked_up");
+                                    }}
                                     className="flex-1 bg-[#fc8019] text-white font-bold py-3.5 text-sm rounded-2xl shadow-orange-500/20 shadow-lg hover:bg-orange-600 transition active:scale-[0.98]"
                                   >
                                     Confirm Pickup
                                   </button>
                                ) : (
                                   <button
-                                    onClick={() => updateOrderStatus(order.id, "delivered")}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      triggerHaptic();
+                                      setExpandedOrderId(order.id);
+                                    }}
                                     className="flex-1 bg-emerald-500 text-white font-bold py-3.5 text-sm rounded-2xl shadow-emerald-500/20 shadow-lg hover:bg-emerald-600 transition active:scale-[0.98] flex items-center justify-center gap-2"
                                   >
                                     <CheckCircle className="w-4 h-4" />
-                                    Mark Delivered
+                                    Complete Delivery
                                   </button>
                                )}
                              </div>
@@ -358,12 +636,20 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
                                </div>
                              </div>
                              <div className="border-t border-slate-100 pt-4 mt-4 flex gap-2">
-                               <button
-                                onClick={() => updateOrderStatus(order.id, "assigned")}
-                                className="flex-1 bg-slate-900 text-white font-bold py-3 text-sm rounded-xl hover:bg-slate-800 transition active:scale-[0.98]"
+                               <motion.button
+                                whileTap={{ scale: 0.94 }}
+                                onClick={() => {
+                                  triggerHaptic();
+                                  setTimeout(() => {
+                                    updateOrderStatus(order.id, "assigned");
+                                    setExpandedOrderId(order.id);
+                                  }, 250);
+                                }}
+                                className="flex-1 bg-slate-900 text-white font-bold py-3 text-sm rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.15)] hover:bg-slate-800 transition-colors flex justify-center items-center gap-2"
                                >
+                                 <Bike className="w-4 h-4" />
                                  Accept Delivery
-                               </button>
+                               </motion.button>
                              </div>
                           </motion.div>
                         ))}
@@ -385,14 +671,25 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
                 ) : (
                   <div className="space-y-3">
                     {pastDeliveries.map(order => (
-                       <div key={order.id} className="bg-white p-4 rounded-2xl border border-slate-200 flex items-center justify-between shadow-sm">
+                       <div key={order.id} className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex justify-between items-start">
                          <div>
-                           <p className="font-bold text-slate-800 text-sm">{order.restaurant_name || "Restaurant"}</p>
+                           <h3 className="font-bold text-slate-800 text-lg">{order.restaurant_name || "Restaurant"}</h3>
+                           <p className="text-sm text-slate-500 mt-0.5">
+                             {new Date(order.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                           </p>
                            <p className="text-xs text-slate-400 mt-0.5">ID: {order.id.substring(0, 8)}</p>
                          </div>
                          <div className="text-right">
-                           <p className="text-green-600 font-bold text-sm">Completed</p>
-                           <p className="text-xs text-slate-400 mt-0.5">Today, 2:30 PM</p>
+                           <p className="font-bold text-slate-800">
+                             ${(order.total_amount || 0).toFixed(2)}
+                           </p>
+                           <div className="bg-green-100 text-green-700 text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto">
+                             <CheckCircle2 className="w-[10px] h-[10px]" />
+                             Delivered
+                           </div>
+                           <p className="text-xs text-slate-500 font-medium mt-2">
+                             {new Date(order.created_at || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                           </p>
                          </div>
                        </div>
                     ))}
@@ -540,6 +837,17 @@ export const RiderDashboard: React.FC<RiderDashboardProps> = ({ isOnline = true,
               })}
             </motion.div>
           </div>
+
+          <AnimatePresence>
+            {expandedOrderId && (
+              <ActiveDeliveryOverlay
+                order={orders.find(o => o.id === expandedOrderId)}
+                onClose={() => setExpandedOrderId(null)}
+                onUpdateStatus={updateOrderStatus}
+                triggerHaptic={triggerHaptic}
+              />
+            )}
+          </AnimatePresence>
 
           <AnimatePresence>
             {newOrderToast && (
