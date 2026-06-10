@@ -100,7 +100,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               id: o.id,
               status: o.status === "Delivered" ? "delivered" : "preparing",
               total_amount: o.total,
-              created_at: new Date(o.date).toISOString(),
+              created_at: new Date().toISOString(),
               customer_name: "John Doe",
               items: o.items.length,
               order_items: o.items.map(i => ({ 
@@ -189,7 +189,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
       case "pending":
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800/50";
       case "preparing":
-        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800/50";
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800/50";
       case "ready":
         return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/50";
       case "picked_up":
@@ -207,90 +207,34 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
           key="splash"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.4 }}
-          className="absolute inset-0 flex flex-col items-center justify-center bg-indigo-600 dark:bg-indigo-900 z-[100]"
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-[#fc8019] flex items-center justify-center z-[100] flex-col"
         >
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
-            className="w-24 h-24 bg-white dark:bg-indigo-100 rounded-3xl shadow-2xl flex items-center justify-center mb-6 relative overflow-hidden"
+            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
+            className="flex items-center justify-center flex-col"
           >
-            <Store className="w-12 h-12 text-indigo-600 dark:text-indigo-700 z-10" />
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-indigo-50 dark:bg-indigo-200" />
+            <h1
+              className="text-6xl font-black text-white tracking-widest lowercase flex flex-col items-center"
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              <span>crave</span>
+              <span className="text-xl tracking-normal opacity-90 mt-1">vendor</span>
+            </h1>
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 40 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+              className="h-1 bg-white dark:bg-slate-900 mt-4 rounded-full"
+            />
           </motion.div>
-          <motion.h1
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-3xl font-black text-white tracking-tight"
-          >
-            Vendor<span className="text-indigo-300">Hub</span>
-          </motion.h1>
         </motion.div>
       )}
 
       {screen === "welcome" && (
-        <motion.div
-          key="welcome"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="absolute inset-0 bg-slate-50 dark:bg-slate-950 flex flex-col z-[90]"
-        >
-          <div className="flex-1 flex flex-col pt-12 items-center p-8 text-center relative overflow-y-auto">
-            <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-indigo-100 dark:from-indigo-900/20 to-transparent -z-10" />
-            
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="w-32 h-32 bg-white dark:bg-slate-900 rounded-[2rem] flex items-center justify-center mb-10 shadow-2xl border border-indigo-50 dark:border-slate-800"
-            >
-              <Utensils className="w-14 h-14 text-indigo-600 dark:text-indigo-400" />
-            </motion.div>
-
-            <motion.h2 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-4 tracking-tight leading-tight"
-            >
-              Manage Your <br /> Restaurant
-            </motion.h2>
-
-            <motion.p 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-sm mb-12"
-            >
-              Streamline your daily operations. Accept live orders, update your menu in real-time, and monitor store analytics.
-            </motion.p>
-          </div>
-
-          <motion.div
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 20 }}
-            className="p-6 bg-white dark:bg-slate-900 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] shrink-0 border-t border-slate-100 dark:border-slate-800 pb-[max(env(safe-area-inset-bottom),2rem)]"
-          >
-            <button
-              onClick={() => setScreen("dashboard")}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 rounded-2xl shadow-xl shadow-indigo-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
-            >
-              Start Managing
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <button
-              onClick={onLogout}
-              className="w-full mt-4 text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 font-bold py-3 transition-colors text-sm"
-            >
-              Return to User App
-            </button>
-          </motion.div>
-        </motion.div>
+        <VendorOnboarding onComplete={() => setScreen("dashboard")} onLogout={onLogout} />
       )}
 
       {screen === "dashboard" && (
@@ -301,25 +245,40 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
           className="absolute inset-0 flex flex-col bg-slate-50 dark:bg-slate-950 font-sans z-[80]"
         >
           {/* Main Scroller */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
+            <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-5 transition-colors duration-500 bg-gradient-to-b from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]">
+              <div className="flex justify-between items-center mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
+                    <Store className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-black text-white tracking-tight leading-tight">Vendor Dashboard</h1>
+                    <p className="text-xs font-medium text-white/80">Manage your business</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-widest">Online</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
             {activeTab === "orders" && (
-              <div className="p-5 pt-[max(2rem,env(safe-area-inset-top))] pb-20">
+              <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">Live Orders</h1>
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Live Orders</h2>
                     <p className="text-sm text-slate-500 font-medium">
                       {orders.filter(o => o.status === "pending" || o.status === "preparing").length} active orders
                     </p>
-                  </div>
-                  <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-full border border-green-100 dark:border-green-900/30 shadow-sm">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-widest">Online</span>
                   </div>
                 </div>
 
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-20 opacity-50">
-                    <RefreshCw className="w-8 h-8 animate-spin text-indigo-500 mb-4" />
+                    <RefreshCw className="w-8 h-8 animate-spin text-[#fc8019] mb-4" />
                     <p className="font-bold text-slate-500 text-sm">Syncing orders...</p>
                   </div>
                 ) : orders.length === 0 ? (
@@ -376,7 +335,18 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                             </div>
                             <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-md">
                               <Clock className="w-4 h-4 text-slate-400" />
-                              <span>{new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                              <span>{
+                                (() => {
+                                  try {
+                                    if (!order.created_at) return "N/A";
+                                    const d = new Date(order.created_at);
+                                    if (isNaN(d.getTime())) return String(order.created_at).split(',')[1] || "N/A"; 
+                                    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                  } catch(e) {
+                                    return "N/A";
+                                  }
+                                })()
+                              }</span>
                             </div>
                           </div>
                         </div>
@@ -432,7 +402,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                                       </button>
                                       <button
                                         onClick={(e) => { e.stopPropagation(); updateOrderStatus(order.id, "preparing"); }}
-                                        className="flex-[2] bg-indigo-600 text-white font-bold py-3.5 text-sm rounded-2xl shadow-indigo-600/20 shadow-lg hover:bg-indigo-700 transition active:scale-[0.98]"
+                                        className="flex-[2] bg-[#fc8019] text-white font-bold py-3.5 text-sm rounded-2xl shadow-orange-500/20 shadow-lg hover:bg-orange-600 transition active:scale-[0.98]"
                                       >
                                         Accept & Prep
                                       </button>
@@ -483,10 +453,10 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
             )}
 
             {activeTab === "menu" && (
-              <div className="p-5 pt-[max(2rem,env(safe-area-inset-top))] pb-20">
+              <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">Menu Items</h1>
+                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Menu Items</h1>
                     <p className="text-sm text-slate-500 font-medium">Manage daily availability</p>
                   </div>
                 </div>
@@ -505,7 +475,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                         <h3 className={`font-bold text-base ${product.is_available ? "text-slate-800 dark:text-slate-100" : "text-slate-500 dark:text-slate-400 line-through"}`}>
                           {product.name}
                         </h3>
-                        <p className="text-indigo-600 dark:text-indigo-400 font-bold text-sm mt-0.5">
+                        <p className="text-[#fc8019] font-bold text-sm mt-0.5">
                           ${product.price.toFixed(2)}
                         </p>
                       </div>
@@ -528,10 +498,10 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
             )}
 
             {activeTab === "analytics" && (
-              <div className="p-5 pt-[max(2rem,env(safe-area-inset-top))] pb-20">
+              <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">Analytics</h1>
+                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Analytics</h1>
                     <p className="text-sm text-slate-500 font-medium">Performance insights</p>
                   </div>
                 </div>
@@ -545,8 +515,8 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                         <AreaChart data={WEEKLY_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                           <defs>
                             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
-                              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                              <stop offset="5%" stopColor="#fc8019" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#fc8019" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
                           <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
@@ -557,7 +527,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                             labelStyle={{ color: '#64748b', fontWeight: 'bold' }}
                             formatter={(value: number) => [`$${value}`, 'Revenue']}
                           />
-                          <Area type="monotone" dataKey="revenue" stroke="#4f46e5" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+                          <Area type="monotone" dataKey="revenue" stroke="#fc8019" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -587,18 +557,18 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
             )}
 
             {activeTab === "profile" && (
-              <div className="p-5 pt-[max(2rem,env(safe-area-inset-top))] pb-20">
+              <div className="pt-2 pb-20">
                  <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">Store Profile</h1>
+                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Store Profile</h1>
                     <p className="text-sm text-slate-500 font-medium">Manage settings & performance</p>
                   </div>
                 </div>
 
                 {/* Profile Header */}
                 <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 mb-6 shadow-sm flex items-center gap-4">
-                  <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center shrink-0">
-                    <Store className="w-8 h-8 text-indigo-600 dark:text-indigo-400" />
+                  <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/10 rounded-2xl flex items-center justify-center shrink-0 border border-orange-100/50 dark:border-orange-900/30">
+                    <Store className="w-8 h-8 text-[#fc8019]" />
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">My Restaurant</h2>
@@ -661,11 +631,17 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                 </div>
               </div>
             )}
+            </div>
           </div>
 
           {/* Bottom Navigation */}
-          <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pb-[max(env(safe-area-inset-bottom),1rem)] pt-3 px-6 shrink-0 z-50">
-            <div className="flex justify-between items-center max-w-sm mx-auto">
+          <div
+            className="absolute left-0 right-0 flex items-center justify-center px-5 z-[90]"
+            style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+          >
+            <motion.div
+              className="flex-1 flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-white/60 dark:border-slate-700/60 shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative"
+            >
               {[
                 { id: "orders", icon: ListOrdered, label: "Orders" },
                 { id: "menu", icon: Package, label: "Menu" },
@@ -673,39 +649,49 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                 { id: "profile", icon: Store, label: "Store" },
               ].map((tab) => {
                 const isActive = activeTab === tab.id;
+                const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as Tab)}
-                    className="relative flex flex-col items-center justify-center w-16"
+                    className="relative flex-1 flex flex-col items-center justify-center h-[56px] rounded-full z-10"
                   >
-                    <div
-                      className={`mb-1 p-1.5 rounded-xl transition-all duration-300 ${
-                        isActive
-                          ? "text-indigo-600 dark:text-indigo-400"
-                          : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
-                      }`}
-                    >
-                      <tab.icon
-                        className={`w-6 h-6 transition-transform duration-300 ${
-                          isActive ? "scale-110" : ""
-                        }`}
-                        strokeWidth={isActive ? 2.5 : 2}
+                    {isActive && (
+                      <motion.div
+                        layoutId="vendorNavIndicator"
+                        className="absolute inset-0 bg-slate-200/80 dark:bg-slate-800/80 rounded-full"
+                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
+                    )}
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <motion.div
+                        animate={{ scale: isActive ? 1.05 : 1 }}
+                        transition={{
+                          duration: 0.4,
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 12,
+                        }}
+                        className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 dark:text-slate-400"}`}
+                      >
+                        <Icon
+                          className="w-5 h-5"
+                          style={{
+                            fill: isActive ? "currentColor" : "none",
+                            strokeWidth: isActive ? 2 : 2.5,
+                          }}
+                        />
+                      </motion.div>
+                      <span
+                        className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 dark:text-slate-400"}`}
+                      >
+                        {tab.label}
+                      </span>
                     </div>
-                    <span
-                      className={`text-[10px] font-bold transition-colors ${
-                        isActive
-                          ? "text-indigo-600 dark:text-indigo-400"
-                          : "text-slate-400"
-                      }`}
-                    >
-                      {tab.label}
-                    </span>
                   </button>
                 );
               })}
-            </div>
+            </motion.div>
           </div>
 
           <AnimatePresence>
@@ -714,20 +700,20 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                 initial={{ opacity: 0, y: -50, x: "-50%" }}
                 animate={{ opacity: 1, y: 30, x: "-50%" }}
                 exit={{ opacity: 0, y: -50, x: "-50%" }}
-                className="fixed top-0 left-1/2 z-[100] bg-indigo-600 text-white px-5 py-4 rounded-3xl shadow-xl shadow-indigo-600/30 flex items-center gap-4 w-11/12 max-w-md border border-indigo-500"
+                className="fixed top-0 left-1/2 z-[100] bg-[#fc8019] text-white px-5 py-4 rounded-3xl shadow-xl shadow-orange-600/30 flex items-center gap-4 w-11/12 max-w-md border border-orange-500"
               >
                 <div className="bg-white/20 p-2.5 rounded-2xl flex-shrink-0 animate-pulse">
                   <BellRing className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-base leading-tight">{newOrderToast.title}</h4>
-                  <p className="text-indigo-100 text-sm font-medium mt-0.5">{newOrderToast.message}</p>
+                  <p className="text-orange-100 text-sm font-medium mt-0.5">{newOrderToast.message}</p>
                 </div>
                 <button 
                   onClick={() => setNewOrderToast(null)} 
-                  className="bg-indigo-700/50 hover:bg-indigo-700 p-2 rounded-full transition-colors flex-shrink-0"
+                  className="bg-orange-700/50 hover:bg-orange-700 p-2 rounded-full transition-colors flex-shrink-0"
                 >
-                  <X className="w-5 h-5 text-indigo-100" />
+                  <X className="w-5 h-5 text-orange-100" />
                 </button>
               </motion.div>
             )}
@@ -757,3 +743,124 @@ const HOURLY_DATA = [
   { hour: '8 PM', volume: 85 },
   { hour: '10 PM', volume: 30 },
 ];
+
+const VENDOR_ONBOARDING_STEPS = [
+  {
+    id: 1,
+    title: "Manage your restaurant effortlessly",
+    description: "Streamline order management, update menu availability, and track your daily sales—all from one convenient spot.",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 2,
+    title: "Real-time Order Tracking",
+    description: "Get instant notifications for new orders and update their status with a single tap to keep your customers informed.",
+    image: "https://images.unsplash.com/photo-1590846406792-0adc7f928f1d?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 3,
+    title: "Insightful Analytics",
+    description: "Understand your peak hours and top-selling items to grow your business smarter, not harder.",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+  }
+];
+
+const VendorOnboarding: React.FC<{onComplete: () => void, onLogout: () => void}> = ({ onComplete, onLogout }) => {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const handleNext = () => {
+    if (currentStep < VENDOR_ONBOARDING_STEPS.length - 1) {
+      setCurrentStep(prev => prev + 1);
+    } else {
+      onComplete();
+    }
+  };
+
+  const step = VENDOR_ONBOARDING_STEPS[currentStep];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, x: "-100%" }}
+      transition={{ duration: 0.5 }}
+      className="absolute inset-0 bg-white dark:bg-slate-900 flex flex-col z-[90] overflow-hidden"
+    >
+      <div className="flex-1 relative bg-orange-50/50 overflow-hidden">
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.img
+            key={step.id}
+            initial={{ opacity: 0, scale: 1.1, x: 50 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.5 }}
+            src={step.image}
+            alt={step.title}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+          />
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50" />
+      </div>
+
+      <div
+        className="px-8 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end"
+        style={{ paddingBottom: "max(3rem, env(safe-area-inset-bottom))" }}
+      >
+        <div className="flex justify-center gap-2 mb-8">
+          {VENDOR_ONBOARDING_STEPS.map((s, idx) => (
+            <div
+              key={s.id}
+              className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? "w-8 bg-[#fc8019]" : "w-2 bg-slate-200 dark:bg-slate-800"}`}
+            />
+          ))}
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-4 tracking-tight leading-tight">
+              {step.title}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-base mb-8 leading-relaxed">
+              {step.description}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+
+        <motion.button
+          onClick={handleNext}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          animate={{
+            boxShadow: [
+              "0px 4px 15px rgba(252, 128, 25, 0.3)",
+              "0px 0px 30px rgba(252, 128, 25, 0.7)",
+              "0px 4px 15px rgba(252, 128, 25, 0.3)",
+            ],
+          }}
+          transition={{
+            boxShadow: {
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+          }}
+          className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 group mt-auto"
+        >
+          {currentStep === VENDOR_ONBOARDING_STEPS.length - 1 ? "Start Managing" : "Next"}
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
+        <button
+          onClick={onLogout}
+          className="mt-6 text-center text-slate-500 dark:text-slate-400 font-bold text-sm hover:text-slate-800 dark:text-slate-100 transition-colors"
+        >
+          Return to User App
+        </button>
+      </div>
+    </motion.div>
+  );
+};

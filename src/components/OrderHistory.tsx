@@ -10,7 +10,9 @@ import {
   Receipt,
   X,
   Navigation,
+  PieChart as PieChartIcon
 } from "lucide-react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, Sector } from "recharts";
 import { MOCK_ORDERS } from "../data";
 import { Order } from "../types";
 
@@ -20,6 +22,13 @@ interface OrderHistoryProps {
   onReorder?: (order: Order) => void;
 }
 
+const SPENDING_DATA = [
+  { name: 'Burgers & American', value: 120, color: '#f43f5e' },
+  { name: 'Pizza & Italian', value: 85, color: '#eab308' },
+  { name: 'Sushi & Asian', value: 145, color: '#10b981' },
+  { name: 'Indian', value: 65, color: '#8b5cf6' },
+];
+
 export const OrderHistory: React.FC<OrderHistoryProps> = ({
   onBack,
   onTrackOrder,
@@ -27,6 +36,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
 }) => {
   const [selectedReceipt, setSelectedReceipt] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [view, setView] = useState<"list" | "analytics">("list");
 
   React.useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1200);
@@ -57,154 +67,250 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
       className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={onBack}
-          className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </motion.button>
-        <div>
-          <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-            <History className="w-5 h-5 text-slate-400 dark:text-slate-500" />
-            Order History
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-            Your past orders
-          </p>
+      <div className="flex flex-col px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-4 mb-4">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={onBack}
+            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </motion.button>
+          <div>
+            <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
+              <History className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+              Order History
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Your past orders
+            </p>
+          </div>
+        </div>
+        
+        {/* Toggle Tabs */}
+        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full max-w-sm self-center">
+          <button
+            onClick={() => setView("list")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${
+              view === "list" 
+                ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" 
+                : "text-slate-500 dark:text-slate-400"
+            }`}
+          >
+            <History className="w-4 h-4" />
+            Orders
+          </button>
+          <button
+            onClick={() => setView("analytics")}
+            className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${
+              view === "analytics" 
+                ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" 
+                : "text-slate-500 dark:text-slate-400"
+            }`}
+          >
+            <PieChartIcon className="w-4 h-4" />
+            Analytics
+          </button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-4">
-        {isLoading
-          ? [1, 2, 3].map((key) => (
-              <div
-                key={key}
-                className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex flex-col gap-2 w-1/2">
-                    <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-3/4"></div>
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-1/2"></div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-16"></div>
-                    <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-20"></div>
-                  </div>
-                </div>
-                <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
-                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-full mb-2"></div>
-                  <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-2/3"></div>
-                </div>
-                <div className="flex gap-3">
-                  <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
-                  <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
-                </div>
-              </div>
-            ))
-          : MOCK_ORDERS.map((order, index) => (
-              <motion.div
-                key={order.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: index * 0.1,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-                className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
-                      {order.restaurantName}
-                    </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                      {order.date}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-slate-800 dark:text-slate-100">
-                      ₹{order.total.toFixed(2)}
-                    </p>
-                    <div
-                      className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
-                        order.status === "Delivered"
-                          ? "bg-green-100 text-green-700"
-                          : order.status === "Cancelled"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-orange-100 text-orange-700"
-                      }`}
-                    >
-                      {order.status === "Delivered" && (
-                        <CheckCircle2 className="w-[10px] h-[10px]" />
-                      )}
-                      {order.status === "Cancelled" && (
-                        <XCircle className="w-[10px] h-[10px]" />
-                      )}
-                      {(order.status === "Processing" ||
-                        (order.status !== "Delivered" &&
-                          order.status !== "Cancelled")) && (
-                        <Clock className="w-[10px] h-[10px]" />
-                      )}
-                      {order.status}
+        {view === "list" && (
+          isLoading
+            ? [1, 2, 3].map((key) => (
+                <div
+                  key={key}
+                  className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex flex-col gap-2 w-1/2">
+                      <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-3/4"></div>
+                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-1/2"></div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-16"></div>
+                      <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-20"></div>
                     </div>
                   </div>
+                  <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-full mb-2"></div>
+                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-2/3"></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
+                    <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
+                  </div>
                 </div>
+              ))
+            : MOCK_ORDERS.map((order, index) => (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: index * 0.1,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
+                        {order.restaurantName}
+                      </h3>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                        {order.date}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-slate-800 dark:text-slate-100">
+                        ₹{order.total.toFixed(2)}
+                      </p>
+                      <div
+                        className={`text-[10px] uppercase tracking-wider font-bold flex items-center gap-1 mt-2 px-2 py-1 rounded-md w-fit ml-auto ${
+                          order.status === "Delivered"
+                            ? "bg-green-100 text-green-700"
+                            : order.status === "Cancelled"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-orange-100 text-orange-700"
+                        }`}
+                      >
+                        {order.status === "Delivered" && (
+                          <CheckCircle2 className="w-[10px] h-[10px]" />
+                        )}
+                        {order.status === "Cancelled" && (
+                          <XCircle className="w-[10px] h-[10px]" />
+                        )}
+                        {(order.status === "Processing" ||
+                          (order.status !== "Delivered" &&
+                            order.status !== "Cancelled")) && (
+                          <Clock className="w-[10px] h-[10px]" />
+                        )}
+                        {order.status}
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
-                  {order.items.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-start gap-2 mb-1 last:mb-0"
+                  <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
+                    {order.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-2 mb-1 last:mb-0"
+                      >
+                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
+                          {item.quantity}
+                        </span>
+                        <span className="text-sm text-slate-700 dark:text-slate-200">
+                          {item.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedReceipt(order)}
+                      className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:bg-slate-950 transition-colors"
                     >
-                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
-                        {item.quantity}
-                      </span>
-                      <span className="text-sm text-slate-700 dark:text-slate-200">
+                      <Receipt className="w-4 h-4" />
+                      View Receipt
+                    </motion.button>
+                    {["Preparing", "Out for Delivery", "Processing"].includes(
+                      order.status,
+                    ) ? (
+                      <motion.button
+                        onClick={() => onTrackOrder && onTrackOrder()}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                      >
+                        <Navigation className="w-4 h-4" />
+                        Track Order
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        onClick={() => onReorder && onReorder(order)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                        Reorder
+                      </motion.button>
+                    )}
+                  </div>
+                </motion.div>
+              ))
+        )}
+
+        {view === "analytics" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-6 pb-20"
+          >
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800">
+              <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight text-center mb-6">
+                Monthly Spending
+              </h2>
+              
+              <div className="h-64 w-full relative">
+                {/* Total amount centered */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 pt-4">
+                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total</span>
+                  <span className="text-2xl font-black text-slate-800 dark:text-slate-100">
+                    ₹{SPENDING_DATA.reduce((acc, curr) => acc + curr.value, 0)}
+                  </span>
+                </div>
+                
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Tooltip 
+                      formatter={(value: number) => [`₹${value}`, 'Spent']}
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.1)' }}
+                      itemStyle={{ color: '#1e293b', fontWeight: 'bold' }}
+                    />
+                    <Pie
+                      data={SPENDING_DATA}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={95}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                      cornerRadius={8}
+                    >
+                      {SPENDING_DATA.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="mt-8 space-y-4">
+                {SPENDING_DATA.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.color }} />
+                      <span className="font-semibold text-slate-700 dark:text-slate-200 text-sm">
                         {item.name}
                       </span>
                     </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-3">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedReceipt(order)}
-                    className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:bg-slate-950 transition-colors"
-                  >
-                    <Receipt className="w-4 h-4" />
-                    View Receipt
-                  </motion.button>
-                  {["Preparing", "Out for Delivery", "Processing"].includes(
-                    order.status,
-                  ) ? (
-                    <motion.button
-                      onClick={() => onTrackOrder && onTrackOrder()}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
-                    >
-                      <Navigation className="w-4 h-4" />
-                      Track Order
-                    </motion.button>
-                  ) : (
-                    <motion.button
-                      onClick={() => onReorder && onReorder(order)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 bg-[#fc8019] text-white font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm shadow-orange-500/20"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      Reorder
-                    </motion.button>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                      ₹{item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Receipt Modal */}
