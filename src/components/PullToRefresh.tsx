@@ -93,7 +93,7 @@ export const PullToRefresh: React.FC<PullToRefreshProps> = ({
         animate={controls}
       >
         <div
-          className={`p-2 rounded-full bg-white dark:bg-slate-800 shadow-md transform transition-transform ${refreshing ? "animate-spin" : ""}`}
+          className={`p-2 rounded-full bg-white  shadow-md transform transition-transform ${refreshing ? "animate-spin" : ""}`}
         >
           <RefreshCw
             className="w-5 h-5 text-[#fc8019]"

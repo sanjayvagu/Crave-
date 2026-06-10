@@ -64,37 +64,37 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
       animate={{ opacity: 1, x: 0, zIndex: 10 }}
       exit={{ opacity: 0, x: "100%", zIndex: 10 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50  overflow-hidden"
     >
       {/* Header */}
-      <div className="flex flex-col px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex flex-col px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white  shadow-sm z-10 shrink-0 border-b border-slate-100 ">
         <div className="flex items-center gap-4 mb-4">
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={onBack}
-            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+            className="w-10 h-10 rounded-full bg-slate-100  flex items-center justify-center text-slate-700 "
           >
             <ArrowLeft className="w-5 h-5" />
           </motion.button>
           <div>
-            <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight flex items-center gap-2">
-              <History className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+            <h1 className="font-bold text-lg text-slate-800  tracking-tight flex items-center gap-2">
+              <History className="w-5 h-5 text-slate-400 " />
               Order History
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-xs text-slate-500  font-medium">
               Your past orders
             </p>
           </div>
         </div>
         
         {/* Toggle Tabs */}
-        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full max-w-sm self-center">
+        <div className="flex bg-slate-100  p-1 rounded-xl w-full max-w-sm self-center">
           <button
             onClick={() => setView("list")}
             className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${
               view === "list" 
-                ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" 
-                : "text-slate-500 dark:text-slate-400"
+                ? "bg-white  text-slate-800  shadow-sm" 
+                : "text-slate-500 "
             }`}
           >
             <History className="w-4 h-4" />
@@ -104,8 +104,8 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
             onClick={() => setView("analytics")}
             className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-lg transition-all ${
               view === "analytics" 
-                ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" 
-                : "text-slate-500 dark:text-slate-400"
+                ? "bg-white  text-slate-800  shadow-sm" 
+                : "text-slate-500 "
             }`}
           >
             <PieChartIcon className="w-4 h-4" />
@@ -120,25 +120,25 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
             ? [1, 2, 3].map((key) => (
                 <div
                   key={key}
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
+                  className="bg-white  rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 "
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex flex-col gap-2 w-1/2">
-                      <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-3/4"></div>
-                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-1/2"></div>
+                      <div className="h-6 bg-slate-200  rounded animate-pulse w-3/4"></div>
+                      <div className="h-4 bg-slate-200  rounded animate-pulse w-1/2"></div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-16"></div>
-                      <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-20"></div>
+                      <div className="h-6 bg-slate-200  rounded animate-pulse w-16"></div>
+                      <div className="h-5 bg-slate-200  rounded animate-pulse w-20"></div>
                     </div>
                   </div>
-                  <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-full mb-2"></div>
-                    <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded animate-pulse w-2/3"></div>
+                  <div className="py-3 border-t border-b border-dashed border-slate-200  my-3">
+                    <div className="h-4 bg-slate-200  rounded animate-pulse w-full mb-2"></div>
+                    <div className="h-4 bg-slate-200  rounded animate-pulse w-2/3"></div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
-                    <div className="h-10 bg-slate-200 dark:bg-slate-800 rounded-xl animate-pulse flex-1"></div>
+                    <div className="h-10 bg-slate-200  rounded-xl animate-pulse flex-1"></div>
+                    <div className="h-10 bg-slate-200  rounded-xl animate-pulse flex-1"></div>
                   </div>
                 </div>
               ))
@@ -152,19 +152,19 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                     delay: index * 0.1,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800"
+                  className="bg-white  rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 "
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg">
+                      <h3 className="font-bold text-slate-800  text-lg">
                         {order.restaurantName}
                       </h3>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-sm text-slate-500  mt-0.5">
                         {order.date}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-800 dark:text-slate-100">
+                      <p className="font-bold text-slate-800 ">
                         ₹{order.total.toFixed(2)}
                       </p>
                       <div
@@ -192,16 +192,16 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                     </div>
                   </div>
 
-                  <div className="py-3 border-t border-b border-dashed border-slate-200 dark:border-slate-700 my-3">
+                  <div className="py-3 border-t border-b border-dashed border-slate-200  my-3">
                     {order.items.map((item, idx) => (
                       <div
                         key={idx}
                         className="flex items-start gap-2 mb-1 last:mb-0"
                       >
-                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-950">
+                        <span className="text-xs font-semibold text-slate-500  border border-slate-200  px-1.5 py-0.5 rounded bg-slate-50 ">
                           {item.quantity}
                         </span>
-                        <span className="text-sm text-slate-700 dark:text-slate-200">
+                        <span className="text-sm text-slate-700 ">
                           {item.name}
                         </span>
                       </div>
@@ -213,7 +213,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setSelectedReceipt(order)}
-                      className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:bg-slate-950 transition-colors"
+                      className="flex-1 border border-slate-200  text-slate-700  font-bold py-2.5 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-slate-50  transition-colors"
                     >
                       <Receipt className="w-4 h-4" />
                       View Receipt
@@ -253,16 +253,16 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
             transition={{ duration: 0.4 }}
             className="space-y-6 pb-20"
           >
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-800">
-              <h2 className="text-xl font-black text-slate-800 dark:text-slate-100 tracking-tight text-center mb-6">
+            <div className="bg-white  rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 ">
+              <h2 className="text-xl font-black text-slate-800  tracking-tight text-center mb-6">
                 Monthly Spending
               </h2>
               
               <div className="h-64 w-full relative">
                 {/* Total amount centered */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 pt-4">
-                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Total</span>
-                  <span className="text-2xl font-black text-slate-800 dark:text-slate-100">
+                  <span className="text-sm font-medium text-slate-500 ">Total</span>
+                  <span className="text-2xl font-black text-slate-800 ">
                     ₹{SPENDING_DATA.reduce((acc, curr) => acc + curr.value, 0)}
                   </span>
                 </div>
@@ -298,11 +298,11 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: item.color }} />
-                      <span className="font-semibold text-slate-700 dark:text-slate-200 text-sm">
+                      <span className="font-semibold text-slate-700  text-sm">
                         {item.name}
                       </span>
                     </div>
-                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                    <span className="font-bold text-slate-800 ">
                       ₹{item.value}
                     </span>
                   </div>
@@ -329,16 +329,16 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="absolute bottom-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+              className="absolute bottom-0 left-0 right-0 z-50 bg-white  rounded-t-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
             >
-              <div className="p-6 pb-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0">
-                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <div className="p-6 pb-4 border-b border-slate-100  flex items-center justify-between shrink-0">
+                <h2 className="text-xl font-bold text-slate-800  flex items-center gap-2">
                   <Receipt className="w-5 h-5 text-[#fc8019]" />
                   Receipt
                 </h2>
                 <button
                   onClick={() => setSelectedReceipt(null)}
-                  className="p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 rounded-full"
+                  className="p-2 text-slate-400  hover:text-slate-600  bg-slate-100  rounded-full"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -346,14 +346,14 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
 
               <div className="p-6 overflow-y-auto no-scrollbar">
                 <div className="text-center mb-6">
-                  <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">
+                  <h3 className="font-bold text-lg text-slate-800 ">
                     {selectedReceipt.restaurantName}
                   </h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-500 ">
                     {selectedReceipt.date}
                   </p>
                   <br />
-                  <div className="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 tracking-wider">
+                  <div className="inline-block px-3 py-1 rounded-full bg-slate-100  text-xs font-bold text-slate-600  tracking-wider">
                     ORDER ID: {selectedReceipt.id}
                   </div>
                 </div>
@@ -361,8 +361,8 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                 <div className="space-y-4 mb-6">
                   {selectedReceipt.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
-                      <span className="text-slate-600 dark:text-slate-300">
-                        <span className="font-semibold text-slate-400 dark:text-slate-500 mr-2">
+                      <span className="text-slate-600 ">
+                        <span className="font-semibold text-slate-400  mr-2">
                           {item.quantity}x
                         </span>{" "}
                         {item.name}
@@ -377,15 +377,15 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   const bd = calculateBreakdown(selectedReceipt.total);
                   return (
                     <div className="space-y-3 mb-6">
-                      <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
+                      <div className="flex justify-between text-sm text-slate-600 ">
                         <span>Item Total</span>
                         <span>₹{bd.itemTotal.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
+                      <div className="flex justify-between text-sm text-slate-600 ">
                         <span>Delivery Fee</span>
                         <span>₹{bd.deliveryFee.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300">
+                      <div className="flex justify-between text-sm text-slate-600 ">
                         <span>Taxes & Charges</span>
                         <span>₹{bd.taxes.toFixed(2)}</span>
                       </div>
@@ -397,9 +397,9 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   );
                 })()}
 
-                <div className="w-full h-px bg-slate-200 dark:bg-slate-700 mb-6"></div>
+                <div className="w-full h-px bg-slate-200  mb-6"></div>
 
-                <div className="flex justify-between font-bold text-lg text-slate-800 dark:text-slate-100">
+                <div className="flex justify-between font-bold text-lg text-slate-800 ">
                   <span>Total Paid</span>
                   <span>₹{selectedReceipt.total.toFixed(2)}</span>
                 </div>

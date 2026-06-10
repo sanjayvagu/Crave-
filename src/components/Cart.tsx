@@ -198,36 +198,36 @@ export const Cart: React.FC<CartProps> = ({
       animate={{ opacity: 1, y: 0, zIndex: 20 }}
       exit={{ opacity: 0, y: "100%", zIndex: 20 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50 "
     >
       {/* Header */}
-      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white  shadow-sm z-10 shrink-0">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={onBack}
-          className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+          className="w-10 h-10 rounded-full bg-slate-100  flex items-center justify-center text-slate-700 "
         >
           <ArrowLeft className="w-5 h-5" />
         </motion.button>
         <div>
-          <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
+          <h1 className="font-bold text-lg text-slate-800  tracking-tight">
             Checkout
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <p className="text-xs text-slate-500  font-medium">
             Truffles & Co. &bull; {cart.length} items
           </p>
         </div>
       </div>
 
       {cart.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-950 pb-32">
-          <div className="w-24 h-24 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
-            <ShoppingCart className="w-10 h-10 text-slate-400 dark:text-slate-500" />
+        <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50  pb-32">
+          <div className="w-24 h-24 bg-slate-200  rounded-full flex items-center justify-center mb-6">
+            <ShoppingCart className="w-10 h-10 text-slate-400 " />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">
+          <h2 className="text-xl font-bold text-slate-800  mb-2">
             Your cart is empty
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-center mb-8">
+          <p className="text-slate-500  text-center mb-8">
             Looks like you haven't added anything to your cart yet.
           </p>
           <motion.button
@@ -242,19 +242,19 @@ export const Cart: React.FC<CartProps> = ({
         <>
           <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6">
         {/* Deliver To Card (Glassmorphic) */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800">
+        <div className="bg-white  rounded-2xl p-4 shadow-sm border border-slate-100 ">
           <div className="flex items-start gap-3">
-            <div className="bg-orange-100 dark:bg-slate-800 p-2 rounded-lg text-[#fc8019] dark:text-slate-200">
+            <div className="bg-orange-100  p-2 rounded-lg text-[#fc8019] ">
               {addressType === "Home" ? <Home className="w-5 h-5" /> : addressType === "Work" ? <Briefcase className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-slate-800 dark:text-slate-100">
+              <h3 className="font-bold text-slate-800 ">
                 Deliver to {addressType}
               </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+              <p className="text-sm text-slate-500  mt-1 line-clamp-1">
                 {deliveryAddress}
               </p>
-              <p className="text-sm font-medium mt-1 text-slate-700 dark:text-slate-200">
+              <p className="text-sm font-medium mt-1 text-slate-700 ">
                 35-40 mins delivery time
               </p>
             </div>
@@ -268,9 +268,9 @@ export const Cart: React.FC<CartProps> = ({
         </div>
 
         {/* Apply Coupon */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800 relative overflow-hidden">
+        <div className="bg-white  rounded-2xl p-5 shadow-sm border border-slate-100  relative overflow-hidden">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center gap-2">
+            <h3 className="font-bold text-slate-800  text-sm flex items-center gap-2">
               <TicketPercent className="w-5 h-5 text-[#fc8019]" />
               Offers & Benefits
             </h3>
@@ -291,19 +291,19 @@ export const Cart: React.FC<CartProps> = ({
                       code: "FREEDEL",
                       title: "Free Delivery",
                       desc: "Get free delivery",
-                      color: "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800/50 dark:text-blue-400",
+                      color: "bg-blue-50 text-blue-600 border-blue-200   ",
                     },
                     {
                       code: "FIRST100",
                       title: "₹100 OFF",
                       desc: "Min purchase ₹500",
-                      color: "bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800/50 dark:text-purple-400",
+                      color: "bg-purple-50 text-purple-600 border-purple-200   ",
                     },
                     {
                       code: "SAVE10",
                       title: "10% OFF",
                       desc: "Min purchase ₹399",
-                      color: "bg-orange-50 text-orange-600 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800/50 dark:text-orange-400",
+                      color: "bg-orange-50 text-orange-600 border-orange-200   ",
                     },
                   ].map((coupon) => (
                     <div
@@ -330,10 +330,10 @@ export const Cart: React.FC<CartProps> = ({
                       placeholder="Enter coupon code"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
-                      className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-xl px-4 py-3 text-sm font-medium uppercase outline-none transition-colors ${
+                      className={`w-full bg-slate-50  border rounded-xl px-4 py-3 text-sm font-medium uppercase outline-none transition-colors ${
                         couponError
                           ? "border-red-300 text-red-600 focus:border-red-500"
-                          : "border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:border-[#fc8019]"
+                          : "border-slate-200  text-slate-800  focus:border-[#fc8019]"
                       }`}
                     />
                     {couponError && (
@@ -381,7 +381,7 @@ export const Cart: React.FC<CartProps> = ({
                     setAppliedCoupon(null);
                     setCouponInput("");
                   }}
-                  className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:text-slate-300 p-2"
+                  className="text-slate-400  hover:text-slate-600  p-2"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -391,8 +391,8 @@ export const Cart: React.FC<CartProps> = ({
         </div>
 
         {/* Add Tip */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-3 text-sm">
+        <div className="bg-white  rounded-2xl p-5 shadow-sm border border-slate-100 ">
+          <h3 className="font-bold text-slate-800  mb-3 text-sm">
             Add a tip for the delivery partner
           </h3>
           <div className="flex gap-3">
@@ -403,7 +403,7 @@ export const Cart: React.FC<CartProps> = ({
                 className={`flex-1 py-2 rounded-xl border text-sm font-bold transition-all ${
                   tipPercentage === percentage
                     ? "border-[#fc8019] bg-orange-50 text-[#fc8019]"
-                    : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-slate-300"
+                    : "border-slate-200  text-slate-600  hover:border-slate-300"
                 }`}
               >
                 {percentage === 0 ? "No Tip" : `${percentage}%`}
@@ -413,8 +413,8 @@ export const Cart: React.FC<CartProps> = ({
         </div>
 
         {/* Payment Selection */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+        <div className="bg-white  rounded-2xl p-5 shadow-sm border border-slate-100 ">
+          <h3 className="font-bold text-slate-800  mb-4 flex items-center gap-2">
             Payment Method
           </h3>
           <div className="space-y-3 mt-3">
@@ -428,8 +428,8 @@ export const Cart: React.FC<CartProps> = ({
                 onClick={() => setPaymentMethod(method.id)}
                 className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
                   paymentMethod === method.id
-                    ? "border-[#fc8019] bg-orange-50/50 dark:bg-slate-800"
-                    : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                    ? "border-[#fc8019] bg-orange-50/50 "
+                    : "border-slate-200  hover:bg-slate-50 :bg-slate-800/50"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -437,16 +437,16 @@ export const Cart: React.FC<CartProps> = ({
                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       paymentMethod === method.id
                         ? "bg-orange-100 text-[#fc8019]"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500"
+                        : "bg-slate-100  text-slate-500"
                     }`}
                   >
                     <method.icon className="w-5 h-5" />
                   </div>
-                  <span className="font-bold text-sm text-slate-800 dark:text-slate-100">
+                  <span className="font-bold text-sm text-slate-800 ">
                     {method.id}
                   </span>
                 </div>
-                <div className="relative flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600">
+                <div className="relative flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-300 ">
                   {paymentMethod === method.id && (
                     <motion.div
                       layoutId="radioCheck"
@@ -460,9 +460,9 @@ export const Cart: React.FC<CartProps> = ({
         </div>
 
         {/* Order Summary */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-100 dark:border-slate-800">
-          <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
-            <Receipt className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+        <div className="bg-white  rounded-2xl p-5 shadow-sm border border-slate-100 ">
+          <h3 className="font-bold text-slate-800  mb-4 flex items-center gap-2">
+            <Receipt className="w-5 h-5 text-slate-400 " />
             Order Summary
           </h3>
 
@@ -485,14 +485,14 @@ export const Cart: React.FC<CartProps> = ({
                         ></div>
                       </div>
                       <div>
-                        <h4 className="text-slate-800 dark:text-slate-100 text-sm font-medium">
+                        <h4 className="text-slate-800  text-sm font-medium">
                           {item.name}
                         </h4>
                         <div className="flex items-center gap-2 mt-1">
                           <motion.button
                             whileTap={{ scale: 0.8 }}
                             onClick={() => onUpdateCart(item, -1)}
-                            className="w-8 h-8 shrink-0 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-slate-950"
+                            className="w-8 h-8 shrink-0 rounded-full border border-slate-200  flex items-center justify-center text-slate-500  hover:bg-slate-50 "
                           >
                             <Minus className="w-3 h-3" />
                           </motion.button>
@@ -509,7 +509,7 @@ export const Cart: React.FC<CartProps> = ({
                         </div>
                       </div>
                     </div>
-                    <div className="font-medium text-slate-800 dark:text-slate-100 text-sm">
+                    <div className="font-medium text-slate-800  text-sm">
                       ₹<NumberTicker value={item.price * item.quantity} />
                     </div>
                   </div>
@@ -521,7 +521,7 @@ export const Cart: React.FC<CartProps> = ({
                       onChange={(e) =>
                         onUpdateInstructions?.(item.id, e.target.value)
                       }
-                      className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-700 dark:text-slate-200 focus:border-[#fc8019] outline-none transition-colors"
+                      className="w-full bg-slate-50  border border-slate-200  rounded-lg px-3 py-1.5 text-xs text-slate-700  focus:border-[#fc8019] outline-none transition-colors"
                     />
                   </div>
                 </motion.div>
@@ -529,11 +529,11 @@ export const Cart: React.FC<CartProps> = ({
             </AnimatePresence>
           </div>
 
-          <div className="w-full h-px bg-slate-100 dark:bg-slate-800 my-4 border-dashed border-t-2 border-slate-200 dark:border-slate-700"></div>
+          <div className="w-full h-px bg-slate-100  my-4 border-dashed border-t-2 border-slate-200 "></div>
 
           {/* Bill Details */}
           <div className="space-y-2 text-sm">
-            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+            <div className="flex justify-between text-slate-600 ">
               <span>Subtotal</span>
               <span className="flex items-center">
                 ₹<NumberTicker value={itemTotal} />
@@ -557,7 +557,7 @@ export const Cart: React.FC<CartProps> = ({
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+            <div className="flex justify-between text-slate-600 ">
               <span className="flex items-center gap-1">
                 Delivery fee <Clock className="w-3 h-3" />
               </span>
@@ -565,7 +565,7 @@ export const Cart: React.FC<CartProps> = ({
                 ₹<NumberTicker value={deliveryFee} />
               </span>
             </div>
-            <div className="flex justify-between text-slate-600 dark:text-slate-300">
+            <div className="flex justify-between text-slate-600 ">
               <span>Taxes & charges</span>
               <span className="flex items-center">
                 ₹<NumberTicker value={taxes} />
@@ -588,9 +588,9 @@ export const Cart: React.FC<CartProps> = ({
             </AnimatePresence>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700 my-4"></div>
+          <div className="w-full h-px bg-slate-200  my-4"></div>
 
-          <div className="flex justify-between font-bold text-slate-800 dark:text-slate-100 text-lg">
+          <div className="flex justify-between font-bold text-slate-800  text-lg">
             <span>To Pay</span>
             <span className="flex items-center">
               ₹<NumberTicker value={total} />
@@ -600,7 +600,7 @@ export const Cart: React.FC<CartProps> = ({
       </div>
 
       {/* Slide to Pay Area */}
-      <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
+      <div className="bg-white  border-t border-slate-100  px-5 pt-6 pb-32 shrink-0 rounded-t-3xl shadow-[0_-10px_40px_rgb(0,0,0,0.05)]">
         <AnimatePresence mode="wait">
           {!isConfirming && !isProcessing ? (
             <motion.button
@@ -641,7 +641,7 @@ export const Cart: React.FC<CartProps> = ({
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setIsConfirming(false)}
-                className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 py-4 rounded-2xl font-bold text-lg text-center transition-colors shrink-0"
+                className="w-full bg-slate-100  hover:bg-slate-200 :bg-slate-700 text-slate-700  py-4 rounded-2xl font-bold text-lg text-center transition-colors shrink-0"
               >
                 Cancel
               </motion.button>
@@ -669,24 +669,24 @@ export const Cart: React.FC<CartProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[100] flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden"
+            className="absolute inset-0 z-[100] flex flex-col bg-slate-50  overflow-hidden"
           >
-            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white  shadow-sm z-10 shrink-0 border-b border-slate-100 ">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowMap(false)}
-                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200"
+                className="w-10 h-10 rounded-full bg-slate-100  flex items-center justify-center text-slate-700 "
               >
                 <ArrowLeft className="w-5 h-5" />
               </motion.button>
-              <h1 className="font-bold text-lg text-slate-800 dark:text-slate-100 tracking-tight">
+              <h1 className="font-bold text-lg text-slate-800  tracking-tight">
                 Select Location
               </h1>
             </div>
-            <div className="flex-1 w-full bg-slate-200 dark:bg-slate-700 relative overflow-hidden flex flex-col">
+            <div className="flex-1 w-full bg-slate-200  relative overflow-hidden flex flex-col">
               {/* Simulated Map Background */}
               <div
-                className="flex-1 w-full opacity-40 mix-blend-multiply dark:mix-blend-screen"
+                className="flex-1 w-full opacity-40 mix-blend-multiply "
                 style={{
                   backgroundImage:
                     "radial-gradient(#cbd5e1 1px, transparent 1px)",
@@ -701,8 +701,8 @@ export const Cart: React.FC<CartProps> = ({
               </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.1)] relative z-20 pb-10">
-              <h3 className="font-bold text-xl text-slate-800 dark:text-slate-100 mb-4">
+            <div className="bg-white  p-6 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.1)] relative z-20 pb-10">
+              <h3 className="font-bold text-xl text-slate-800  mb-4">
                 Choose Delivery Address
               </h3>
               
@@ -720,18 +720,18 @@ export const Cart: React.FC<CartProps> = ({
                     }}
                     className={`flex items-start gap-4 p-4 border rounded-2xl cursor-pointer transition-all ${
                       addressType === addr.type
-                        ? "border-[#fc8019] bg-orange-50/50 dark:bg-slate-800"
-                        : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                        ? "border-[#fc8019] bg-orange-50/50 "
+                        : "border-slate-200  hover:bg-slate-50 :bg-slate-800/50"
                     }`}
                   >
-                    <div className={`p-2 rounded-full mt-0.5 ${addressType === addr.type ? "bg-orange-100 text-[#fc8019] dark:bg-slate-700" : "bg-slate-100 text-slate-500 dark:bg-slate-800"}`}>
+                    <div className={`p-2 rounded-full mt-0.5 ${addressType === addr.type ? "bg-orange-100 text-[#fc8019] " : "bg-slate-100 text-slate-500 "}`}>
                       <addr.icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-bold text-slate-800 dark:text-slate-100">{addr.type}</h4>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">{addr.street}</p>
+                      <h4 className="font-bold text-slate-800 ">{addr.type}</h4>
+                      <p className="text-sm text-slate-500  mt-0.5 leading-snug">{addr.street}</p>
                     </div>
-                    <div className="relative flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600 shrink-0 mt-1">
+                    <div className="relative flex items-center justify-center w-5 h-5 rounded-full border-2 border-slate-300  shrink-0 mt-1">
                       {addressType === addr.type && (
                         <motion.div
                           layoutId="addressRadioCheck"

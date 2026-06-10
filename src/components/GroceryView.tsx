@@ -25,7 +25,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
               <p className="text-white/90 text-sm mt-1">
                 on your first grocery order
               </p>
-              <button className="mt-3 bg-white dark:bg-slate-900 text-[#16a34a] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+              <button className="mt-3 bg-white  text-[#16a34a] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
                 Claim Now
               </button>
             </div>
@@ -55,7 +55,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
       {/* Grocery Categories */}
       <div className="mb-8 cursor-grab active:cursor-grabbing">
         <div className="flex items-center justify-between px-5 mb-4 mt-6">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-800  tracking-tight">
             Shop by Category
           </h2>
         </div>
@@ -76,7 +76,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
               whileTap={{ scale: 0.95 }}
               className="flex flex-col items-center gap-2.5 cursor-pointer shrink-0"
             >
-              <div className="w-[72px] h-[72px] bg-slate-50 dark:bg-slate-800/50 rounded-full shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center p-3">
+              <div className="w-[72px] h-[72px] bg-slate-50  rounded-full shadow-sm border border-slate-100  flex items-center justify-center p-3">
                 <motion.img 
                   animate={{ y: [0, -4, 0] }}
                   transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: idx * 0.1 }}
@@ -85,7 +85,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                   className="w-full h-full object-contain drop-shadow-md" 
                 />
               </div>
-              <span className="text-[11px] font-bold text-center leading-tight text-slate-700 dark:text-slate-300 w-16">
+              <span className="text-[11px] font-bold text-center leading-tight text-slate-700  w-16">
                 {cat.name}
               </span>
             </motion.div>
@@ -96,26 +96,26 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
       {/* Snack Corner */}
       <div className="mb-8">
         <div className="flex items-center justify-between px-5 mb-4 mt-6">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-800  tracking-tight">
             Craving a Snack?
           </h2>
           <span className="text-[#16a34a] text-sm font-bold cursor-pointer">See All</span>
         </div>
         <div className="grid grid-cols-2 gap-4 px-5">
           {[
-            { name: "Chips & Crisps", items: "120+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/French%20Fries.png", color: "from-orange-100 to-orange-50 dark:from-orange-900/30 dark:to-orange-900/10" },
-            { name: "Cold Drinks", items: "85+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Tropical%20Drink.png", color: "from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-900/10" },
-            { name: "Chocolates", items: "90+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Chocolate%20Bar.png", color: "from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10" },
-            { name: "Ice Creams", items: "40+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Ice%20Cream.png", color: "from-pink-100 to-pink-50 dark:from-pink-900/30 dark:to-pink-900/10" },
+            { name: "Chips & Crisps", items: "120+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/French%20Fries.png", color: "from-orange-100 to-orange-50  " },
+            { name: "Cold Drinks", items: "85+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Tropical%20Drink.png", color: "from-blue-100 to-blue-50  " },
+            { name: "Chocolates", items: "90+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Chocolate%20Bar.png", color: "from-amber-100 to-amber-50  " },
+            { name: "Ice Creams", items: "40+ items", image: "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Food/Ice%20Cream.png", color: "from-pink-100 to-pink-50  " },
           ].map((cat, idx) => (
             <motion.div
               key={idx}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`bg-gradient-to-br ${cat.color} rounded-2xl p-3 flex flex-col h-32 relative overflow-hidden shadow-sm cursor-pointer border border-slate-100 dark:border-slate-800`}
+              className={`bg-gradient-to-br ${cat.color} rounded-2xl p-3 flex flex-col h-32 relative overflow-hidden shadow-sm cursor-pointer border border-slate-100 `}
             >
               <div className="z-10 relative">
-                <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 leading-tight w-2/3">{cat.name}</h3>
+                <h3 className="font-bold text-sm text-slate-800  leading-tight w-2/3">{cat.name}</h3>
                 <p className="text-[10px] text-slate-500 font-medium mt-0.5">{cat.items}</p>
               </div>
               <motion.img 
@@ -132,7 +132,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
       {/* Curated Stores */}
       <div className="mb-8">
         <div className="flex items-center justify-between px-5 mb-4 mt-6">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-800  tracking-tight">
             Curated Stores
           </h2>
         </div>
@@ -147,9 +147,9 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                key={idx}
                whileHover={{ y: -2 }}
                whileTap={{ scale: 0.98 }}
-               className="min-w-[220px] bg-slate-50 dark:bg-slate-800/60 p-4 rounded-3xl flex items-center gap-4 cursor-pointer border border-slate-100 dark:border-slate-800 shadow-sm"
+               className="min-w-[220px] bg-slate-50  p-4 rounded-3xl flex items-center gap-4 cursor-pointer border border-slate-100  shadow-sm"
              >
-               <div className="w-12 h-12 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center p-2 shadow-sm shrink-0">
+               <div className="w-12 h-12 bg-white  rounded-full flex items-center justify-center p-2 shadow-sm shrink-0">
                  <motion.img 
                    animate={{ y: [0, -4, 0] }}
                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: idx * 0.15 }}
@@ -159,7 +159,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                  />
                </div>
                <div>
-                 <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 leading-tight">{store.name}</h3>
+                 <h3 className="font-bold text-sm text-slate-800  leading-tight">{store.name}</h3>
                  <p className="text-[10px] text-slate-500 font-medium mt-0.5">{store.suffix}</p>
                </div>
              </motion.div>
@@ -169,7 +169,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
 
       <div>
         <div className="flex items-center justify-between px-5 mb-4 mt-6">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-800  tracking-tight">
             Bestsellers
           </h2>
         </div>
@@ -179,7 +179,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
               key={item.id}
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.96 }}
-              className="min-w-[160px] max-w-[160px] bg-white dark:bg-slate-900 rounded-[24px] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer flex flex-col relative"
+              className="min-w-[160px] max-w-[160px] bg-white  rounded-[24px] overflow-hidden shadow-sm border border-slate-100  cursor-pointer flex flex-col relative"
             >
               {/* Discount Badge */}
               <div className="absolute top-2 left-2 z-10 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">
@@ -189,17 +189,17 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-10" />
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
               </div>
-              <div className="p-4 flex flex-col flex-1 justify-between bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+              <div className="p-4 flex flex-col flex-1 justify-between bg-white  border-t border-slate-100 ">
                 <div>
-                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">{item.description}</div>
-                  <h3 className="font-bold text-sm leading-tight text-slate-800 dark:text-slate-100 line-clamp-2">
+                  <div className="text-xs font-medium text-slate-500  mb-1">{item.description}</div>
+                  <h3 className="font-bold text-sm leading-tight text-slate-800  line-clamp-2">
                     {item.name}
                   </h3>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-[10px] text-slate-400 line-through">₹{Math.round(item.price * 1.1)}</span>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-base">₹{item.price}</span>
+                    <span className="font-bold text-slate-800  text-base">₹{item.price}</span>
                   </div>
                   <motion.button 
                     whileTap={{ scale: 0.8 }}
@@ -221,7 +221,7 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
       {/* Recommended for You */}
       <div>
         <div className="flex items-center justify-between px-5 mb-4 mt-4">
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+          <h2 className="text-lg font-bold text-slate-800  tracking-tight">
             Recommended for You
           </h2>
         </div>
@@ -231,22 +231,22 @@ export const GroceryView: React.FC<GroceryViewProps> = ({ onUpdateCart }) => {
               key={item.id}
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.96 }}
-              className="min-w-[160px] max-w-[160px] bg-white dark:bg-slate-900 rounded-[24px] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer flex flex-col relative"
+              className="min-w-[160px] max-w-[160px] bg-white  rounded-[24px] overflow-hidden shadow-sm border border-slate-100  cursor-pointer flex flex-col relative"
             >
               <div className="h-32 w-full relative">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent z-10" />
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
               </div>
-              <div className="p-4 flex flex-col flex-1 justify-between bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+              <div className="p-4 flex flex-col flex-1 justify-between bg-white  border-t border-slate-100 ">
                 <div>
-                  <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">{item.description}</div>
-                  <h3 className="font-bold text-sm leading-tight text-slate-800 dark:text-slate-100 line-clamp-2">
+                  <div className="text-xs font-medium text-slate-500  mb-1">{item.description}</div>
+                  <h3 className="font-bold text-sm leading-tight text-slate-800  line-clamp-2">
                     {item.name}
                   </h3>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <div className="flex flex-col">
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-base">₹{item.price}</span>
+                    <span className="font-bold text-slate-800  text-base">₹{item.price}</span>
                   </div>
                   <motion.button 
                     whileTap={{ scale: 0.8 }}

@@ -75,25 +75,25 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
       animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50  overflow-hidden"
     >
-      <div className="px-5 pb-4 pt-[max(3rem,env(safe-area-inset-top))] bg-white dark:bg-slate-900 shadow-sm z-10 shrink-0">
+      <div className="px-5 pb-4 pt-[max(3rem,env(safe-area-inset-top))] bg-white  shadow-sm z-10 shrink-0">
         <div className="relative">
-          <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+          <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 " />
           <input
             autoFocus
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for restaurants, items..."
-            className="w-full bg-slate-100 dark:bg-slate-800 rounded-2xl py-3.5 pl-12 pr-12 outline-none text-slate-800 dark:text-slate-100 placeholder-slate-500 font-medium border border-slate-200 dark:border-slate-700 focus:border-[#fc8019]/50 transition-colors shadow-inner"
+            className="w-full bg-slate-100  rounded-2xl py-3.5 pl-12 pr-12 outline-none text-slate-800  placeholder-slate-500 font-medium border border-slate-200  focus:border-[#fc8019]/50 transition-colors shadow-inner"
           />
           <button
             onClick={startListening}
             className={`absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors z-10 ${
               isListening
-                ? "bg-red-100 text-red-500 dark:bg-red-900/30 animate-pulse"
-                : "text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+                ? "bg-red-100 text-red-500  animate-pulse"
+                : "text-slate-400  hover:bg-slate-200 :bg-slate-700"
             }`}
           >
             <Mic className="w-4 h-4" />
@@ -109,7 +109,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 text-lg tracking-tight">
+              <h3 className="font-bold text-slate-800  mb-4 text-lg tracking-tight">
                 Trending Searches
               </h3>
               <div className="flex flex-wrap gap-2.5">
@@ -118,7 +118,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
                     <button
                       key={item}
                       onClick={() => setQuery(item)}
-                      className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-200 font-medium text-sm shadow-sm hover:border-[#fc8019] hover:text-[#fc8019] transition-colors"
+                      className="px-4 py-2 bg-white  border border-slate-200  rounded-xl text-slate-700  font-medium text-sm shadow-sm hover:border-[#fc8019] hover:text-[#fc8019] transition-colors"
                     >
                       {item}
                     </button>
@@ -128,7 +128,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
             </motion.div>
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-4 text-lg tracking-tight">
+              <h3 className="font-bold text-slate-800  mb-4 text-lg tracking-tight">
                 Results
               </h3>
               {results.length > 0 ? (
@@ -144,7 +144,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
                       }}
                       key={r.id}
                       onClick={() => onSelectRestaurant(r)}
-                      className="bg-white dark:bg-slate-900 p-3 rounded-2xl flex items-center gap-4 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-800 cursor-pointer hover:shadow-md transition-shadow"
+                      className="bg-white  p-3 rounded-2xl flex items-center gap-4 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100  cursor-pointer hover:shadow-md transition-shadow"
                     >
                       <img
                         src={r.image}
@@ -152,10 +152,10 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
                         className="w-16 h-16 rounded-xl object-cover"
                       />
                       <div>
-                        <h4 className="font-bold text-slate-800 dark:text-slate-100">
+                        <h4 className="font-bold text-slate-800 ">
                           {r.name}
                         </h4>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">
+                        <p className="text-sm text-slate-500  line-clamp-1">
                           {r.tags.join(", ")}
                         </p>
                       </div>
@@ -163,7 +163,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-10 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-10 text-slate-500 ">
                   <p>No results found for "{query}"</p>
                 </div>
               )}

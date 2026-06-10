@@ -89,7 +89,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         ref={containerRef}
         onTouchMove={handleTouchMove}
         onPointerMove={handlePointerMove}
-        className="flex-1 flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-white/60 dark:border-slate-700/60 shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative touch-none"
+        className="flex-1 flex bg-white/80  backdrop-blur-2xl border border-white/60  shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative touch-none"
       >
         {TABS.map((tab) => {
           const isActive = currentScreen === tab.id;
@@ -103,7 +103,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               {isActive && (
                 <motion.div
                   layoutId="navIndicator"
-                  className="absolute inset-0 bg-slate-200/80 dark:bg-slate-800/80 rounded-full"
+                  className="absolute inset-0 bg-slate-200/80  rounded-full"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
@@ -121,7 +121,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                     stiffness: 400,
                     damping: 12,
                   }}
-                  className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}
+                  className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-blue-600 " : "text-slate-500 "}`}
                 >
                   <Icon
                     className="w-5 h-5"
@@ -137,7 +137,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                   )}
                 </motion.div>
                 <span
-                  className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}
+                  className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? "text-blue-600 " : "text-slate-500 "}`}
                 >
                   {tab.label}
                 </span>
@@ -149,7 +149,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
 
       <button
         onClick={() => onNavigate("search")}
-        className={`w-[64px] h-[64px] shrink-0 rounded-full flex flex-col items-center justify-center shadow-[0_8px_32px_rgb(0,0,0,0.08)] border border-white/60 dark:border-slate-700/60 backdrop-blur-2xl transition-colors duration-300 ${currentScreen === "search" ? "bg-slate-200/80 dark:bg-slate-800/80 text-blue-600 dark:text-blue-400" : "bg-white/80 dark:bg-slate-900/80 text-slate-500 dark:text-slate-400"}`}
+        className={`w-[64px] h-[64px] shrink-0 rounded-full flex flex-col items-center justify-center shadow-[0_8px_32px_rgb(0,0,0,0.08)] border border-white/60  backdrop-blur-2xl transition-colors duration-300 ${currentScreen === "search" ? "bg-slate-200/80  text-blue-600 " : "bg-white/80  text-slate-500 "}`}
       >
         {serviceType === "grocery" ? (
           <LayoutGrid

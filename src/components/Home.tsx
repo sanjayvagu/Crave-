@@ -124,12 +124,12 @@ export const Home: React.FC<HomeProps> = ({
       animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50  overflow-hidden"
     >
       <PullToRefresh onRefresh={handleRefresh}>
         <div className="pb-32">
           {/* Header & Hero Section */}
-          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]" : "from-[#380e52] to-[#1d0628] dark:from-[#2e0b44] dark:to-[#16041f]"}`}>
+          <div className={`relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-4 transition-colors duration-500 bg-gradient-to-b ${serviceType === "food" ? "from-[#fc8019] to-[#f27405]  " : "from-[#380e52] to-[#1d0628]  "}`}>
             
             <div className="relative z-10 flex items-center justify-between gap-2">
               {/* Logo */}
@@ -280,7 +280,7 @@ export const Home: React.FC<HomeProps> = ({
               onClick={onOpenSearch}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="relative z-10 mt-6 mx-1 flex items-center bg-white dark:bg-slate-900 shadow-[0_4px_20px_rgb(0,0,0,0.1)] rounded-full p-[14px] px-5 cursor-pointer overflow-hidden"
+              className="relative z-10 mt-6 mx-1 flex items-center bg-white  shadow-[0_4px_20px_rgb(0,0,0,0.1)] rounded-full p-[14px] px-5 cursor-pointer overflow-hidden"
             >
               <Search className="w-5 h-5 text-slate-400" strokeWidth={2.5} />
               <div className="flex-1 ml-3 text-slate-400 text-[15px] font-medium flex items-center h-5 overflow-hidden gap-[3px]">
@@ -292,7 +292,7 @@ export const Home: React.FC<HomeProps> = ({
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -20, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="text-slate-700 dark:text-slate-300 font-bold max-w-[150px] truncate"
+                    className="text-slate-700  font-bold max-w-[150px] truncate"
                   >
                     {currentCycle.text}
                   </motion.span>
@@ -344,16 +344,16 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
+          <div className="px-5 pb-8 pt-6 bg-slate-50  rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
 
           {/* Conditional Content based on Serviceability */}
           {!selectedCity.isServiceable ? (
             <div className="flex flex-col items-center justify-center pt-20 px-6 text-center">
-              <div className="w-32 h-32 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
+              <div className="w-32 h-32 bg-slate-200  rounded-full flex items-center justify-center mb-6">
                 <MapPin className="w-12 h-12 text-[#fc8019] opacity-50" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">Unserviceable Area</h2>
-              <p className="text-slate-500 dark:text-slate-400">
+              <h2 className="text-2xl font-bold text-slate-800  mb-2">Unserviceable Area</h2>
+              <p className="text-slate-500 ">
                 Coming soon to {selectedCity.name}!
               </p>
             </div>
@@ -374,7 +374,7 @@ export const Home: React.FC<HomeProps> = ({
                       <p className="text-white/90 text-sm mt-1">
                         on your first 3 orders
                       </p>
-                      <button className="mt-3 bg-white dark:bg-slate-900 text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                      <button className="mt-3 bg-white  text-[#fc8019] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
                         Claim Now
                       </button>
                     </div>
@@ -404,7 +404,7 @@ export const Home: React.FC<HomeProps> = ({
             {/* Categories */}
             <div className="mb-8 cursor-grab active:cursor-grabbing">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+                <h2 className="text-lg font-bold text-slate-800  tracking-tight">
                   What's on your mind?
                 </h2>
               </div>
@@ -425,10 +425,10 @@ export const Home: React.FC<HomeProps> = ({
                     onClick={() => onOpenSearch(category.name)}
                     className="flex flex-col items-center gap-2 cursor-pointer shrink-0"
                   >
-                    <div className="w-[72px] h-[72px] bg-slate-50 dark:bg-slate-800/50 rounded-full shadow-sm border border-slate-100 dark:border-slate-800 flex items-center justify-center p-3">
+                    <div className="w-[72px] h-[72px] bg-slate-50  rounded-full shadow-sm border border-slate-100  flex items-center justify-center p-3">
                       <img src={category.image} alt={category.name} className="w-full h-full object-contain drop-shadow-md" />
                     </div>
-                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    <span className="text-xs font-bold text-slate-700 ">
                       {category.name}
                     </span>
                   </motion.div>
@@ -439,7 +439,7 @@ export const Home: React.FC<HomeProps> = ({
             {/* Recommended for You */}
             {recommendedItems.length > 0 && (
               <div className="mt-2 mb-8">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 tracking-tight">
+                <h2 className="text-lg font-bold text-slate-800  mb-4 tracking-tight">
                   Recommended for You
                 </h2>
                 <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 -mx-5 px-5">
@@ -451,9 +451,9 @@ export const Home: React.FC<HomeProps> = ({
                         whileHover={{ y: -4 }}
                         whileTap={{ scale: 0.96 }}
                         onClick={() => restaurant && onSelectRestaurant(restaurant)}
-                        className="min-w-[160px] max-w-[160px] bg-white dark:bg-slate-900 rounded-[24px] overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800 cursor-pointer flex flex-col"
+                        className="min-w-[160px] max-w-[160px] bg-white  rounded-[24px] overflow-hidden shadow-sm border border-slate-100  cursor-pointer flex flex-col"
                       >
-                        <div className="relative h-28 w-full bg-slate-100 dark:bg-slate-800">
+                        <div className="relative h-28 w-full bg-slate-100 ">
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                           <div className="absolute top-2 right-2 px-2 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[10px] font-bold text-white flex items-center gap-1 border border-white/20">
                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
@@ -462,11 +462,11 @@ export const Home: React.FC<HomeProps> = ({
                         </div>
                         <div className="p-3.5 flex flex-col flex-1 justify-between">
                           <div>
-                            <h3 className="font-bold text-sm text-slate-800 dark:text-slate-100 line-clamp-1 leading-tight">{item.name}</h3>
+                            <h3 className="font-bold text-sm text-slate-800  line-clamp-1 leading-tight">{item.name}</h3>
                             <p className="text-xs text-slate-400 line-clamp-1 mt-1">{restaurant?.name}</p>
                           </div>
                           <div className="mt-3 flex items-center justify-between">
-                            <span className="font-extrabold text-slate-800 dark:text-slate-100 text-sm">
+                            <span className="font-extrabold text-slate-800  text-sm">
                               ₹{item.price.toFixed(2)}
                             </span>
                             <motion.button 
@@ -490,7 +490,7 @@ export const Home: React.FC<HomeProps> = ({
 
             {/* Top Restaurants */}
             <div className="mt-2">
-              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 tracking-tight">
+              <h2 className="text-lg font-bold text-slate-800  mb-4 tracking-tight">
                 Top Restaurants to explore
               </h2>
               <div className="flex flex-col gap-6">
@@ -501,7 +501,7 @@ export const Home: React.FC<HomeProps> = ({
                       whileHover={{ y: -4 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => onSelectRestaurant(restaurant)}
-                      className="bg-white dark:bg-slate-900 rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100 dark:border-slate-800 cursor-pointer"
+                      className="bg-white  rounded-[28px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-100  cursor-pointer"
                     >
                       <div className="relative h-44">
                         <motion.img
@@ -531,11 +531,11 @@ export const Home: React.FC<HomeProps> = ({
                           )}
                         </div>
                       </div>
-                      <div className="p-4 bg-white dark:bg-slate-900">
+                      <div className="p-4 bg-white ">
                         <div className="flex justify-between items-start">
                           <motion.h3
                             layoutId={`restaurant-title-${restaurant.id}`}
-                            className="font-bold text-xl text-slate-800 dark:text-slate-100 tracking-tight"
+                            className="font-bold text-xl text-slate-800  tracking-tight"
                           >
                             {restaurant.name}
                           </motion.h3>
@@ -551,7 +551,7 @@ export const Home: React.FC<HomeProps> = ({
                             </span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4 mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        <div className="flex items-center gap-4 mt-2 text-slate-500  text-sm font-medium">
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4" />
                             {restaurant.deliveryTime}
@@ -571,11 +571,11 @@ export const Home: React.FC<HomeProps> = ({
             )}
 
             {/* Footer */}
-            <div className="mt-12 py-10 border-t border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center">
+            <div className="mt-12 py-10 border-t border-slate-200  flex flex-col items-center justify-center">
               <div className="flex flex-col items-center shrink-0 mb-4 cursor-pointer group">
                 <div className="flex items-center">
                   <h1
-                    className="text-4xl font-black tracking-tight lowercase text-slate-300 dark:text-slate-600 flex items-baseline group-hover:text-slate-800 dark:text-slate-100 transition-colors duration-500"
+                    className="text-4xl font-black tracking-tight lowercase text-slate-300  flex items-baseline group-hover:text-slate-800  transition-colors duration-500"
                     style={{ fontFamily: "Outfit, sans-serif" }}
                   >
                     {"cra".split("").map((char, index) => (
@@ -583,7 +583,7 @@ export const Home: React.FC<HomeProps> = ({
                         {char}
                       </span>
                     ))}
-                    <span className="text-slate-300 dark:text-slate-600 group-hover:text-[#fc8019] transition-colors duration-500">
+                    <span className="text-slate-300  group-hover:text-[#fc8019] transition-colors duration-500">
                       v
                     </span>
                     <span className="inline-block">e</span>
@@ -591,7 +591,7 @@ export const Home: React.FC<HomeProps> = ({
                   <div className="w-1.5 h-1.5 rounded-full bg-slate-300 self-end mb-2 ml-0.5 group-hover:bg-[#fc8019] transition-colors duration-500" />
                 </div>
               </div>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase">
+              <p className="text-[10px] font-bold text-slate-400  tracking-widest uppercase">
                 Developed by Sanjay vagu
               </p>
             </div>
@@ -608,9 +608,9 @@ export const Home: React.FC<HomeProps> = ({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl flex flex-col max-h-[80vh]"
+            className="w-full bg-white  rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl flex flex-col max-h-[80vh]"
           >
-            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">Select City</h2>
+            <h2 className="text-xl font-bold text-slate-800  mb-4">Select City</h2>
             <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar pb-6">
               {CITIES.map((city) => (
                 <button
@@ -621,12 +621,12 @@ export const Home: React.FC<HomeProps> = ({
                   }}
                   className={`flex items-center justify-between p-4 rounded-2xl border transition-colors ${
                     selectedCity.id === city.id
-                      ? "border-[#fc8019] bg-orange-50 dark:bg-[#fc8019]/10"
-                      : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      ? "border-[#fc8019] bg-orange-50 "
+                      : "border-slate-200  hover:bg-slate-50 :bg-slate-800"
                   }`}
                 >
                   <div className="flex flex-col items-start">
-                    <span className={`font-bold text-lg ${selectedCity.id === city.id ? "text-[#fc8019]" : "text-slate-800 dark:text-slate-100"}`}>
+                    <span className={`font-bold text-lg ${selectedCity.id === city.id ? "text-[#fc8019]" : "text-slate-800 "}`}>
                       {city.name}
                     </span>
                     {!city.isServiceable && (

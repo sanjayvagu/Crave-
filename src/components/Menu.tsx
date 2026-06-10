@@ -77,7 +77,7 @@ export const Menu: React.FC<MenuProps> = ({
       animate={{ opacity: 1, x: 0, zIndex: 10 }}
       exit={{ opacity: 0, x: "100%", zIndex: 10 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-hidden"
+      className="absolute inset-0 flex flex-col h-full bg-slate-50  overflow-hidden"
     >
       <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
         {/* Parallax Header */}
@@ -140,10 +140,10 @@ export const Menu: React.FC<MenuProps> = ({
         </div>
 
         {/* Menu Section */}
-        <div className="bg-white dark:bg-slate-900 rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
+        <div className="bg-white  rounded-t-3xl -mt-6 relative z-10 pt-8 px-5 min-h-screen">
           <div className="flex flex-col gap-4 mb-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-bold text-xl text-slate-800 dark:text-slate-100">
+              <h2 className="font-bold text-xl text-slate-800 ">
                 Menu
               </h2>
               <div className="flex items-center gap-2">
@@ -153,8 +153,8 @@ export const Menu: React.FC<MenuProps> = ({
                     onClick={() => setDietaryFilter(filter)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors border ${
                       dietaryFilter === filter
-                        ? "border-[#fc8019] bg-orange-50 text-[#fc8019] dark:bg-[#fc8019]/10"
-                        : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        ? "border-[#fc8019] bg-orange-50 text-[#fc8019] "
+                        : "border-slate-200  text-slate-600  hover:bg-slate-50 :bg-slate-800"
                     }`}
                   >
                     {filter === "Veg" && (
@@ -185,7 +185,7 @@ export const Menu: React.FC<MenuProps> = ({
                 placeholder="Search dishes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 pl-12 pr-4 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-[#fc8019]/50 transition-all font-medium placeholder:text-slate-400 placeholder:font-normal"
+                className="w-full bg-slate-100  text-slate-800  pl-12 pr-4 py-3.5 rounded-2xl outline-none focus:ring-2 focus:ring-[#fc8019]/50 transition-all font-medium placeholder:text-slate-400 placeholder:font-normal"
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ export const Menu: React.FC<MenuProps> = ({
                       visible: { opacity: 1 },
                     }}
                   >
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
+                    <h2 className="text-xl font-bold text-slate-800  mb-6">
                       {category}
                     </h2>
                     <motion.div
@@ -271,13 +271,13 @@ export const Menu: React.FC<MenuProps> = ({
                                       className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
                                     ></div>
                                   </div>
-                                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg leading-tight">
+                                  <h3 className="font-bold text-slate-800  text-lg leading-tight">
                                     {item.name}
                                   </h3>
-                                  <p className="font-bold text-slate-700 dark:text-slate-200 mt-1">
+                                  <p className="font-bold text-slate-700  mt-1">
                                     ₹{item.price.toFixed(2)}
                                   </p>
-                                  <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 line-clamp-2 leading-relaxed">
+                                  <p className="text-slate-500  text-sm mt-2 line-clamp-2 leading-relaxed">
                                     {item.description}
                                   </p>
                                 </div>
@@ -301,7 +301,7 @@ export const Menu: React.FC<MenuProps> = ({
                                           exit={{ scale: 0.8, opacity: 0 }}
                                           whileTap={{ scale: 0.9 }}
                                           onClick={() => onUpdateCart(item, 1)}
-                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-28 relative z-20"
+                                          className="bg-white  text-[#fc8019] font-bold text-sm px-6 py-2 rounded-xl shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 flex items-center justify-center w-28 relative z-20"
                                         >
                                           ADD
                                         </motion.button>
@@ -311,7 +311,7 @@ export const Menu: React.FC<MenuProps> = ({
                                           initial={{ scale: 0.8, opacity: 0 }}
                                           animate={{ scale: 1, opacity: 1 }}
                                           exit={{ scale: 0.8, opacity: 0 }}
-                                          className="bg-white dark:bg-slate-900 text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-28 h-[38px] px-2 relative z-20 shrink-0"
+                                          className="bg-white  text-[#fc8019] font-bold shadow-[0_4px_15px_rgb(0,0,0,0.1)] border border-[#fc8019]/20 rounded-xl flex items-center justify-between w-28 h-[38px] px-2 relative z-20 shrink-0"
                                         >
                                           <motion.button
                                             whileTap={{ scale: 0.8 }}
@@ -326,7 +326,7 @@ export const Menu: React.FC<MenuProps> = ({
                                             key={qty}
                                             initial={{ scale: 1.5, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
-                                            className="text-slate-800 dark:text-slate-100"
+                                            className="text-slate-800 "
                                           >
                                             {qty}
                                           </motion.span>
@@ -433,7 +433,7 @@ export const Menu: React.FC<MenuProps> = ({
               exit={{ y: "100%", opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] p-6 mb-16 shadow-2xl origin-bottom"
+              className="bg-white  w-full max-w-sm rounded-[32px] p-6 mb-16 shadow-2xl origin-bottom"
             >
               <h3 className="font-bold text-xs uppercase text-slate-500 mb-4 tracking-wider text-center">
                 Jump to Category
@@ -448,7 +448,7 @@ export const Menu: React.FC<MenuProps> = ({
                   return (
                     <button
                       key={c}
-                      className={`flex justify-between items-center py-3.5 border-b border-slate-100 dark:border-slate-800/60 last:border-0 ${activeCategory === c ? "text-[#fc8019] font-bold" : "text-slate-800 dark:text-slate-200"}`}
+                      className={`flex justify-between items-center py-3.5 border-b border-slate-100  last:border-0 ${activeCategory === c ? "text-[#fc8019] font-bold" : "text-slate-800 "}`}
                       onClick={() => {
                         setActiveCategory(c);
                         setIsMenuModalOpen(false);

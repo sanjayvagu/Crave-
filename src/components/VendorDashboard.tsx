@@ -187,16 +187,16 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800/50";
+        return "bg-yellow-100 text-yellow-800   border-yellow-200 ";
       case "preparing":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800/50";
+        return "bg-orange-100 text-orange-800   border-orange-200 ";
       case "ready":
-        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/50";
+        return "bg-green-100 text-green-800   border-green-200 ";
       case "picked_up":
       case "delivered":
-        return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+        return "bg-slate-100 text-slate-800   border-slate-200 ";
       default:
-        return "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700";
+        return "bg-slate-100 text-slate-800   border-slate-200 ";
     }
   };
 
@@ -227,7 +227,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               initial={{ width: 0 }}
               animate={{ width: 40 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="h-1 bg-white dark:bg-slate-900 mt-4 rounded-full"
+              className="h-1 bg-white  mt-4 rounded-full"
             />
           </motion.div>
         </motion.div>
@@ -242,11 +242,11 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
           key="dashboard"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="absolute inset-0 flex flex-col bg-slate-50 dark:bg-slate-950 font-sans z-[80]"
+          className="absolute inset-0 flex flex-col bg-slate-50  font-sans z-[80]"
         >
           {/* Main Scroller */}
           <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
-            <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-5 transition-colors duration-500 bg-gradient-to-b from-[#fc8019] to-[#f27405] dark:from-[#e06d10] dark:to-[#c45e0a]">
+            <div className="relative z-10 pt-[max(1.5rem,env(safe-area-inset-top))] pb-12 px-5 transition-colors duration-500 bg-gradient-to-b from-[#fc8019] to-[#f27405]  ">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30">
@@ -264,12 +264,12 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               </div>
             </div>
 
-            <div className="px-5 pb-8 pt-6 bg-slate-50 dark:bg-slate-950 rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
+            <div className="px-5 pb-8 pt-6 bg-slate-50  rounded-t-[32px] -mt-6 relative z-20 shadow-[0_-10px_20px_rgb(0,0,0,0.05)]">
             {activeTab === "orders" && (
               <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Live Orders</h2>
+                    <h2 className="text-xl font-bold text-slate-800  tracking-tight">Live Orders</h2>
                     <p className="text-sm text-slate-500 font-medium">
                       {orders.filter(o => o.status === "pending" || o.status === "preparing").length} active orders
                     </p>
@@ -282,11 +282,11 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                     <p className="font-bold text-slate-500 text-sm">Syncing orders...</p>
                   </div>
                 ) : orders.length === 0 ? (
-                  <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
-                    <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="text-center py-20 bg-white  rounded-3xl border border-slate-200  border-dashed">
+                    <div className="w-16 h-16 bg-slate-100  rounded-full flex items-center justify-center mx-auto mb-4">
                       <ListOrdered className="w-8 h-8 text-slate-400" />
                     </div>
-                    <p className="font-bold text-slate-800 dark:text-slate-200 text-lg">No active orders</p>
+                    <p className="font-bold text-slate-800  text-lg">No active orders</p>
                     <p className="text-slate-500 text-sm mt-1">New orders will appear here automatically.</p>
                   </div>
                 ) : (
@@ -303,19 +303,19 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         key={order.id}
-                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden"
+                        className="bg-white  border border-slate-200  rounded-3xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden"
                       >
                         <div 
                           className="cursor-pointer"
                           onClick={() => toggleOrderExpand(order.id)}
                         >
-                          <div className="flex items-start justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                          <div className="flex items-start justify-between mb-4 border-b border-slate-100  pb-4">
                             <div>
                               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                                 ID: {order.id?.substring(0, 8) || "UNKNOWN"}
                                 <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                               </p>
-                              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-lg leading-none">
+                              <h3 className="font-bold text-slate-900  text-lg leading-none">
                                 {customerName}
                               </h3>
                             </div>
@@ -328,12 +328,12 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between mb-5 text-sm font-medium text-slate-600 dark:text-slate-400">
+                          <div className="flex items-center justify-between mb-5 text-sm font-medium text-slate-600 ">
                             <div className="flex items-center gap-1.5">
                               <Package className="w-4 h-4 text-slate-400" />
                               <span>{order.items || (order.order_items ? order.order_items.length : 2)} Items</span>
                             </div>
-                            <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-md">
+                            <div className="flex items-center gap-1.5 bg-slate-50  px-2.5 py-1 rounded-md">
                               <Clock className="w-4 h-4 text-slate-400" />
                               <span>{
                                 (() => {
@@ -360,33 +360,33 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                               exit={{ height: 0, opacity: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="border-t border-slate-100 dark:border-slate-800 pt-4 pb-4 mb-4">
+                              <div className="border-t border-slate-100  pt-4 pb-4 mb-4">
                                 <div className="space-y-3 mb-4 text-sm">
                                   {order.order_items?.map((item: any, i: number) => (
                                     <div key={i} className="flex justify-between items-start">
                                       <div>
-                                        <p className="font-bold text-slate-800 dark:text-slate-200">
+                                        <p className="font-bold text-slate-800 ">
                                           {item.quantity}x {item.products?.name || item.product_name || "Unknown Item"}
                                         </p>
                                         {item.special_instructions && (
-                                          <p className="text-xs text-slate-500 italic mt-0.5 bg-yellow-50 dark:bg-yellow-900/10 p-2 rounded-md border border-yellow-100 dark:border-yellow-900/30">
+                                          <p className="text-xs text-slate-500 italic mt-0.5 bg-yellow-50  p-2 rounded-md border border-yellow-100 ">
                                             "{item.special_instructions}"
                                           </p>
                                         )}
                                       </div>
-                                      <p className="font-bold text-slate-600 dark:text-slate-400 shrink-0 ml-4">
+                                      <p className="font-bold text-slate-600  shrink-0 ml-4">
                                         ${item.price_at_time?.toFixed(2)}
                                       </p>
                                     </div>
                                   ))}
                                 </div>
 
-                                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl text-sm border border-slate-100 dark:border-slate-800">
-                                  <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 mb-2">
+                                <div className="bg-slate-50  p-4 rounded-2xl text-sm border border-slate-100 ">
+                                  <div className="flex items-center gap-2 font-bold text-slate-800  mb-2">
                                     <MapPin className="w-4 h-4 text-slate-400" />
                                     Delivery Info
                                   </div>
-                                  <p className="text-slate-600 dark:text-slate-400 mb-1">{deliveryAddress}</p>
+                                  <p className="text-slate-600  mb-1">{deliveryAddress}</p>
                                   <p className="text-slate-500 font-medium">{customerPhone}</p>
                                 </div>
 
@@ -396,7 +396,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                                     <div className="flex gap-2">
                                       <button
                                         onClick={(e) => { e.stopPropagation(); updateOrderStatus(order.id, "cancelled"); }}
-                                        className="flex-1 bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 font-bold py-3.5 text-sm rounded-2xl hover:bg-red-100 transition active:scale-[0.98]"
+                                        className="flex-1 bg-red-50 text-red-600   font-bold py-3.5 text-sm rounded-2xl hover:bg-red-100 transition active:scale-[0.98]"
                                       >
                                         Reject
                                       </button>
@@ -425,7 +425,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                                     <div className="flex gap-2">
                                       <button
                                         disabled
-                                        className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold py-3.5 text-sm rounded-2xl flex items-center justify-center gap-2"
+                                        className="flex-1 bg-slate-100  text-slate-400  font-bold py-3.5 text-sm rounded-2xl flex items-center justify-center gap-2"
                                       >
                                         <RefreshCw className="w-4 h-4 animate-spin" />
                                         Waiting for Rider
@@ -440,9 +440,9 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
 
                         
                         {order.status === "delivered" && (
-                          <div className="flex justify-between items-center text-slate-400 dark:text-slate-500 text-sm font-bold bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl">
+                          <div className="flex justify-between items-center text-slate-400  text-sm font-bold bg-slate-50  p-3 rounded-xl">
                             <span>Completed Order</span>
-                            <span className="text-slate-600 dark:text-slate-300">${order.total_amount?.toFixed(2)}</span>
+                            <span className="text-slate-600 ">${order.total_amount?.toFixed(2)}</span>
                           </div>
                         )}
                       </motion.div>
@@ -456,7 +456,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Menu Items</h1>
+                    <h1 className="text-xl font-bold text-slate-800  tracking-tight">Menu Items</h1>
                     <p className="text-sm text-slate-500 font-medium">Manage daily availability</p>
                   </div>
                 </div>
@@ -465,14 +465,14 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                   {products.map((product) => (
                     <div
                       key={product.id}
-                      className={`bg-white dark:bg-slate-900 border rounded-2xl p-4 flex items-center justify-between transition-colors shadow-sm ${
+                      className={`bg-white  border rounded-2xl p-4 flex items-center justify-between transition-colors shadow-sm ${
                         product.is_available
-                          ? "border-slate-200 dark:border-slate-800"
-                          : "border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10"
+                          ? "border-slate-200 "
+                          : "border-red-100  bg-red-50/50 "
                       }`}
                     >
                       <div>
-                        <h3 className={`font-bold text-base ${product.is_available ? "text-slate-800 dark:text-slate-100" : "text-slate-500 dark:text-slate-400 line-through"}`}>
+                        <h3 className={`font-bold text-base ${product.is_available ? "text-slate-800 " : "text-slate-500  line-through"}`}>
                           {product.name}
                         </h3>
                         <p className="text-[#fc8019] font-bold text-sm mt-0.5">
@@ -484,8 +484,8 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                         onClick={() => toggleProductAvailability(product.id, product.is_available)}
                         className={`flex items-center gap-2 font-bold text-xs px-3 py-2 rounded-xl transition-all ${
                           product.is_available 
-                          ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400 hover:bg-green-100" 
-                          : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 hover:bg-slate-200"
+                          ? "bg-green-50 text-green-700   hover:bg-green-100" 
+                          : "bg-slate-100 text-slate-500   hover:bg-slate-200"
                         }`}
                       >
                         {product.is_available ? "In Stock" : "Sold Out"}
@@ -501,15 +501,15 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               <div className="pt-2 pb-20">
                 <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Analytics</h1>
+                    <h1 className="text-xl font-bold text-slate-800  tracking-tight">Analytics</h1>
                     <p className="text-sm text-slate-500 font-medium">Performance insights</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   {/* Weekly Revenue Area Chart */}
-                  <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Weekly Revenue</h3>
+                  <div className="bg-white  p-5 rounded-3xl border border-slate-200  shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                    <h3 className="text-lg font-bold text-slate-800  mb-4">Weekly Revenue</h3>
                     <div className="h-64 w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={WEEKLY_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -534,8 +534,8 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                   </div>
 
                   {/* Peak Hours Bar Chart */}
-                  <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4">Peak Order Hours</h3>
+                  <div className="bg-white  p-5 rounded-3xl border border-slate-200  shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                    <h3 className="text-lg font-bold text-slate-800  mb-4">Peak Order Hours</h3>
                     <div className="h-64 w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={HOURLY_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barSize={30}>
@@ -560,19 +560,19 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
               <div className="pt-2 pb-20">
                  <div className="flex justify-between items-end mb-6">
                   <div>
-                    <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Store Profile</h1>
+                    <h1 className="text-xl font-bold text-slate-800  tracking-tight">Store Profile</h1>
                     <p className="text-sm text-slate-500 font-medium">Manage settings & performance</p>
                   </div>
                 </div>
 
                 {/* Profile Header */}
-                <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 mb-6 shadow-sm flex items-center gap-4">
-                  <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/10 rounded-2xl flex items-center justify-center shrink-0 border border-orange-100/50 dark:border-orange-900/30">
+                <div className="bg-white  rounded-3xl p-6 border border-slate-200  mb-6 shadow-sm flex items-center gap-4">
+                  <div className="w-16 h-16 bg-orange-50  rounded-2xl flex items-center justify-center shrink-0 border border-orange-100/50 ">
                     <Store className="w-8 h-8 text-[#fc8019]" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">My Restaurant</h2>
-                    <div className="flex items-center gap-3 mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    <h2 className="text-xl font-bold text-slate-900 ">My Restaurant</h2>
+                    <div className="flex items-center gap-3 mt-1 text-sm text-slate-500 ">
                       <span className="flex items-center gap-1">
                         <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
                         4.8
@@ -587,19 +587,19 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
 
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-3 mb-8">
-                  <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div className="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-2">
-                       <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  <div className="bg-white  p-4 rounded-3xl border border-slate-200  shadow-sm">
+                    <div className="w-8 h-8 bg-green-100  rounded-full flex items-center justify-center mb-2">
+                       <TrendingUp className="w-4 h-4 text-green-600 " />
                     </div>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Today's Sales</p>
-                    <p className="text-xl font-black text-slate-800 dark:text-slate-100">$428.50</p>
+                    <p className="text-xl font-black text-slate-800 ">$428.50</p>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-2">
-                       <CheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <div className="bg-white  p-4 rounded-3xl border border-slate-200  shadow-sm">
+                    <div className="w-8 h-8 bg-blue-100  rounded-full flex items-center justify-center mb-2">
+                       <CheckCircle className="w-4 h-4 text-blue-600 " />
                     </div>
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Orders Completed</p>
-                    <p className="text-xl font-black text-slate-800 dark:text-slate-100">24</p>
+                    <p className="text-xl font-black text-slate-800 ">24</p>
                   </div>
                 </div>
 
@@ -610,12 +610,12 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                     { label: "Payout Accounts", icon: LogOut },
                     { label: "Help & Support", icon: Settings },
                   ].map((item, idx) => (
-                    <button key={idx} className="w-full bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <button key={idx} className="w-full bg-white  p-4 rounded-2xl border border-slate-200  flex items-center justify-between hover:bg-slate-50 :bg-slate-800/50 transition">
                       <div className="flex items-center gap-3">
-                        <div className="bg-slate-100 dark:bg-slate-800 p-2 rounded-xl">
-                          <item.icon className="w-5 h-5 text-slate-600 dark:text-slate-400" />
+                        <div className="bg-slate-100  p-2 rounded-xl">
+                          <item.icon className="w-5 h-5 text-slate-600 " />
                         </div>
-                        <span className="font-bold text-slate-800 dark:text-slate-200">{item.label}</span>
+                        <span className="font-bold text-slate-800 ">{item.label}</span>
                       </div>
                       <ChevronRight className="w-5 h-5 text-slate-400" />
                     </button>
@@ -623,10 +623,10 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
 
                   <button 
                     onClick={onLogout}
-                    className="w-full bg-red-50 dark:bg-red-900/10 mt-6 p-4 rounded-2xl border border-red-100 dark:border-red-900/30 flex items-center justify-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/20 transition group"
+                    className="w-full bg-red-50  mt-6 p-4 rounded-2xl border border-red-100  flex items-center justify-center gap-2 hover:bg-red-100 :bg-red-900/20 transition group"
                   >
-                    <LogOut className="w-5 h-5 text-red-600 dark:text-red-400 group-hover:-translate-x-1 transition-transform" />
-                    <span className="font-bold text-red-600 dark:text-red-400">Exit Vendor App</span>
+                    <LogOut className="w-5 h-5 text-red-600  group-hover:-translate-x-1 transition-transform" />
+                    <span className="font-bold text-red-600 ">Exit Vendor App</span>
                   </button>
                 </div>
               </div>
@@ -640,7 +640,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
             style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
           >
             <motion.div
-              className="flex-1 flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-white/60 dark:border-slate-700/60 shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative"
+              className="flex-1 flex bg-white/80  backdrop-blur-2xl border border-white/60  shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative"
             >
               {[
                 { id: "orders", icon: ListOrdered, label: "Orders" },
@@ -659,7 +659,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                     {isActive && (
                       <motion.div
                         layoutId="vendorNavIndicator"
-                        className="absolute inset-0 bg-slate-200/80 dark:bg-slate-800/80 rounded-full"
+                        className="absolute inset-0 bg-slate-200/80  rounded-full"
                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                       />
                     )}
@@ -672,7 +672,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                           stiffness: 400,
                           damping: 12,
                         }}
-                        className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 dark:text-slate-400"}`}
+                        className={`mb-0.5 transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 "}`}
                       >
                         <Icon
                           className="w-5 h-5"
@@ -683,7 +683,7 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
                         />
                       </motion.div>
                       <span
-                        className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 dark:text-slate-400"}`}
+                        className={`text-[11px] font-bold tracking-tight transition-colors duration-300 ${isActive ? "text-[#fc8019]" : "text-slate-500 "}`}
                       >
                         {tab.label}
                       </span>
@@ -784,7 +784,7 @@ const VendorOnboarding: React.FC<{onComplete: () => void, onLogout: () => void}>
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, x: "-100%" }}
       transition={{ duration: 0.5 }}
-      className="absolute inset-0 bg-white dark:bg-slate-900 flex flex-col z-[90] overflow-hidden"
+      className="absolute inset-0 bg-white  flex flex-col z-[90] overflow-hidden"
     >
       <div className="flex-1 relative bg-orange-50/50 overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
@@ -799,18 +799,18 @@ const VendorOnboarding: React.FC<{onComplete: () => void, onLogout: () => void}>
             className="absolute inset-0 w-full h-full object-cover object-center"
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-slate-900 dark:via-slate-900/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent  " />
       </div>
 
       <div
-        className="px-8 pt-6 shrink-0 z-10 bg-white dark:bg-slate-900 min-h-[300px] flex flex-col justify-end"
+        className="px-8 pt-6 shrink-0 z-10 bg-white  min-h-[300px] flex flex-col justify-end"
         style={{ paddingBottom: "max(3rem, env(safe-area-inset-bottom))" }}
       >
         <div className="flex justify-center gap-2 mb-8">
           {VENDOR_ONBOARDING_STEPS.map((s, idx) => (
             <div
               key={s.id}
-              className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? "w-8 bg-[#fc8019]" : "w-2 bg-slate-200 dark:bg-slate-800"}`}
+              className={`h-2 rounded-full transition-all duration-300 ${idx === currentStep ? "w-8 bg-[#fc8019]" : "w-2 bg-slate-200 "}`}
             />
           ))}
         </div>
@@ -822,10 +822,10 @@ const VendorOnboarding: React.FC<{onComplete: () => void, onLogout: () => void}>
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-4 tracking-tight leading-tight">
+            <h1 className="text-3xl font-black text-slate-800  mb-4 tracking-tight leading-tight">
               {step.title}
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-base mb-8 leading-relaxed">
+            <p className="text-slate-500  text-base mb-8 leading-relaxed">
               {step.description}
             </p>
           </motion.div>
@@ -856,7 +856,7 @@ const VendorOnboarding: React.FC<{onComplete: () => void, onLogout: () => void}>
         </motion.button>
         <button
           onClick={onLogout}
-          className="mt-6 text-center text-slate-500 dark:text-slate-400 font-bold text-sm hover:text-slate-800 dark:text-slate-100 transition-colors"
+          className="mt-6 text-center text-slate-500  font-bold text-sm hover:text-slate-800  transition-colors"
         >
           Return to User App
         </button>
