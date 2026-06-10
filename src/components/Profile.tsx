@@ -14,15 +14,12 @@ import {
   Wallet,
   Smartphone,
   Landmark,
-  Moon,
-  Sun,
   ShoppingBag,
   Heart,
   Star,
   Clock,
   Store,
 } from "lucide-react";
-import { useTheme } from "../ThemeContext";
 import { RESTAURANTS } from "../data";
 import { Restaurant, Address } from "../types";
 
@@ -54,7 +51,6 @@ export const Profile: React.FC<ProfileProps> = ({
   const [activeView, setActiveView] = useState<
     "main" | "edit" | "payment" | "address" | "wishlist"
   >("main");
-  const { theme, toggleTheme } = useTheme();
 
   const favoriteRestaurants = RESTAURANTS.filter((r) =>
     favorites.includes(r.id),
@@ -86,13 +82,6 @@ export const Profile: React.FC<ProfileProps> = ({
       icon: MapPin,
       label: "Saved Addresses",
       value: `${addresses.length} Saved`,
-    },
-    {
-      id: "theme",
-      icon: theme === "dark" ? Sun : Moon,
-      label: "Dark Mode",
-      value: theme === "dark" ? "On" : "Off",
-      onClick: toggleTheme,
     },
     { id: null, icon: Bell, label: "Notifications", value: "On" },
     {
@@ -163,17 +152,15 @@ export const Profile: React.FC<ProfileProps> = ({
                       onClick={() => {
                         if (item.onClick) {
                           item.onClick();
-                        } else if (item.id && item.id !== "theme") {
+                        } else if (item.id) {
                           setActiveView(item.id as any);
                         }
                       }}
                       whileHover={{
-                        backgroundColor:
-                          theme === "dark" ? "#1e293b" : "#f8fafc",
+                        backgroundColor: "#f8fafc",
                       }}
                       whileTap={{
-                        backgroundColor:
-                          theme === "dark" ? "#334155" : "#f1f5f9",
+                        backgroundColor: "#f1f5f9",
                       }}
                       className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800 last:border-b-0 cursor-pointer transition-colors"
                     >
