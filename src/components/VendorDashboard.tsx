@@ -43,6 +43,13 @@ interface VendorDashboardProps {
 type InternalScreen = "splash" | "welcome" | "dashboard";
 type Tab = "orders" | "menu" | "analytics" | "profile";
 
+const TABS = [
+  { id: "orders", icon: ListOrdered, label: "Orders" },
+  { id: "menu", icon: Package, label: "Menu" },
+  { id: "analytics", icon: BarChart3, label: "Analytics" },
+  { id: "profile", icon: Store, label: "Store" },
+];
+
 export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) => {
   const [screen, setScreen] = useState<InternalScreen>("splash");
   const [activeTab, setActiveTab] = useState<Tab>("orders");
@@ -52,6 +59,39 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
   const [loading, setLoading] = useState(true);
   const [newOrderToast, setNewOrderToast] = useState<{id: string, title: string, message: string} | null>(null);
   const initialOrdersLoad = useRef(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const triggerHaptic = () => {
+    if (typeof window !== "undefined" && window.navigator && window.navigator.vibrate) {
+      try { window.navigator.vibrate(40); } catch (e) {}
+    }
+  };
+
+  const handleGlide = (clientX: number, clientY: number) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    if (clientY < rect.top - 40 || clientY > rect.bottom + 40) return;
+
+    const x = clientX - rect.left;
+    const width = rect.width;
+    const index = Math.floor((x / width) * TABS.length);
+    const clampedIndex = Math.max(0, Math.min(TABS.length - 1, index));
+    const targetTab = TABS[clampedIndex].id as Tab;
+
+    if (targetTab !== activeTab && TABS.some((t) => t.id === targetTab)) {
+      triggerHaptic();
+      setActiveTab(targetTab);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (e.touches.length > 0) handleGlide(e.touches[0].clientX, e.touches[0].clientY);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.buttons === 1) handleGlide(e.clientX, e.clientY);
+  };
 
   // Simulated vendor user logic
   useEffect(() => {
@@ -640,14 +680,12 @@ export const VendorDashboard: React.FC<VendorDashboardProps> = ({ onLogout }) =>
             style={{ bottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
           >
             <motion.div
-              className="flex-1 flex bg-white/80  backdrop-blur-2xl border border-white/60  shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative"
+              ref={containerRef}
+              onTouchMove={handleTouchMove}
+              onPointerMove={handlePointerMove}
+              className="flex-1 flex bg-white/80  backdrop-blur-2xl border border-white/60  shadow-[0_8px_32px_rgb(0,0,0,0.08)] rounded-full p-1 items-center relative touch-none"
             >
-              {[
-                { id: "orders", icon: ListOrdered, label: "Orders" },
-                { id: "menu", icon: Package, label: "Menu" },
-                { id: "analytics", icon: BarChart3, label: "Analytics" },
-                { id: "profile", icon: Store, label: "Store" },
-              ].map((tab) => {
+              {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
                 const Icon = tab.icon;
                 return (
@@ -755,7 +793,7 @@ const VENDOR_ONBOARDING_STEPS = [
     id: 2,
     title: "Real-time Order Tracking",
     description: "Get instant notifications for new orders and update their status with a single tap to keep your customers informed.",
-    image: "https://images.unsplash.com/photo-1590846406792-0adc7f928f1d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
