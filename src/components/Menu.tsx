@@ -16,6 +16,7 @@ import { MENU_ITEMS } from "../data";
 interface MenuProps {
   restaurant: Restaurant;
   cart: CartItem[];
+  isVegMode?: boolean;
   isVendorOnline?: boolean;
   onUpdateCart: (item: MenuItem, delta: number) => void;
   onBack: () => void;
@@ -25,6 +26,7 @@ interface MenuProps {
 export const Menu: React.FC<MenuProps> = ({
   restaurant,
   cart,
+  isVegMode = false,
   isVendorOnline = true,
   onUpdateCart,
   onBack,
@@ -44,7 +46,7 @@ export const Menu: React.FC<MenuProps> = ({
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [dietaryFilter, setDietaryFilter] = useState<"All" | "Veg" | "Non-Veg">(
-    "All",
+    isVegMode ? "Veg" : "All"
   );
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
 

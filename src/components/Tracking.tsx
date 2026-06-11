@@ -15,6 +15,7 @@ import {
   MessageCircle,
   Headset,
   Send,
+  Star,
 } from "lucide-react";
 
 interface TrackingProps {
@@ -60,6 +61,9 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
   );
   const [showDialer, setShowDialer] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [showRating, setShowRating] = useState(false);
+  const [foodRating, setFoodRating] = useState(0);
+  const [deliveryRating, setDeliveryRating] = useState(0);
   const [toast, setToast] = useState<{
     message: string;
     subtext: string;
@@ -74,6 +78,15 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  useEffect(() => {
+    if (currentStep === 3) {
+      const timer = setTimeout(() => {
+        setShowRating(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep]);
 
   const handleCallDriver = () => {
     if (
@@ -608,6 +621,92 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                   </button>
                 </div>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Post-Order Rating Modal */}
+      <AnimatePresence>
+        {showRating && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex items-end justify-center bg-slate-900/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="bg-white w-full rounded-t-3xl shadow-2xl p-6 pb-[max(2rem,env(safe-area-inset-bottom))] flex flex-col relative"
+            >
+              <button
+                onClick={() => setShowRating(false)}
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 bg-slate-100 rounded-full"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="text-center mb-6 mt-2">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-green-500" />
+                </div>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">How was your order?</h2>
+                <p className="text-sm text-slate-500 font-medium">Rate your food and delivery experience</p>
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
+                <p className="text-center font-bold text-slate-700 mb-3 text-sm">Food Quality</p>
+                <div className="flex justify-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <motion.button
+                      key={`food-${star}`}
+                      whileTap={{ scale: 0.8 }}
+                      onClick={() => setFoodRating(star)}
+                      className="p-1"
+                    >
+                      <Star
+                        className={`w-8 h-8 ${foodRating >= star ? "fill-[#fc8019] text-[#fc8019]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                      />
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
+                <p className="text-center font-bold text-slate-700 mb-3 text-sm">Delivery Experience</p>
+                <div className="flex justify-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <motion.button
+                      key={`dev-${star}`}
+                      whileTap={{ scale: 0.8 }}
+                      onClick={() => setDeliveryRating(star)}
+                      className="p-1"
+                    >
+                      <Star
+                        className={`w-8 h-8 ${deliveryRating >= star ? "fill-[#60b246] text-[#60b246]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                      />
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setShowRating(false);
+                }}
+                disabled={foodRating === 0 || deliveryRating === 0}
+                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 ${
+                  foodRating > 0 && deliveryRating > 0
+                    ? "bg-[#fc8019] text-white shadow-[0_8px_20px_rgb(252,128,25,0.3)]"
+                    : "bg-slate-200 text-slate-400 shadow-none"
+                }`}
+              >
+                Submit Feedback
+              </motion.button>
             </motion.div>
           </motion.div>
         )}

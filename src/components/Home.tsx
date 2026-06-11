@@ -18,6 +18,8 @@ import { PharmacyView } from "./PharmacyView";
 
 interface HomeProps {
   serviceType: "food" | "grocery" | "pharmacy";
+  isVegMode: boolean;
+  onVegModeChange: (isVeg: boolean) => void;
   onServiceTypeChange: (type: "food" | "grocery" | "pharmacy") => void;
   favorites: string[];
   isVendorOnline?: boolean;
@@ -34,6 +36,8 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({
   serviceType,
+  isVegMode,
+  onVegModeChange,
   onServiceTypeChange,
   favorites,
   isVendorOnline = true,
@@ -114,8 +118,12 @@ export const Home: React.FC<HomeProps> = ({
   };
 
   const cityRestaurants = useMemo(() => {
-    return RESTAURANTS.filter(r => r.cityId === selectedCity.id);
-  }, [selectedCity.id]);
+    let filtered = RESTAURANTS.filter(r => r.cityId === selectedCity.id);
+    if (serviceType === "food" && isVegMode) {
+      filtered = filtered.filter(r => MENU_ITEMS.some(item => item.restaurantId === r.id && item.isVeg));
+    }
+    return filtered;
+  }, [selectedCity.id, serviceType, isVegMode]);
 
   const recommendedItems = useMemo(() => {
     const orderedItemNames = new Set<string>();
@@ -123,12 +131,16 @@ export const Home: React.FC<HomeProps> = ({
       order.items.forEach((item) => orderedItemNames.add(item.name));
     });
 
-    const recommended = MENU_ITEMS.filter((item) => {
+    let recommended = MENU_ITEMS.filter((item) => {
       const parentRest = RESTAURANTS.find(r => r.id === item.restaurantId);
       return orderedItemNames.has(item.name) && parentRest?.cityId === selectedCity.id;
     });
+
+    if (serviceType === "food" && isVegMode) {
+      recommended = recommended.filter(item => item.isVeg);
+    }
     return recommended.slice(0, 5); // Return up to 5 items
-  }, [selectedCity.id]);
+  }, [selectedCity.id, serviceType, isVegMode]);
 
   return (
     <motion.div
@@ -304,34 +316,62 @@ export const Home: React.FC<HomeProps> = ({
               </div>
             )}
 
-            {/* Search Bar */}
-            <motion.div
-              onClick={onOpenSearch}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative z-10 mt-6 mx-1 flex items-center bg-white  shadow-[0_4px_20px_rgb(0,0,0,0.1)] rounded-full p-[14px] px-5 cursor-pointer overflow-hidden"
-            >
-              <Search className="w-5 h-5 text-slate-400" strokeWidth={2.5} />
-              <div className="flex-1 ml-3 text-slate-400 text-[15px] font-medium flex items-center h-5 overflow-hidden gap-[3px]">
-                <span>Search for '</span>
-                <AnimatePresence mode="popLayout">
-                  <motion.span
-                    key={currentCycle.text}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="text-slate-700  font-bold max-w-[150px] truncate"
-                  >
-                    {currentCycle.text}
-                  </motion.span>
-                </AnimatePresence>
-                <span>'</span>
-              </div>
-              <div className="text-[#fc8019] ml-2">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-              </div>
-            </motion.div>
+            {/* Search Bar & Veg Toggle */}
+            <div className="mt-6 mx-1 flex items-center gap-3 relative z-10">
+              <motion.div
+                onClick={onOpenSearch}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-1 flex items-center bg-white shadow-[0_4px_20px_rgb(0,0,0,0.1)] rounded-[20px] p-[14px] px-5 cursor-pointer overflow-hidden"
+              >
+                <Search className="w-5 h-5 text-slate-400" strokeWidth={2.5} />
+                <div className="flex-1 ml-3 text-slate-400 text-[15px] font-medium flex items-center h-5 overflow-hidden gap-[3px]">
+                  <span>Search for '</span>
+                  <AnimatePresence mode="popLayout">
+                    <motion.span
+                      key={currentCycle.text}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -20, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="text-slate-700 font-bold max-w-[120px] truncate"
+                    >
+                      {currentCycle.text}
+                    </motion.span>
+                  </AnimatePresence>
+                  <span>'</span>
+                </div>
+                <div className="text-[#fc8019] ml-2">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                </div>
+              </motion.div>
+
+              {serviceType === "food" && (
+                <div className="flex flex-col items-center justify-center shrink-0">
+                  <div className="bg-black/20 backdrop-blur-md border border-white/10 p-1.5 px-2.5 rounded-2xl shadow-inner flex flex-col items-center gap-1">
+                    <span className="text-[10px] font-bold text-white uppercase tracking-wider leading-none drop-shadow-sm">Veg</span>
+                    <button
+                      onClick={() => onVegModeChange(!isVegMode)}
+                      className="w-10 h-6 rounded-full p-[2px] flex items-center transition-colors duration-300 relative shadow-inner overflow-hidden cursor-pointer"
+                      style={{ background: "rgba(0,0,0,0.4)", boxShadow: "inset 0 2px 4px rgba(0,0,0,0.2)" }}
+                    >
+                       <motion.div
+                         initial={false}
+                         animate={{ x: isVegMode ? 16 : 0 }}
+                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                         className="w-[20px] h-[20px] bg-white rounded-full shadow-md flex items-center justify-center absolute left-[2px]"
+                       >
+                         <motion.div 
+                           initial={false}
+                           animate={{ scale: isVegMode ? 1 : 0 }}
+                           className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" 
+                         />
+                       </motion.div>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
             
             {/* Animated Banner Overlay */}
             <div className="relative z-10 mt-[26px] mb-2 flex items-center justify-center">

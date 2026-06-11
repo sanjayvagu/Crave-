@@ -46,6 +46,7 @@ export default function App() {
   const [selectedAddressId, setSelectedAddressId] = useState<string>("1");
   const [selectedCityId, setSelectedCityId] = useState<string>(CITIES[0].id);
   const [serviceType, setServiceType] = useState<"food" | "grocery" | "pharmacy">("food");
+  const [isVegMode, setIsVegMode] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -174,6 +175,8 @@ export default function App() {
               <Home
                 key="home"
                 serviceType={serviceType}
+                isVegMode={isVegMode}
+                onVegModeChange={setIsVegMode}
                 isVendorOnline={isVendorOnline}
                 onServiceTypeChange={setServiceType}
                 favorites={favorites}
@@ -212,6 +215,7 @@ export default function App() {
                 key="menu"
                 restaurant={selectedRestaurant}
                 cart={cart}
+                isVegMode={isVegMode}
                 isVendorOnline={isVendorOnline}
                 onUpdateCart={handleUpdateCart}
                 onBack={() => setCurrentScreen("home")}
