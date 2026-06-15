@@ -100,12 +100,12 @@ export default function App() {
     );
   };
 
-  const handleCheckoutComplete = () => {
+  const handleCheckoutComplete = (destination: "home" | "tracking" = "tracking") => {
     if (typeof window !== "undefined" && navigator.vibrate) {
       navigator.vibrate(50);
     }
     setCart([]);
-    setCurrentScreen("tracking");
+    setCurrentScreen(destination);
   };
 
   const handleReorder = (order: Order) => {

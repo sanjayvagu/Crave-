@@ -24,6 +24,7 @@ import {
   Upload,
   AlertCircle,
   Timer,
+  Share,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { CartItem, MenuItem } from "../types";
@@ -32,7 +33,7 @@ interface CartProps {
   cart: CartItem[];
   serviceType?: "food" | "grocery" | "pharmacy";
   onBack: () => void;
-  onCheckoutComplete: () => void;
+  onCheckoutComplete: (destination?: "home" | "tracking") => void;
   onUpdateCart: (item: MenuItem, delta: number) => void;
   onUpdateInstructions: (itemId: string, instructions: string) => void;
 }
@@ -196,6 +197,60 @@ export const Cart: React.FC<CartProps> = ({
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleDownloadInvoice = (groupType: string, groupItems: CartItem[]) => {
+    const groupTotal = groupItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const invoiceContent = `INVOICE - ${groupType.toUpperCase()}
+Date: ${new Date().toLocaleString()}
+
+ITEMS:
+${groupItems.map(i => `${i.quantity}x ${i.name} - Rs.${i.price * i.quantity}`).join('\n')}
+
+TOTAL: Rs.${groupTotal}
+
+Thank you for your order!`;
+    const blob = new Blob([invoiceContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-${groupType}-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+  };
+
+  const handleShareReceipt = async (groupType: string, groupItems: CartItem[]) => {
+    if (typeof window !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    const groupTotal = groupItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const invoiceContent = `Receipt - ${groupType.toUpperCase()}
+Date: ${new Date().toLocaleString()}
+
+ITEMS:
+${groupItems.map(i => `${i.quantity}x ${i.name} - Rs.${i.price * i.quantity}`).join('\n')}
+
+TOTAL: Rs.${groupTotal}
+
+Thank you for your order!`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Receipt - ${groupType.toUpperCase()}`,
+          text: invoiceContent,
+        });
+      } else {
+        alert("Sharing is not supported on this device.");
+      }
+    } catch (error) {
+      console.error("Error sharing receipt:", error);
+    }
   };
 
   const handleConfirmOrder = () => {
@@ -413,8 +468,17 @@ export const Cart: React.FC<CartProps> = ({
                   ))}
                 </div>
 
-                <div className="w-full flex justify-end">
-                  <button className={`px-4 py-2 text-sm font-bold rounded-xl border flex items-center gap-2 transition-colors ${groupTheme.bgLight} ${groupTheme.text} ${groupTheme.border}`}>
+                <div className="w-full flex justify-end gap-2">
+                  <button 
+                    onClick={() => handleShareReceipt(groupType, groupItems)}
+                    className={`px-3 py-2 text-sm font-bold rounded-xl border flex items-center justify-center transition-colors ${groupTheme.bgLight} ${groupTheme.text} hover:opacity-80 active:scale-95 ${groupTheme.border}`}
+                  >
+                    <Share className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDownloadInvoice(groupType, groupItems)}
+                    className={`px-4 py-2 text-sm font-bold rounded-xl border flex items-center gap-2 transition-colors ${groupTheme.bgLight} ${groupTheme.text} hover:opacity-80 active:scale-95 ${groupTheme.border}`}
+                  >
                     <FileText className="w-4 h-4" />
                     Download Invoice
                   </button>
@@ -424,10 +488,16 @@ export const Cart: React.FC<CartProps> = ({
           })}
 
           </div>
-          <div className="bg-white px-5 pt-5 pb-32 shrink-0 border-t border-slate-100 shadow-[0_-10px_40px_rgb(0,0,0,0.05)] z-10 w-full relative">
+          <div className="bg-white px-5 pt-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] shrink-0 border-t border-slate-100 shadow-[0_-10px_40px_rgb(0,0,0,0.05)] z-10 w-full relative flex flex-col gap-3">
              <button
-                onClick={onCheckoutComplete}
+                onClick={() => onCheckoutComplete("tracking")}
                 className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg shadow-green-500/30"
+              >
+                Track Order
+              </button>
+              <button
+                onClick={() => onCheckoutComplete("home")}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-4 rounded-2xl font-bold text-lg text-center transition-colors"
               >
                 Back to Home
               </button>
