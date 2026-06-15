@@ -19,6 +19,10 @@ import {
   ShoppingCart,
   Home,
   Briefcase,
+  FileText,
+  Check,
+  Upload,
+  AlertCircle,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { CartItem, MenuItem } from "../types";
@@ -142,6 +146,9 @@ export const Cart: React.FC<CartProps> = ({
 
   const theme = getTheme(isMultiService ? "multi" : dominantServiceType);
 
+  const [activeFilter, setActiveFilter] = useState<"all" | "food" | "grocery" | "pharmacy">("all");
+  const [prescriptionUploaded, setPrescriptionUploaded] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -274,6 +281,18 @@ export const Cart: React.FC<CartProps> = ({
   const tipAmount = subTotalAfterDiscount * (tipPercentage / 100);
   const total = subTotalAfterDiscount + deliveryFee + taxes + tipAmount;
 
+  const handleProceedToConfirm = () => {
+    if (itemTypeCounts.pharmacy > 0 && !prescriptionUploaded) {
+      alert("Please upload a prescription for your pharmacy items to proceed.");
+      return;
+    }
+    if (itemTypeCounts.grocery > 0 && !ageVerified) {
+      alert("Please verify your age for grocery items to proceed.");
+      return;
+    }
+    setIsConfirming(true);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: "100%", zIndex: 20 }}
@@ -322,6 +341,48 @@ export const Cart: React.FC<CartProps> = ({
         </div>
       ) : (
         <>
+          {isMultiService && (
+            <div className="flex gap-2 px-5 py-3 bg-white border-b border-slate-100 shrink-0 overflow-x-auto no-scrollbar">
+              <button
+                onClick={() => setActiveFilter("all")}
+                className={`px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                  activeFilter === "all" ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                All
+              </button>
+              {itemTypeCounts.food > 0 && (
+                <button
+                  onClick={() => setActiveFilter("food")}
+                  className={`px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                    activeFilter === "food" ? "bg-[#fc8019] text-white" : "bg-orange-50 text-[#fc8019]"
+                  }`}
+                >
+                  Food
+                </button>
+              )}
+              {itemTypeCounts.grocery > 0 && (
+                <button
+                  onClick={() => setActiveFilter("grocery")}
+                  className={`px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                    activeFilter === "grocery" ? "bg-[#16a34a] text-white" : "bg-green-50 text-[#16a34a]"
+                  }`}
+                >
+                  Grocery
+                </button>
+              )}
+              {itemTypeCounts.pharmacy > 0 && (
+                <button
+                  onClick={() => setActiveFilter("pharmacy")}
+                  className={`px-4 py-1.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors ${
+                    activeFilter === "pharmacy" ? "bg-[#20615b] text-white" : "bg-teal-50 text-[#20615b]"
+                  }`}
+                >
+                  Pharmacy
+                </button>
+              )}
+            </div>
+          )}
           <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-6">
         {/* Deliver To Card (Glassmorphic) */}
         <div className="bg-white  rounded-2xl p-4 shadow-sm border border-slate-100 ">
@@ -551,6 +612,8 @@ export const Cart: React.FC<CartProps> = ({
           <div className="space-y-6">
             <AnimatePresence initial={false}>
               {(["food", "grocery", "pharmacy"] as const).map((groupType) => {
+                if (activeFilter !== "all" && activeFilter !== groupType) return null;
+
                 const groupItems = cart.filter((item) => {
                   if (groupType === "grocery") return item.id.startsWith("g");
                   if (groupType === "pharmacy") return item.id.startsWith("p");
@@ -573,7 +636,7 @@ export const Cart: React.FC<CartProps> = ({
                     <div className={`${groupTheme.bgLight} px-4 py-3 flex items-center justify-between border-b border-slate-100`}>
                       <span className={`font-bold text-sm ${groupTheme.text}`}>{groupTheme.title}</span>
                       <span className={`text-[10px] uppercase font-bold px-2 py-1 bg-white rounded-md ${groupTheme.text} shadow-sm`}>
-                        {groupItems.length} {groupItems.length === 1 ? 'item' : 'items'}
+                        {groupItems.length} {groupItems.length === 1 ? 'ITEM' : 'ITEMS'}
                       </span>
                     </div>
                     <div className="p-4 space-y-4">
@@ -607,6 +670,9 @@ export const Cart: React.FC<CartProps> = ({
                                     <h4 className="text-slate-800  text-sm font-medium">
                                       {item.name}
                                     </h4>
+                                    <span className={`text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-md ${itemTheme.bgLight} ${itemTheme.text}`}>
+                                      {itemType}
+                                    </span>
                                   </div>
                                   <div className="flex items-center gap-2 mt-1">
                                     <motion.button
@@ -651,6 +717,49 @@ export const Cart: React.FC<CartProps> = ({
               })}
             </AnimatePresence>
           </div>
+
+          {/* Pharmacy Prescription Requirement */}
+          {itemTypeCounts.pharmacy > 0 && (
+            <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 my-4">
+              <h3 className="font-bold text-slate-800 text-sm mb-2 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#20615b]" />
+                Prescription Required
+              </h3>
+              <p className="text-xs text-slate-500 mb-3">Please upload a valid prescription for the medicine in your cart to proceed.</p>
+              <button 
+                onClick={() => setPrescriptionUploaded(!prescriptionUploaded)}
+                className={`w-full py-2.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
+                  prescriptionUploaded
+                    ? "bg-teal-50 border-[#20615b] text-[#20615b]"
+                    : "bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300"
+                }`}
+              >
+                {prescriptionUploaded ? <CheckCircle2 className="w-4 h-4" /> : <Upload className="w-4 h-4" />}
+                {prescriptionUploaded ? "Prescription Verified" : "Upload Prescription"}
+              </button>
+            </div>
+          )}
+
+          {/* Grocery Age Verification */}
+          {itemTypeCounts.grocery > 0 && (
+            <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 my-4">
+              <h3 className="font-bold text-slate-800 text-sm mb-2 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-[#16a34a]" />
+                Age Verification
+              </h3>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+                  <input type="checkbox" className="sr-only" checked={ageVerified} onChange={() => setAgeVerified(!ageVerified)} />
+                  <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${ageVerified ? "bg-[#16a34a] border-[#16a34a]" : "bg-white border-slate-300"}`}>
+                    {ageVerified && <Check className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                </div>
+                <span className="text-xs text-slate-600 leading-relaxed">
+                  I confirm that I am aged 18 or over and am legally eligible to purchase age-restricted grocery items.
+                </span>
+              </label>
+            </div>
+          )}
 
           <div className="w-full h-px bg-slate-100  my-4 border-dashed border-t-2 border-slate-200 "></div>
 
@@ -728,7 +837,7 @@ export const Cart: React.FC<CartProps> = ({
           {!isConfirming && !isProcessing ? (
             <motion.button
               key="proceed-btn"
-              onClick={() => setIsConfirming(true)}
+              onClick={handleProceedToConfirm}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
