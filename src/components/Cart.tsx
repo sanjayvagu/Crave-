@@ -89,7 +89,7 @@ const getTheme = (type?: "food" | "grocery" | "pharmacy" | "multi" | null) => {
         bg: "bg-[#fc8019]",
         bgHover: "hover:bg-[#ea580c]",
         shadowBtn: "shadow-[rgba(252,128,25,0.3)]",
-        title: "Checkout",
+        title: "Food Delivery Cart",
         subtitle: "Truffles & Co.",
         deliveryTime: "35-40",
         browseText: "Browse Restaurants"
