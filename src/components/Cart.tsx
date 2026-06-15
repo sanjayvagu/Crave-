@@ -365,7 +365,8 @@ export const Cart: React.FC<CartProps> = ({
       </div>
 
       {orderPlaced ? (
-        <div className="flex-1 overflow-y-auto bg-slate-50 p-5 pb-32 space-y-6">
+        <>
+          <div className="flex-1 overflow-y-auto bg-slate-50 p-5 space-y-6">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8 text-green-600" />
@@ -422,7 +423,8 @@ export const Cart: React.FC<CartProps> = ({
             );
           })}
 
-          <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-100">
+          </div>
+          <div className="bg-white px-5 pt-5 pb-32 shrink-0 border-t border-slate-100 shadow-[0_-10px_40px_rgb(0,0,0,0.05)] z-10 w-full relative">
              <button
                 onClick={onCheckoutComplete}
                 className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg shadow-green-500/30"
@@ -430,7 +432,7 @@ export const Cart: React.FC<CartProps> = ({
                 Back to Home
               </button>
           </div>
-        </div>
+        </>
       ) : cart.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50  pb-32">
           <div className="w-24 h-24 bg-slate-200  rounded-full flex items-center justify-center mb-6">
