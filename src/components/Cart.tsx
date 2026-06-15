@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowLeft,
@@ -23,6 +23,7 @@ import {
   Check,
   Upload,
   AlertCircle,
+  Timer,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { CartItem, MenuItem } from "../types";
@@ -35,6 +36,24 @@ interface CartProps {
   onUpdateCart: (item: MenuItem, delta: number) => void;
   onUpdateInstructions: (itemId: string, instructions: string) => void;
 }
+
+const RECOMMENDATIONS: Record<"food" | "grocery" | "pharmacy", MenuItem[]> = {
+  food: [
+    { id: "f-rec-1", restaurantId: "rec", name: "Coke Pet Bottle", description: "750ml", price: 40, isVeg: true, image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=200" },
+    { id: "f-rec-2", restaurantId: "rec", name: "Fries (Large)", description: "Crispy golden fries", price: 90, isVeg: true, image: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&q=80&w=200" },
+    { id: "f-rec-3", restaurantId: "rec", name: "Extra Cheese Dip", description: "Spicy cheese dip", price: 25, isVeg: true, image: "https://images.unsplash.com/photo-1594519983424-9dfa86ce917f?auto=format&fit=crop&q=80&w=200" },
+  ],
+  grocery: [
+    { id: "g-rec-1", restaurantId: "rec", name: "Facial Tissues", description: "100 Pulls, 2 Ply", price: 65, isVeg: true, image: "https://images.unsplash.com/photo-1584346133934-a3afd2a33c4c?auto=format&fit=crop&q=80&w=200" },
+    { id: "g-rec-2", restaurantId: "rec", name: "Reusable Bag", description: "Eco-friendly cloth bag", price: 20, isVeg: true, image: "https://images.unsplash.com/photo-1597348989645-46b190ce4918?auto=format&fit=crop&q=80&w=200" },
+    { id: "g-rec-3", restaurantId: "rec", name: "Wet Wipes", description: "Aloe Vera, 30pcs", price: 45, isVeg: true, image: "https://images.unsplash.com/photo-1618141443463-b81b83141f10?auto=format&fit=crop&q=80&w=200" },
+  ],
+  pharmacy: [
+    { id: "p-rec-1", restaurantId: "rec", name: "Hand Sanitizer", description: "50ml, 70% Alcohol", price: 50, isVeg: true, image: "https://images.unsplash.com/photo-1584483768567-bea2499c8942?auto=format&fit=crop&q=80&w=200" },
+    { id: "p-rec-2", restaurantId: "rec", name: "Disposable Mask", description: "N95, Single Pack", price: 80, isVeg: true, image: "https://images.unsplash.com/photo-1584033284078-436ed5facbc4?auto=format&fit=crop&q=80&w=200" },
+    { id: "p-rec-3", restaurantId: "rec", name: "Vitamin C Tablets", description: "Chewable, 15 tabs", price: 40, isVeg: true, image: "https://images.unsplash.com/photo-1550572017-edb702ec8c9b?auto=format&fit=crop&q=80&w=200" },
+  ],
+};
 
 const getTheme = (type?: "food" | "grocery" | "pharmacy" | "multi" | null) => {
   switch (type) {
@@ -151,6 +170,7 @@ export const Cart: React.FC<CartProps> = ({
   const [ageVerified, setAgeVerified] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [addressType, setAddressType] = useState("Home");
   const [deliveryAddress, setDeliveryAddress] = useState(
@@ -161,6 +181,22 @@ export const Cart: React.FC<CartProps> = ({
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("Credit Card");
+
+  const [offerTimeLeft, setOfferTimeLeft] = useState(600); // 10 minutes
+
+  useEffect(() => {
+    if (orderPlaced || cart.length === 0) return;
+    const timer = setInterval(() => {
+      setOfferTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [orderPlaced, cart.length]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
 
   const handleConfirmOrder = () => {
     setIsProcessing(true);
@@ -221,7 +257,10 @@ export const Cart: React.FC<CartProps> = ({
       // Trigger complete
       setTimeout(() => {
         setIsProcessing(false);
-        onCheckoutComplete();
+        if (typeof window !== "undefined" && navigator.vibrate) {
+          navigator.vibrate([100, 50, 100, 50, 100]);
+        }
+        setOrderPlaced(true);
       }, 600);
     }, 2500);
   };
@@ -282,10 +321,6 @@ export const Cart: React.FC<CartProps> = ({
   const total = subTotalAfterDiscount + deliveryFee + taxes + tipAmount;
 
   const handleProceedToConfirm = () => {
-    if (itemTypeCounts.pharmacy > 0 && !prescriptionUploaded) {
-      alert("Please upload a prescription for your pharmacy items to proceed.");
-      return;
-    }
     if (itemTypeCounts.grocery > 0 && !ageVerified) {
       alert("Please verify your age for grocery items to proceed.");
       return;
@@ -305,22 +340,98 @@ export const Cart: React.FC<CartProps> = ({
       <div className="flex items-center gap-4 px-5 pb-5 pt-[max(1.25rem,env(safe-area-inset-top))] bg-white  shadow-sm z-10 shrink-0">
         <motion.button
           whileTap={{ scale: 0.9 }}
-          onClick={onBack}
+          onClick={orderPlaced ? onCheckoutComplete : onBack}
           className="w-10 h-10 rounded-full bg-slate-100  flex items-center justify-center text-slate-700 "
         >
           <ArrowLeft className="w-5 h-5" />
         </motion.button>
-        <div>
+        <div className="flex-1">
           <h1 className="font-bold text-lg text-slate-800  tracking-tight">
-            {theme.title}
+            {orderPlaced ? "Order Summary" : theme.title}
           </h1>
           <p className="text-xs text-slate-500  font-medium">
-            {theme.subtitle} &bull; {cart.length} items
+            {orderPlaced ? "Invoice generated successfully" : `${theme.subtitle} • ${cart.length} items`}
           </p>
         </div>
+        {!orderPlaced && cart.length > 0 && offerTimeLeft > 0 && (
+          <div className="flex flex-col items-end shrink-0">
+            <span className="text-[10px] uppercase font-bold text-slate-500 mb-0.5">Offer ends in</span>
+            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${theme.bgLight} ${theme.text} border ${theme.border} bg-opacity-30`}>
+              <Timer className="w-3.5 h-3.5" />
+              <span className="text-xs font-bold font-mono tracking-tight">{formatTime(offerTimeLeft)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {cart.length === 0 ? (
+      {orderPlaced ? (
+        <div className="flex-1 overflow-y-auto bg-slate-50 p-5 pb-32 space-y-6">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            </div>
+          </div>
+          <div className="text-center mb-6">
+             <h2 className="text-2xl font-bold text-slate-800">Order Confirmed!</h2>
+             <p className="text-slate-500 text-sm mt-1">Your items will be delivered in {theme.deliveryTime} mins.</p>
+          </div>
+
+          {(["food", "grocery", "pharmacy"] as const).map((groupType) => {
+            const groupItems = cart.filter((item) => {
+              if (groupType === "grocery") return item.id.startsWith("g");
+              if (groupType === "pharmacy") return item.id.startsWith("p");
+              return !item.id.startsWith("g") && !item.id.startsWith("p");
+            });
+
+            if (groupItems.length === 0) return null;
+
+            const groupTheme = getTheme(groupType);
+            const groupTotal = groupItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+            return (
+              <div key={groupType} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`${groupTheme.bgLight} p-2 rounded-lg`}>
+                      <Receipt className={`w-4 h-4 ${groupTheme.text}`} />
+                    </div>
+                    <span className={`font-bold ${groupTheme.text}`}>{groupTheme.title}</span>
+                  </div>
+                  <span className="font-bold text-slate-800 text-sm">₹{groupTotal}</span>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  {groupItems.map(item => (
+                    <div key={item.id} className="flex justify-between items-start text-sm">
+                      <div className="flex gap-2">
+                        <span className="text-slate-500 font-medium">{item.quantity}x</span>
+                        <span className="text-slate-700">{item.name}</span>
+                      </div>
+                      <span className="text-slate-800 font-medium w-16 text-right">₹{item.price * item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="w-full flex justify-end">
+                  <button className={`px-4 py-2 text-sm font-bold rounded-xl border flex items-center gap-2 transition-colors ${groupTheme.bgLight} ${groupTheme.text} ${groupTheme.border}`}>
+                    <FileText className="w-4 h-4" />
+                    Download Invoice
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+
+          <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-slate-100">
+             <button
+                onClick={onCheckoutComplete}
+                className="w-full bg-[#60b246] hover:bg-[#529d3a] text-white py-4 rounded-2xl font-bold text-lg text-center transition-colors shadow-lg shadow-green-500/30"
+              >
+                Back to Home
+              </button>
+          </div>
+        </div>
+      ) : cart.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50  pb-32">
           <div className="w-24 h-24 bg-slate-200  rounded-full flex items-center justify-center mb-6">
             <ShoppingCart className="w-10 h-10 text-slate-400 " />
@@ -718,14 +829,14 @@ export const Cart: React.FC<CartProps> = ({
             </AnimatePresence>
           </div>
 
-          {/* Pharmacy Prescription Requirement */}
+          {/* Pharmacy Prescription */}
           {itemTypeCounts.pharmacy > 0 && (
             <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 my-4">
               <h3 className="font-bold text-slate-800 text-sm mb-2 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-[#20615b]" />
-                Prescription Required
+                Prescription (Optional)
               </h3>
-              <p className="text-xs text-slate-500 mb-3">Please upload a valid prescription for the medicine in your cart to proceed.</p>
+              <p className="text-xs text-slate-500 mb-3">Upload a valid prescription for the medicine in your cart, if applicable.</p>
               <button 
                 onClick={() => setPrescriptionUploaded(!prescriptionUploaded)}
                 className={`w-full py-2.5 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-colors ${
@@ -758,6 +869,69 @@ export const Cart: React.FC<CartProps> = ({
                   I confirm that I am aged 18 or over and am legally eligible to purchase age-restricted grocery items.
                 </span>
               </label>
+            </div>
+          )}
+
+          {/* Frequently Bought Together */}
+          {!orderPlaced && cart.length > 0 && dominantServiceType && RECOMMENDATIONS[dominantServiceType as keyof typeof RECOMMENDATIONS] && (
+            <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 my-4">
+              <h3 className="font-bold text-slate-800 mb-4 text-sm flex items-center gap-2">
+                <Tag className="w-5 h-5 text-indigo-500" />
+                Frequently Bought Together
+              </h3>
+              <div className="flex gap-4 overflow-x-auto pb-4 -mx-5 px-5 snap-x hide-scrollbar">
+                {RECOMMENDATIONS[dominantServiceType as keyof typeof RECOMMENDATIONS].map((item) => {
+                  const cartItem = cart.find(c => c.id === item.id);
+                  return (
+                    <motion.div
+                      key={item.id}
+                      className="min-w-[140px] max-w-[140px] bg-slate-50 rounded-2xl p-3 border border-slate-100 flex flex-col snap-start shrink-0"
+                    >
+                      <div className="w-full h-24 bg-slate-200 rounded-xl mb-3 overflow-hidden relative">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        {item.isVeg !== undefined && (
+                          <div className="absolute top-2 right-2 bg-white/90 p-0.5 rounded shadow-sm backdrop-blur-sm">
+                            <div className={`w-3 h-3 rounded-sm border flex items-center justify-center ${item.isVeg ? "border-green-600" : "border-red-600"}`}>
+                              <div className={`w-1.5 h-1.5 rounded-full ${item.isVeg ? "bg-green-600" : "bg-red-600"}`} />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 flex flex-col">
+                        <h4 className="font-bold text-slate-800 text-sm line-clamp-2 leading-tight">{item.name}</h4>
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-1">{item.description}</p>
+                        <div className="mt-auto pt-3 flex items-center justify-between">
+                          <span className="font-bold text-slate-800 text-sm">₹{item.price}</span>
+                          {cartItem ? (
+                            <div className="flex items-center gap-2 bg-slate-200 rounded-lg p-1">
+                              <button
+                                onClick={() => onUpdateCart(item, -1)}
+                                className="w-6 h-6 flex items-center justify-center bg-white rounded-md shadow-sm"
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              <span className="text-xs font-bold w-4 text-center">{cartItem.quantity}</span>
+                              <button
+                                onClick={() => onUpdateCart(item, 1)}
+                                className="w-6 h-6 flex items-center justify-center bg-white rounded-md shadow-sm text-[#60b246]"
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => onUpdateCart(item, 1)}
+                              className="bg-white border border-[#60b246] text-[#60b246] px-3 py-1 rounded-lg text-xs font-bold hover:bg-green-50 transition-colors"
+                            >
+                              Add
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           )}
 

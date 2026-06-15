@@ -71,7 +71,11 @@ export default function App() {
 
   const handleUpdateCart = (item: MenuItem, delta: number) => {
     if (typeof window !== "undefined" && navigator.vibrate) {
-      navigator.vibrate(50);
+      if (delta > 0) {
+        navigator.vibrate([40, 60, 40]);
+      } else {
+        navigator.vibrate(50);
+      }
     }
     setCart((prev) => {
       const existing = prev.find((c) => c.id === item.id);
@@ -98,7 +102,7 @@ export default function App() {
 
   const handleCheckoutComplete = () => {
     if (typeof window !== "undefined" && navigator.vibrate) {
-      navigator.vibrate([100, 50, 100]);
+      navigator.vibrate(50);
     }
     setCart([]);
     setCurrentScreen("tracking");

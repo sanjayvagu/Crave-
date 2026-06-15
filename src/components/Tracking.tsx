@@ -136,6 +136,9 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
 
           const statusObj = STATUSES[stepIndex];
           if (statusObj) {
+            if (typeof window !== "undefined" && navigator.vibrate) {
+              navigator.vibrate([50, 100, 50]);
+            }
             setToast({
               message: statusObj.label,
               subtext: statusObj.subtext,
@@ -153,6 +156,9 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
         if (index === 0) return;
         const timer = setTimeout(() => {
           setCurrentStep(index);
+          if (typeof window !== "undefined" && navigator.vibrate) {
+            navigator.vibrate([50, 100, 50]);
+          }
           setToast({
             message: status.label,
             subtext: status.subtext,
