@@ -52,4 +52,5 @@ export interface Order {
     | "Processing"
     | "Preparing"
     | "Out for Delivery";
+  type?: "food" | "grocery" | "pharmacy";
 }

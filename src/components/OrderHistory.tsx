@@ -37,6 +37,8 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
   const [selectedReceipt, setSelectedReceipt] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [view, setView] = useState<"list" | "analytics">("list");
+  const [filterType, setFilterType] = useState<"all" | "food" | "grocery" | "pharmacy">("all");
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   React.useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1200);
@@ -57,6 +59,17 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
 
     return { itemTotal, deliveryFee, taxes, tipAmount };
   };
+
+  const filteredOrders = MOCK_ORDERS.filter((order) => {
+    if (filterType === "all") return true;
+    return order.type === filterType;
+  }).sort((a, b) => {
+      // In real life, parse dates. For mock, we'll try a rough parse or assume they are ordered for desc.
+      // E.g. "Today, 01:00 PM" vs "12 Oct 2026, 08:30 PM"
+      const dateA = a.date.includes("Today") ? Date.now() : new Date(a.date).getTime();
+      const dateB = b.date.includes("Today") ? Date.now() : new Date(b.date).getTime();
+      return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+  });
 
   return (
     <motion.div
@@ -112,6 +125,34 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
             Analytics
           </button>
         </div>
+
+        {view === "list" && (
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <div className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pb-1">
+              <div className="flex items-center gap-2">
+                {(["all", "food", "grocery", "pharmacy"] as const).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setFilterType(type)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize whitespace-nowrap transition-colors ${
+                      filterType === type
+                        ? "bg-slate-800 text-white"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                  >
+                    {type === "all" ? "All Orders" : type}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setSortOrder(prev => prev === "desc" ? "asc" : "desc")}
+                className="flex items-center gap-1 text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full shrink-0"
+              >
+                Date: {sortOrder === "desc" ? "Newest" : "Oldest"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-4">
@@ -142,7 +183,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                   </div>
                 </div>
               ))
-            : MOCK_ORDERS.map((order, index) => (
+            : filteredOrders.length > 0 ? filteredOrders.map((order, index) => (
                 <motion.div
                   key={order.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -243,7 +284,15 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({
                     )}
                   </div>
                 </motion.div>
-              ))
+              )) : (
+                <div className="flex flex-col items-center justify-center p-8 text-center bg-white rounded-3xl border border-slate-100">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                    <History className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800">No orders found</h3>
+                  <p className="text-sm text-slate-500 mt-1">Try changing the filter or sorting options.</p>
+                </div>
+              )
         )}
 
         {view === "analytics" && (

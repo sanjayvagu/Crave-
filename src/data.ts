@@ -179,7 +179,8 @@ export const MOCK_ORDERS: Order[] = [
       { name: "Classic Smash Burger", quantity: 1 },
       { name: "Oreo Shake", quantity: 1 }
     ],
-    status: "Preparing"
+    status: "Preparing",
+    type: "food"
   },
   {
     id: "ORD-1A2B3C",
@@ -190,7 +191,31 @@ export const MOCK_ORDERS: Order[] = [
       { name: "Classic Smash Burger", quantity: 2 },
       { name: "Truffle Fries", quantity: 1 }
     ],
-    status: "Delivered"
+    status: "Delivered",
+    type: "food"
+  },
+  {
+    id: "ORD-GROC1",
+    restaurantName: "Instamart",
+    date: "10 Oct 2026, 11:30 AM",
+    total: 74,
+    items: [
+      { name: "Farm Fresh Tomatoes", quantity: 1 },
+      { name: "Amul Taaza Milk", quantity: 1 }
+    ],
+    status: "Delivered",
+    type: "grocery"
+  },
+  {
+    id: "ORD-PHARM1",
+    restaurantName: "Apollo Pharmacy",
+    date: "08 Oct 2026, 09:15 AM",
+    total: 30,
+    items: [
+      { name: "Dolo 650 Tablet", quantity: 1 }
+    ],
+    status: "Delivered",
+    type: "pharmacy"
   },
   {
     id: "ORD-9X8Y7Z",
@@ -201,7 +226,8 @@ export const MOCK_ORDERS: Order[] = [
       { name: "Spicy Tuna Roll", quantity: 1 },
       { name: "Dragon Roll", quantity: 1 }
     ],
-    status: "Delivered"
+    status: "Delivered",
+    type: "food"
   },
   {
     id: "ORD-5P6Q7R",
@@ -211,6 +237,7 @@ export const MOCK_ORDERS: Order[] = [
     items: [
       { name: "Pepperoni Pizza", quantity: 1 }
     ],
-    status: "Cancelled"
+    status: "Cancelled",
+    type: "food"
   }
 ];
