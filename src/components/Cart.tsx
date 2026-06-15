@@ -32,7 +32,7 @@ interface CartProps {
   onUpdateInstructions: (itemId: string, instructions: string) => void;
 }
 
-const getTheme = (type?: "food" | "grocery" | "pharmacy") => {
+const getTheme = (type?: "food" | "grocery" | "pharmacy" | "multi" | null) => {
   switch (type) {
     case "grocery":
       return {
@@ -63,6 +63,21 @@ const getTheme = (type?: "food" | "grocery" | "pharmacy") => {
         subtitle: "Medicines & Essentials",
         deliveryTime: "30-45",
         browseText: "Browse Medicines"
+      };
+    case "multi":
+      return {
+        colorHex: "#3b82f6",
+        bgLight: "bg-blue-50",
+        bgLightest: "bg-blue-50/50",
+        text: "text-[#3b82f6]",
+        border: "border-[#3b82f6]",
+        bg: "bg-[#3b82f6]",
+        bgHover: "hover:bg-[#2563eb]",
+        shadowBtn: "shadow-blue-500/30",
+        title: "Checkout",
+        subtitle: "Multi-Service Order",
+        deliveryTime: "30-45",
+        browseText: "Browse More"
       };
     default:
       return {
@@ -112,7 +127,21 @@ export const Cart: React.FC<CartProps> = ({
   onUpdateCart,
   onUpdateInstructions,
 }) => {
-  const theme = getTheme(serviceType);
+  const itemTypeCounts = {
+    food: cart.filter((i) => !i.id.startsWith("g") && !i.id.startsWith("p")).length,
+    grocery: cart.filter((i) => i.id.startsWith("g")).length,
+    pharmacy: cart.filter((i) => i.id.startsWith("p")).length,
+  };
+  
+  const dominantServiceType = cart.length > 0
+    ? (Object.entries(itemTypeCounts).reduce((a, b) => (a[1] > b[1] ? a : b))[0] as "food" | "grocery" | "pharmacy")
+    : serviceType;
+
+  const activeCategoriesCount = Object.values(itemTypeCounts).filter((c) => c > 0).length;
+  const isMultiService = activeCategoriesCount > 1;
+
+  const theme = getTheme(isMultiService ? "multi" : dominantServiceType);
+
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -519,66 +548,107 @@ export const Cart: React.FC<CartProps> = ({
             Order Summary
           </h3>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <AnimatePresence initial={false}>
-              {cart.map((item) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-start gap-2">
-                      <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center shrink-0 mt-1">
-                        <div
-                          className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
-                        ></div>
-                      </div>
-                      <div>
-                        <h4 className="text-slate-800  text-sm font-medium">
-                          {item.name}
-                        </h4>
-                        <div className="flex items-center gap-2 mt-1">
-                          <motion.button
-                            whileTap={{ scale: 0.8 }}
-                            onClick={() => onUpdateCart(item, -1)}
-                            className="w-8 h-8 shrink-0 rounded-full border border-slate-200  flex items-center justify-center text-slate-500  hover:bg-slate-50 "
-                          >
-                            <Minus className="w-3 h-3" />
-                          </motion.button>
-                          <span className="text-sm font-medium w-6 text-center">
-                            {item.quantity}
-                          </span>
-                          <motion.button
-                            whileTap={{ scale: 0.8 }}
-                            onClick={() => onUpdateCart(item, 1)}
-                            className={`w-8 h-8 shrink-0 rounded-full border flex items-center justify-center ${theme.border} ${theme.text} ${theme.bgLightest}`}
-                          >
-                            <Plus className="w-3 h-3" />
-                          </motion.button>
-                        </div>
-                      </div>
+              {(["food", "grocery", "pharmacy"] as const).map((groupType) => {
+                const groupItems = cart.filter((item) => {
+                  if (groupType === "grocery") return item.id.startsWith("g");
+                  if (groupType === "pharmacy") return item.id.startsWith("p");
+                  return !item.id.startsWith("g") && !item.id.startsWith("p");
+                });
+
+                if (groupItems.length === 0) return null;
+
+                const groupTheme = getTheme(groupType);
+
+                return (
+                  <motion.div
+                    key={groupType}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className={`border border-slate-100 rounded-2xl overflow-hidden`}
+                  >
+                    <div className={`${groupTheme.bgLight} px-4 py-3 flex items-center justify-between border-b border-slate-100`}>
+                      <span className={`font-bold text-sm ${groupTheme.text}`}>{groupTheme.title}</span>
+                      <span className={`text-[10px] uppercase font-bold px-2 py-1 bg-white rounded-md ${groupTheme.text} shadow-sm`}>
+                        {groupItems.length} {groupItems.length === 1 ? 'item' : 'items'}
+                      </span>
                     </div>
-                    <div className="font-medium text-slate-800  text-sm">
-                      ₹<NumberTicker value={item.price * item.quantity} />
+                    <div className="p-4 space-y-4">
+                      {groupItems.map((item) => {
+                        const itemType = groupType;
+                        const itemTheme = groupTheme;
+                        const placeholderText = itemType === "grocery"
+                          ? "Add instructions (e.g. pick ripe fruits)"
+                          : itemType === "pharmacy"
+                          ? "Add instructions (e.g. check expiry date)"
+                          : "Add special instructions (e.g. extra cheese)";
+
+                        return (
+                          <motion.div
+                            key={item.id}
+                            layout
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="flex flex-col gap-2"
+                          >
+                            <div className="flex justify-between items-start">
+                              <div className="flex items-start gap-2">
+                                <div className="w-4 h-4 border border-slate-300 rounded flex items-center justify-center shrink-0 mt-1">
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`}
+                                  ></div>
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <h4 className="text-slate-800  text-sm font-medium">
+                                      {item.name}
+                                    </h4>
+                                  </div>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <motion.button
+                                      whileTap={{ scale: 0.8 }}
+                                      onClick={() => onUpdateCart(item, -1)}
+                                      className="w-8 h-8 shrink-0 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </motion.button>
+                                    <span className="text-sm font-medium w-6 text-center">
+                                      {item.quantity}
+                                    </span>
+                                    <motion.button
+                                      whileTap={{ scale: 0.8 }}
+                                      onClick={() => onUpdateCart(item, 1)}
+                                      className={`w-8 h-8 shrink-0 rounded-full border flex items-center justify-center ${itemTheme.border} ${itemTheme.text} ${itemTheme.bgLightest}`}
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </motion.button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="font-medium text-slate-800  text-sm">
+                                ₹<NumberTicker value={item.price * item.quantity} />
+                              </div>
+                            </div>
+                            <div className="ml-6 mr-10 relative">
+                              <input
+                                type="text"
+                                placeholder={placeholderText}
+                                value={item.instructions || ""}
+                                onChange={(e) => onUpdateInstructions?.(item.id, e.target.value)}
+                                className={`w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:${itemTheme.border} outline-none transition-colors`}
+                              />
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                     </div>
-                  </div>
-                  <div className="ml-6 mr-10 relative">
-                    <input
-                      type="text"
-                      placeholder="Add special instructions (e.g. extra cheese)"
-                      value={item.instructions || ""}
-                      onChange={(e) =>
-                        onUpdateInstructions?.(item.id, e.target.value)
-                      }
-                      className={`w-full bg-slate-50  border border-slate-200  rounded-lg px-3 py-1.5 text-xs text-slate-700  focus:${theme.border} outline-none transition-colors`}
-                    />
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </div>
 
