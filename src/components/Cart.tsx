@@ -25,11 +25,62 @@ import { CartItem, MenuItem } from "../types";
 
 interface CartProps {
   cart: CartItem[];
+  serviceType?: "food" | "grocery" | "pharmacy";
   onBack: () => void;
   onCheckoutComplete: () => void;
   onUpdateCart: (item: MenuItem, delta: number) => void;
   onUpdateInstructions: (itemId: string, instructions: string) => void;
 }
+
+const getTheme = (type?: "food" | "grocery" | "pharmacy") => {
+  switch (type) {
+    case "grocery":
+      return {
+        colorHex: "#16a34a",
+        bgLight: "bg-green-50",
+        bgLightest: "bg-green-50/50",
+        text: "text-[#16a34a]",
+        border: "border-[#16a34a]",
+        bg: "bg-[#16a34a]",
+        bgHover: "hover:bg-[#15803d]",
+        shadowBtn: "shadow-green-500/30",
+        title: "Grocery Cart",
+        subtitle: "Fresh Groceries",
+        deliveryTime: "15-20",
+        browseText: "Browse Groceries"
+      };
+    case "pharmacy":
+      return {
+        colorHex: "#20615b",
+        bgLight: "bg-teal-50",
+        bgLightest: "bg-teal-50/50",
+        text: "text-[#20615b]",
+        border: "border-[#20615b]",
+        bg: "bg-[#20615b]",
+        bgHover: "hover:bg-[#134e4a]",
+        shadowBtn: "shadow-teal-500/30",
+        title: "Pharmacy Cart",
+        subtitle: "Medicines & Essentials",
+        deliveryTime: "30-45",
+        browseText: "Browse Medicines"
+      };
+    default:
+      return {
+        colorHex: "#fc8019",
+        bgLight: "bg-orange-50",
+        bgLightest: "bg-orange-50/50",
+        text: "text-[#fc8019]",
+        border: "border-[#fc8019]",
+        bg: "bg-[#fc8019]",
+        bgHover: "hover:bg-[#ea580c]",
+        shadowBtn: "shadow-[rgba(252,128,25,0.3)]",
+        title: "Checkout",
+        subtitle: "Truffles & Co.",
+        deliveryTime: "35-40",
+        browseText: "Browse Restaurants"
+      };
+  }
+};
 
 const NumberTicker = ({ value }: { value: number }) => {
   return (
@@ -55,11 +106,13 @@ const NumberTicker = ({ value }: { value: number }) => {
 
 export const Cart: React.FC<CartProps> = ({
   cart,
+  serviceType,
   onBack,
   onCheckoutComplete,
   onUpdateCart,
   onUpdateInstructions,
 }) => {
+  const theme = getTheme(serviceType);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -83,7 +136,7 @@ export const Cart: React.FC<CartProps> = ({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#fc8019", "#60b246", "#ffffff"],
+        colors: [theme.colorHex, "#60b246", "#ffffff"],
       });
 
       // Sound
@@ -211,10 +264,10 @@ export const Cart: React.FC<CartProps> = ({
         </motion.button>
         <div>
           <h1 className="font-bold text-lg text-slate-800  tracking-tight">
-            Checkout
+            {theme.title}
           </h1>
           <p className="text-xs text-slate-500  font-medium">
-            Truffles & Co. &bull; {cart.length} items
+            {theme.subtitle} &bull; {cart.length} items
           </p>
         </div>
       </div>
@@ -233,9 +286,9 @@ export const Cart: React.FC<CartProps> = ({
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={onBack}
-            className="w-full max-w-[250px] bg-[#fc8019] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30"
+            className={`w-full max-w-[250px] text-white font-bold py-4 rounded-xl shadow-lg ${theme.bg} ${theme.shadowBtn}`}
           >
-            Browse Restaurants
+            {theme.browseText}
           </motion.button>
         </div>
       ) : (
@@ -244,7 +297,7 @@ export const Cart: React.FC<CartProps> = ({
         {/* Deliver To Card (Glassmorphic) */}
         <div className="bg-white  rounded-2xl p-4 shadow-sm border border-slate-100 ">
           <div className="flex items-start gap-3">
-            <div className="bg-orange-100  p-2 rounded-lg text-[#fc8019] ">
+            <div className={`${theme.bgLight} p-2 rounded-lg ${theme.text}`}>
               {addressType === "Home" ? <Home className="w-5 h-5" /> : addressType === "Work" ? <Briefcase className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
             </div>
             <div className="flex-1">
@@ -255,12 +308,12 @@ export const Cart: React.FC<CartProps> = ({
                 {deliveryAddress}
               </p>
               <p className="text-sm font-medium mt-1 text-slate-700 ">
-                35-40 mins delivery time
+                {theme.deliveryTime} mins delivery time
               </p>
             </div>
             <button
               onClick={() => setShowMap(true)}
-              className="text-[#fc8019] text-sm font-bold uppercase tracking-wider"
+              className={`${theme.text} text-sm font-bold uppercase tracking-wider`}
             >
               Change
             </button>
@@ -271,7 +324,7 @@ export const Cart: React.FC<CartProps> = ({
         <div className="bg-white  rounded-2xl p-5 shadow-sm border border-slate-100  relative overflow-hidden">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-slate-800  text-sm flex items-center gap-2">
-              <TicketPercent className="w-5 h-5 text-[#fc8019]" />
+              <TicketPercent className={`w-5 h-5 ${theme.text}`} />
               Offers & Benefits
             </h3>
           </div>
@@ -333,7 +386,7 @@ export const Cart: React.FC<CartProps> = ({
                       className={`w-full bg-slate-50  border rounded-xl px-4 py-3 text-sm font-medium uppercase outline-none transition-colors ${
                         couponError
                           ? "border-red-300 text-red-600 focus:border-red-500"
-                          : "border-slate-200  text-slate-800  focus:border-[#fc8019]"
+                          : `border-slate-200 text-slate-800 focus:${theme.border}`
                       }`}
                     />
                     {couponError && (
@@ -402,7 +455,7 @@ export const Cart: React.FC<CartProps> = ({
                 onClick={() => setTipPercentage(percentage)}
                 className={`flex-1 py-2 rounded-xl border text-sm font-bold transition-all ${
                   tipPercentage === percentage
-                    ? "border-[#fc8019] bg-orange-50 text-[#fc8019]"
+                    ? `${theme.border} ${theme.bgLight} ${theme.text}`
                     : "border-slate-200  text-slate-600  hover:border-slate-300"
                 }`}
               >
@@ -428,7 +481,7 @@ export const Cart: React.FC<CartProps> = ({
                 onClick={() => setPaymentMethod(method.id)}
                 className={`flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-colors ${
                   paymentMethod === method.id
-                    ? "border-[#fc8019] bg-orange-50/50 "
+                    ? `${theme.border} ${theme.bgLightest} `
                     : "border-slate-200  hover:bg-slate-50 :bg-slate-800/50"
                 }`}
               >
@@ -436,7 +489,7 @@ export const Cart: React.FC<CartProps> = ({
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       paymentMethod === method.id
-                        ? "bg-orange-100 text-[#fc8019]"
+                        ? `${theme.bgLight} ${theme.text}`
                         : "bg-slate-100  text-slate-500"
                     }`}
                   >
@@ -450,7 +503,7 @@ export const Cart: React.FC<CartProps> = ({
                   {paymentMethod === method.id && (
                     <motion.div
                       layoutId="radioCheck"
-                      className="w-2.5 h-2.5 rounded-full bg-[#fc8019]"
+                      className={`w-2.5 h-2.5 rounded-full ${theme.bg}`}
                     />
                   )}
                 </div>
@@ -502,7 +555,7 @@ export const Cart: React.FC<CartProps> = ({
                           <motion.button
                             whileTap={{ scale: 0.8 }}
                             onClick={() => onUpdateCart(item, 1)}
-                            className="w-8 h-8 shrink-0 rounded-full border border-[#fc8019] flex items-center justify-center text-[#fc8019] hover:bg-orange-50"
+                            className={`w-8 h-8 shrink-0 rounded-full border flex items-center justify-center ${theme.border} ${theme.text} ${theme.bgLightest}`}
                           >
                             <Plus className="w-3 h-3" />
                           </motion.button>
@@ -521,7 +574,7 @@ export const Cart: React.FC<CartProps> = ({
                       onChange={(e) =>
                         onUpdateInstructions?.(item.id, e.target.value)
                       }
-                      className="w-full bg-slate-50  border border-slate-200  rounded-lg px-3 py-1.5 text-xs text-slate-700  focus:border-[#fc8019] outline-none transition-colors"
+                      className={`w-full bg-slate-50  border border-slate-200  rounded-lg px-3 py-1.5 text-xs text-slate-700  focus:${theme.border} outline-none transition-colors`}
                     />
                   </div>
                 </motion.div>
@@ -577,7 +630,7 @@ export const Cart: React.FC<CartProps> = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="flex justify-between text-[#fc8019] font-medium"
+                  className={`flex justify-between ${theme.text} font-medium`}
                 >
                   <span>Delivery Tip ({tipPercentage}%)</span>
                   <span className="flex items-center">
@@ -651,7 +704,7 @@ export const Cart: React.FC<CartProps> = ({
               key="confirmed-btn"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="w-full bg-[#fc8019] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(252,128,25,0.3)]"
+              className={`w-full ${theme.bg} text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-[0_10px_20px_rgba(0,0,0,0.1)]`}
             >
               <CheckCircle2 className="w-6 h-6" />
               Order Confirmed!
@@ -695,7 +748,7 @@ export const Cart: React.FC<CartProps> = ({
               ></div>
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <MapPin
-                  className="w-12 h-12 text-[#fc8019] -mt-12 drop-shadow-xl"
+                  className={`w-12 h-12 ${theme.text} -mt-12 drop-shadow-xl`}
                   strokeWidth={2.5}
                 />
               </div>
@@ -720,11 +773,11 @@ export const Cart: React.FC<CartProps> = ({
                     }}
                     className={`flex items-start gap-4 p-4 border rounded-2xl cursor-pointer transition-all ${
                       addressType === addr.type
-                        ? "border-[#fc8019] bg-orange-50/50 "
+                        ? `${theme.border} ${theme.bgLightest} `
                         : "border-slate-200  hover:bg-slate-50 :bg-slate-800/50"
                     }`}
                   >
-                    <div className={`p-2 rounded-full mt-0.5 ${addressType === addr.type ? "bg-orange-100 text-[#fc8019] " : "bg-slate-100 text-slate-500 "}`}>
+                    <div className={`p-2 rounded-full mt-0.5 ${addressType === addr.type ? `${theme.bgLight} ${theme.text} ` : "bg-slate-100 text-slate-500 "}`}>
                       <addr.icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
@@ -735,7 +788,7 @@ export const Cart: React.FC<CartProps> = ({
                       {addressType === addr.type && (
                         <motion.div
                           layoutId="addressRadioCheck"
-                          className="w-2.5 h-2.5 rounded-full bg-[#fc8019]"
+                          className={`w-2.5 h-2.5 rounded-full ${theme.bg}`}
                         />
                       )}
                     </div>
@@ -746,7 +799,7 @@ export const Cart: React.FC<CartProps> = ({
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowMap(false)}
-                className="w-full bg-[#fc8019] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30"
+                className={`w-full ${theme.bg} text-white font-bold py-4 rounded-xl shadow-lg ${theme.shadowBtn}`}
               >
                 Confirm Location
               </motion.button>

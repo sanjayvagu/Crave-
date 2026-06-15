@@ -14,6 +14,7 @@ import { SearchScreen } from "./components/SearchScreen";
 import { BottomNav } from "./components/BottomNav";
 import { VendorDashboard } from "./components/VendorDashboard";
 import { RiderDashboard } from "./components/RiderDashboard";
+import { StatusBar } from "./components/StatusBar";
 import { Restaurant, CartItem, MenuItem, Order, Address, City } from "./types";
 import { RESTAURANTS, MENU_ITEMS, CITIES } from "./data";
 
@@ -134,6 +135,8 @@ export default function App() {
         {/* Dynamic Island / Top Notch Hardware Simulation (Desktop only) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-32 bg-slate-800 rounded-b-3xl z-[100] hidden sm:block"></div>
 
+        <StatusBar />
+
         <motion.div
           className="flex-1 overflow-hidden relative touch-pan-y"
           onPanEnd={(e, info) => {
@@ -227,6 +230,7 @@ export default function App() {
               <Cart
                 key="cart"
                 cart={cart}
+                serviceType={serviceType}
                 onUpdateCart={handleUpdateCart}
                 onUpdateInstructions={handleUpdateInstructions}
                 onBack={() => setCurrentScreen("home")}
