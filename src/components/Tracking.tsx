@@ -16,11 +16,17 @@ import {
   Headset,
   Send,
   Star,
+  ShoppingBag,
+  Store,
+  Apple,
+  Pill,
 } from "lucide-react";
+import { CartItem } from "../types";
 
 interface TrackingProps {
   onGoHome: () => void;
   orderId?: string;
+  orderItems?: CartItem[];
 }
 
 const STATUSES = [
@@ -54,7 +60,11 @@ const STATUSES = [
   },
 ];
 
-export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
+export const Tracking: React.FC<TrackingProps> = ({
+  onGoHome,
+  orderId,
+  orderItems = [],
+}) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [timeLeft, setTimeLeft] = useState(() =>
     Math.floor(Math.random() * (30 * 60 - 20 * 60 + 1) + 20 * 60),
@@ -63,12 +73,26 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
   const [showChat, setShowChat] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const [foodRating, setFoodRating] = useState(0);
+  const [groceryRating, setGroceryRating] = useState(0);
+  const [pharmacyRating, setPharmacyRating] = useState(0);
   const [deliveryRating, setDeliveryRating] = useState(0);
   const [toast, setToast] = useState<{
     message: string;
     subtext: string;
     id: number;
   } | null>(null);
+
+  const itemTypeCounts = {
+    food: orderItems.filter(
+      (i) => !i.id.startsWith("g") && !i.id.startsWith("p"),
+    ).length,
+    grocery: orderItems.filter((i) => i.id.startsWith("g")).length,
+    pharmacy: orderItems.filter((i) => i.id.startsWith("p")).length,
+  };
+  const activeCategoriesCount = Object.values(itemTypeCounts).filter(
+    (c) => c > 0,
+  ).length;
+  const isMultiService = activeCategoriesCount > 1;
 
   useEffect(() => {
     if (toast) {
@@ -148,7 +172,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
         },
         (error) => {
           console.error("Firestore Error:", error);
-        }
+        },
       );
     } else {
       // 2. Local Fallback Mock Simulation
@@ -255,10 +279,10 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
 
         {/* Abstract Map Blocks (Parks, Buildings) */}
         <div className="absolute inset-0">
-           <div className="absolute top-4 left-4 w-32 h-24 bg-white/60  rounded-xl"></div>
-           <div className="absolute top-1/2 right-8 w-24 h-32 bg-[#dcfce7]/60  rounded-xl"></div>
-           <div className="absolute bottom-8 left-12 w-40 h-16 bg-white/60  rounded-xl"></div>
-           <div className="absolute top-8 right-1/3 w-20 h-20 bg-blue-100/60  rounded-full blur-md"></div>
+          <div className="absolute top-4 left-4 w-32 h-24 bg-white/60  rounded-xl"></div>
+          <div className="absolute top-1/2 right-8 w-24 h-32 bg-[#dcfce7]/60  rounded-xl"></div>
+          <div className="absolute bottom-8 left-12 w-40 h-16 bg-white/60  rounded-xl"></div>
+          <div className="absolute top-8 right-1/3 w-20 h-20 bg-blue-100/60  rounded-full blur-md"></div>
         </div>
 
         {/* Route line simulation */}
@@ -269,7 +293,11 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
             preserveAspectRatio="none"
           >
             <path
-              d="M 15 85 L 35 85 L 35 45 L 75 45 L 75 25"
+              d={
+                isMultiService
+                  ? "M 15 85 L 15 45 L 45 45 L 75 45 L 75 25"
+                  : "M 15 85 L 35 85 L 35 45 L 75 45 L 75 25"
+              }
               fill="none"
               stroke="currentColor"
               strokeWidth="4"
@@ -280,12 +308,46 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
           </svg>
         </div>
 
-        {/* Restaurant Location */}
-        <div className="absolute top-[85%] left-[15%] -translate-x-1/2 -translate-y-1/2">
-           <div className="w-8 h-8 bg-slate-800  text-white  rounded-full shadow-lg flex items-center justify-center">
-             <ChefHat className="w-4 h-4" />
-           </div>
-        </div>
+        {/* Pickup Locations */}
+        {isMultiService ? (
+          <>
+            {itemTypeCounts.food > 0 && (
+              <div className="absolute top-[85%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="w-8 h-8 bg-slate-800 text-white rounded-full shadow-lg flex items-center justify-center">
+                  <ChefHat className="w-4 h-4" />
+                </div>
+              </div>
+            )}
+            {itemTypeCounts.grocery > 0 && (
+              <div className="absolute top-[45%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="w-8 h-8 bg-slate-800 text-white rounded-full shadow-lg flex items-center justify-center">
+                  <ShoppingBag className="w-4 h-4" />
+                </div>
+              </div>
+            )}
+            {itemTypeCounts.pharmacy > 0 && (
+              <div className="absolute top-[45%] left-[45%] -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="w-8 h-8 bg-slate-800 text-white rounded-full shadow-lg flex items-center justify-center">
+                  <Pill className="w-4 h-4" />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="absolute top-[85%] left-[15%] -translate-x-1/2 -translate-y-1/2 z-10">
+            <div
+              className={`w-8 h-8 text-white rounded-full shadow-lg flex items-center justify-center bg-slate-800`}
+            >
+              {itemTypeCounts.pharmacy > 0 ? (
+                <Pill className="w-4 h-4" />
+              ) : itemTypeCounts.grocery > 0 ? (
+                <Store className="w-4 h-4" />
+              ) : (
+                <ChefHat className="w-4 h-4" />
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Home Location */}
         <div className="absolute top-[25%] left-[75%] -translate-x-1/2 -translate-y-1/2">
@@ -306,10 +368,15 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                 currentStep === 3
                   ? { left: "75%", top: "25%" }
                   : currentStep === 2
-                    ? {
-                        left: ["15%", "35%", "35%", "75%", "75%"],
-                        top: ["85%", "85%", "45%", "45%", "25%"],
-                      }
+                    ? isMultiService
+                      ? {
+                          left: ["15%", "15%", "45%", "75%", "75%"],
+                          top: ["85%", "45%", "45%", "45%", "25%"],
+                        }
+                      : {
+                          left: ["15%", "35%", "35%", "75%", "75%"],
+                          top: ["85%", "85%", "45%", "45%", "25%"],
+                        }
                     : { left: "15%", top: "85%" }
               }
               transition={
@@ -489,8 +556,12 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                 </p>
                 {currentStep === 2 && (
                   <div className="mt-3 bg-white px-3 py-2 rounded-xl border border-slate-200 inline-block shadow-sm">
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-0.5">Delivery OTP</p>
-                    <p className="text-xl font-black text-slate-800 tracking-widest">1234</p>
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-0.5">
+                      Delivery OTP
+                    </p>
+                    <p className="text-xl font-black text-slate-800 tracking-widest">
+                      1234
+                    </p>
                   </div>
                 )}
               </div>
@@ -550,9 +621,7 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
               <h2 className="text-xl font-bold text-slate-800  mb-1">
                 Alex (Driver)
               </h2>
-              <p className="text-slate-500  mb-8">
-                +1 (555) 019-8372
-              </p>
+              <p className="text-slate-500  mb-8">+1 (555) 019-8372</p>
 
               <div className="flex gap-6">
                 <motion.button
@@ -588,11 +657,15 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
               <div className="bg-white  p-4 border-b border-slate-200  flex items-center justify-between shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-100  rounded-full flex items-center justify-center overflow-hidden">
-                     <Headset className="w-5 h-5 text-blue-600 " />
+                    <Headset className="w-5 h-5 text-blue-600 " />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 ">Customer Support</h3>
-                    <p className="text-xs text-green-500 font-medium">● Online</p>
+                    <h3 className="font-bold text-slate-800 ">
+                      Customer Support
+                    </h3>
+                    <p className="text-xs text-green-500 font-medium">
+                      ● Online
+                    </p>
                   </div>
                 </div>
                 <button
@@ -606,14 +679,19 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
               {/* Chat Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 <div className="flex justify-center">
-                  <span className="text-[10px] font-bold text-slate-400  bg-slate-200/50  px-2 py-1 rounded">Today</span>
+                  <span className="text-[10px] font-bold text-slate-400  bg-slate-200/50  px-2 py-1 rounded">
+                    Today
+                  </span>
                 </div>
                 <div className="flex items-end gap-2">
                   <div className="w-8 h-8 bg-blue-100  rounded-full flex shrink-0 items-center justify-center overflow-hidden">
-                     <Headset className="w-4 h-4 text-blue-600 " />
+                    <Headset className="w-4 h-4 text-blue-600 " />
                   </div>
                   <div className="bg-white  p-3 rounded-2xl rounded-bl-sm border border-slate-100  shadow-sm max-w-[80%]">
-                     <p className="text-sm text-slate-700 ">Hi! I'm your support agent. How can I help you with your order today?</p>
+                    <p className="text-sm text-slate-700 ">
+                      Hi! I'm your support agent. How can I help you with your
+                      order today?
+                    </p>
                   </div>
                 </div>
               </div>
@@ -621,8 +699,15 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
               {/* Input */}
               <div className="bg-white  p-4 border-t border-slate-200  shrink-0 pb-[max(1rem,env(safe-area-inset-bottom))]">
                 <div className="flex items-center gap-2">
-                  <input type="text" placeholder="Type your message..." className="flex-1 bg-slate-100  text-slate-800  rounded-full px-4 py-3 outline-none text-sm placeholder:text-slate-400 :text-slate-500" />
-                  <button className="w-10 h-10 bg-[#fc8019] text-white rounded-full flex items-center justify-center shrink-0 shadow-md" onClick={() => alert("Message sent!")}>
+                  <input
+                    type="text"
+                    placeholder="Type your message..."
+                    className="flex-1 bg-slate-100  text-slate-800  rounded-full px-4 py-3 outline-none text-sm placeholder:text-slate-400 :text-slate-500"
+                  />
+                  <button
+                    className="w-10 h-10 bg-[#fc8019] text-white rounded-full flex items-center justify-center shrink-0 shadow-md"
+                    onClick={() => alert("Message sent!")}
+                  >
                     <Send className="w-4 h-4 ml-0.5" />
                   </button>
                 </div>
@@ -659,43 +744,99 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 className="w-8 h-8 text-green-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-800 mb-2">How was your order?</h2>
-                <p className="text-sm text-slate-500 font-medium">Rate your food and delivery experience</p>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                  How was your order?
+                </h2>
+                <p className="text-sm text-slate-500 font-medium">
+                  Rate your items and delivery experience
+                </p>
               </div>
 
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
-                <p className="text-center font-bold text-slate-700 mb-3 text-sm">Food Quality</p>
-                <div className="flex justify-center gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <motion.button
-                      key={`food-${star}`}
-                      whileTap={{ scale: 0.8 }}
-                      onClick={() => setFoodRating(star)}
-                      className="p-1"
-                    >
-                      <Star
-                        className={`w-8 h-8 ${foodRating >= star ? "fill-[#fc8019] text-[#fc8019]" : "fill-slate-200 text-slate-200"} transition-colors`}
-                      />
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
+              <div className="max-h-[50vh] overflow-y-auto no-scrollbar pb-6 space-y-4">
+                {itemTypeCounts.food > 0 && (
+                  <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <p className="text-center font-bold text-slate-700 mb-3 text-sm">
+                      Food Quality
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <motion.button
+                          key={`food-${star}`}
+                          whileTap={{ scale: 0.8 }}
+                          onClick={() => setFoodRating(star)}
+                          className="p-1"
+                        >
+                          <Star
+                            className={`w-8 h-8 ${foodRating >= star ? "fill-[#fc8019] text-[#fc8019]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                          />
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
-                <p className="text-center font-bold text-slate-700 mb-3 text-sm">Delivery Experience</p>
-                <div className="flex justify-center gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <motion.button
-                      key={`dev-${star}`}
-                      whileTap={{ scale: 0.8 }}
-                      onClick={() => setDeliveryRating(star)}
-                      className="p-1"
-                    >
-                      <Star
-                        className={`w-8 h-8 ${deliveryRating >= star ? "fill-[#60b246] text-[#60b246]" : "fill-slate-200 text-slate-200"} transition-colors`}
-                      />
-                    </motion.button>
-                  ))}
+                {itemTypeCounts.grocery > 0 && (
+                  <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <p className="text-center font-bold text-slate-700 mb-3 text-sm">
+                      Grocery Quality
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <motion.button
+                          key={`grocery-${star}`}
+                          whileTap={{ scale: 0.8 }}
+                          onClick={() => setGroceryRating(star)}
+                          className="p-1"
+                        >
+                          <Star
+                            className={`w-8 h-8 ${groceryRating >= star ? "fill-[#16a34a] text-[#16a34a]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                          />
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {itemTypeCounts.pharmacy > 0 && (
+                  <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                    <p className="text-center font-bold text-slate-700 mb-3 text-sm">
+                      Pharmacy Experience
+                    </p>
+                    <div className="flex justify-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <motion.button
+                          key={`pharmacy-${star}`}
+                          whileTap={{ scale: 0.8 }}
+                          onClick={() => setPharmacyRating(star)}
+                          className="p-1"
+                        >
+                          <Star
+                            className={`w-8 h-8 ${pharmacyRating >= star ? "fill-[#20615b] text-[#20615b]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                          />
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                  <p className="text-center font-bold text-slate-700 mb-3 text-sm">
+                    Delivery Experience
+                  </p>
+                  <div className="flex justify-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <motion.button
+                        key={`dev-${star}`}
+                        whileTap={{ scale: 0.8 }}
+                        onClick={() => setDeliveryRating(star)}
+                        className="p-1"
+                      >
+                        <Star
+                          className={`w-8 h-8 ${deliveryRating >= star ? "fill-[#60b246] text-[#60b246]" : "fill-slate-200 text-slate-200"} transition-colors`}
+                        />
+                      </motion.button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -704,9 +845,19 @@ export const Tracking: React.FC<TrackingProps> = ({ onGoHome, orderId }) => {
                 onClick={() => {
                   setShowRating(false);
                 }}
-                disabled={foodRating === 0 || deliveryRating === 0}
-                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 ${
-                  foodRating > 0 && deliveryRating > 0
+                disabled={
+                  (itemTypeCounts.food > 0 && foodRating === 0) ||
+                  (itemTypeCounts.grocery > 0 && groceryRating === 0) ||
+                  (itemTypeCounts.pharmacy > 0 && pharmacyRating === 0) ||
+                  deliveryRating === 0
+                }
+                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 mt-2 shrink-0 ${
+                  !(
+                    (itemTypeCounts.food > 0 && foodRating === 0) ||
+                    (itemTypeCounts.grocery > 0 && groceryRating === 0) ||
+                    (itemTypeCounts.pharmacy > 0 && pharmacyRating === 0) ||
+                    deliveryRating === 0
+                  )
                     ? "bg-[#fc8019] text-white shadow-[0_8px_20px_rgb(252,128,25,0.3)]"
                     : "bg-slate-200 text-slate-400 shadow-none"
                 }`}

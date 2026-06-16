@@ -36,6 +36,7 @@ export default function App() {
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<Restaurant | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [lastPlacedOrder, setLastPlacedOrder] = useState<CartItem[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isVendorOnline, setIsVendorOnline] = useState<boolean>(true);
   const [isRiderOnline, setIsRiderOnline] = useState<boolean>(true);
@@ -103,6 +104,9 @@ export default function App() {
   const handleCheckoutComplete = (destination: "home" | "tracking" = "tracking") => {
     if (typeof window !== "undefined" && navigator.vibrate) {
       navigator.vibrate(50);
+    }
+    if (cart.length > 0) {
+      setLastPlacedOrder([...cart]);
     }
     setCart([]);
     setCurrentScreen(destination);
@@ -254,6 +258,7 @@ export default function App() {
             {currentScreen === "tracking" && (
               <Tracking
                 key="tracking"
+                orderItems={lastPlacedOrder}
                 onGoHome={() => setCurrentScreen("home")}
               />
             )}
